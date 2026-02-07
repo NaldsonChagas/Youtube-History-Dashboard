@@ -1,0 +1,12 @@
+---
+description: Padrões e arquitetura do projeto - consultar docs em toda alteração
+alwaysApply: true
+---
+
+# Padrões do projeto
+
+- **Código**: seguir [docs/coding-standards.md](../docs/coding-standards.md). Código limpo, sem comentários desnecessários, Google TypeScript Style Guide. ESLint no backend.
+- **Backend (MVC)**: seguir [docs/architecture.md](../docs/architecture.md). Nova rota = model → controller → route → registro em app. Manter controllers finos; lógica e queries nos models.
+- **Testes**: seguir a skill e a rule de testes: sempre criar ou atualizar testes para funcionalidades e correções; em correção de bug, escrever o teste que falha primeiro.
+
+Consultar esses documentos ao implementar ou revisar código.

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YouTube History – Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link href="/css/styles.css" rel="stylesheet">
+</head>
+<body class="bg-gray-900 text-gray-100 min-h-screen">
+  <div class="container mx-auto px-4 py-8 max-w-7xl">
+    <header class="mb-8">
+      <h1 class="text-3xl font-bold text-white">YouTube History Dashboard</h1>
+      <p class="text-gray-400 mt-1">Visão geral do seu histórico de visualização</p>
+      <nav class="mt-4 flex gap-4">
+        <a href="/" class="text-indigo-400 font-medium">Dashboard</a>
+        <a href="/history" class="text-gray-400 hover:text-gray-200">Lista completa</a>
+      </nav>
+    </header>
+
+    <section id="overview" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+      <div class="bg-gray-800 rounded-lg p-4 shadow">
+        <p class="text-gray-400 text-sm">Total de visualizações</p>
+        <p id="stat-total-views" class="text-2xl font-bold text-white">–</p>
+      </div>
+      <div class="bg-gray-800 rounded-lg p-4 shadow">
+        <p class="text-gray-400 text-sm">Canais únicos</p>
+        <p id="stat-unique-channels" class="text-2xl font-bold text-white">–</p>
+      </div>
+      <div class="bg-gray-800 rounded-lg p-4 shadow">
+        <p class="text-gray-400 text-sm">Primeira visualização</p>
+        <p id="stat-first-watched" class="text-lg font-semibold text-white">–</p>
+      </div>
+      <div class="bg-gray-800 rounded-lg p-4 shadow">
+        <p class="text-gray-400 text-sm">Última visualização</p>
+        <p id="stat-last-watched" class="text-lg font-semibold text-white">–</p>
+      </div>
+    </section>
+
+    <section class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+      <div class="bg-gray-800 rounded-lg p-6 shadow">
+        <h2 class="text-xl font-semibold text-white mb-4">Canais mais vistos</h2>
+        <div class="h-80">
+          <canvas id="chart-channels"></canvas>
+        </div>
+      </div>
+      <div class="bg-gray-800 rounded-lg p-6 shadow">
+        <h2 class="text-xl font-semibold text-white mb-4">Visualizações por hora do dia</h2>
+        <div class="h-80">
+          <canvas id="chart-by-hour"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <section class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+      <div class="bg-gray-800 rounded-lg p-6 shadow">
+        <h2 class="text-xl font-semibold text-white mb-4">Visualizações por dia da semana</h2>
+        <div class="h-80">
+          <canvas id="chart-by-weekday"></canvas>
+        </div>
+      </div>
+      <div class="bg-gray-800 rounded-lg p-6 shadow">
+        <h2 class="text-xl font-semibold text-white mb-4">Atividade por mês</h2>
+        <div class="h-80">
+          <canvas id="chart-by-month"></canvas>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script type="module" src="/js/api.js"></script>
+  <script type="module" src="/js/dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,10 @@
+---
+description: Obriga criação de testes para features e correções; correção = teste primeiro
+alwaysApply: true
+---
+
+# Testes obrigatórios
+
+- **Nova funcionalidade**: sempre criar ou atualizar testes de integração (ou unitários quando aplicável) que cubram o comportamento da API ou do código alterado. Testes ficam em `backend/tests/` para a API.
+- **Correção de bug**: usar abordagem test-first. Primeiro escrever (ou ajustar) o teste que reproduz o bug (teste que falha); depois implementar a correção até o teste passar.
+- Não considerar a tarefa concluída sem os testes correspondentes.
