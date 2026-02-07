@@ -40,6 +40,16 @@ Este documento define os padrões de código do projeto, alinhados ao **Google T
 - Aspas duplas para strings, a menos que aspas simples evitem escape.
 - Linhas longas: quebrar em pontos lógicos (parâmetros, encadeamentos); evitar linhas muito longas.
 
+## Injeção de dependências
+
+- Usar **injection-js** para injeção de dependências. Tokens em `di/tokens.ts`; providers (incluindo `useClass` e `useFactory`) em `di/providers.ts`; container criado em `app.ts` com `buildContainerWithDataSource()`.
+- Controllers e use cases **não instanciam** dependências: recebem-nas pelo construtor (via container). Use cases dependem apenas de **interfaces** de repositório (ex.: `IStatsRepository`); as implementações concretas ficam em `infrastructure/repositories/` e são injetadas no ponto de composição.
+
+## Core e bibliotecas externas
+
+- Em **`domain/`** e **`use-cases/`**: não importar TypeORM, injection-js, Fastify nem outras libs de infra. Nenhum decorator de ORM ou de DI no core. Interfaces e tipos são TypeScript puro.
+- Implementações e detalhes de framework ficam em **`infrastructure/`** e em **`di/`**. Controllers podem usar Fastify (request/reply) e decorators de injection-js para receber use cases.
+
 ## Lint
 
 - O projeto usa **ESLint** com **typescript-eslint** (substituição ao TSLint).

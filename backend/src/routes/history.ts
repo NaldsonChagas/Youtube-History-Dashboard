@@ -1,6 +1,9 @@
-import { FastifyInstance } from 'fastify';
-import { historyController } from '../controllers/historyController.js';
+import type { FastifyInstance } from "fastify";
+import type { HistoryController } from "../controllers/historyController.js";
 
-export async function historyRoutes(app: FastifyInstance): Promise<void> {
-  app.get('/', historyController.list);
+export async function registerHistoryRoutes(
+  app: FastifyInstance,
+  historyController: HistoryController
+): Promise<void> {
+  app.get("/", historyController.list.bind(historyController));
 }

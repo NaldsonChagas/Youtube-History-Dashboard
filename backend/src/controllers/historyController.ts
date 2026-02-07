@@ -1,5 +1,8 @@
-import { FastifyRequest, FastifyReply } from 'fastify';
-import { historyModel } from '../models/historyModel.js';
+import type { FastifyReply, FastifyRequest } from "fastify";
+import { Inject, Injectable } from "injection-js";
+import { LIST_HISTORY_USE_CASE } from "../di/tokens.js";
+import { optionalQueryParam } from "../lib/queryParams.js";
+import type { ListHistoryUseCase } from "../use-cases/history/ListHistoryUseCase.js";
 
 interface ListQuerystring {
   page?: string;
@@ -9,19 +12,26 @@ interface ListQuerystring {
   channel_id?: string;
 }
 
-export const historyController = {
+@Injectable()
+export class HistoryController {
+  constructor(
+    @Inject(LIST_HISTORY_USE_CASE) private readonly listHistoryUseCase: ListHistoryUseCase
+  ) {}
+
   async list(
     request: FastifyRequest<{ Querystring: ListQuerystring }>,
     reply: FastifyReply
   ): Promise<void> {
-    const page = Math.max(1, parseInt(request.query.page ?? '1', 10) || 1);
-    const limit = Math.min(100, Math.max(1, parseInt(request.query.limit ?? '50', 10) || 50));
-    const raw = (v: string | undefined) => (v && v !== 'undefined' ? v : undefined);
-    const from = raw(request.query.from);
-    const to = raw(request.query.to);
-    const channelId = raw(request.query.channel_id);
+    const page = Math.max(1, parseInt(request.query.page ?? "1", 10) || 1);
+    const limit = Math.min(
+      100,
+      Math.max(1, parseInt(request.query.limit ?? "50", 10) || 50)
+    );
+    const from = optionalQueryParam(request.query.from);
+    const to = optionalQueryParam(request.query.to);
+    const channelId = optionalQueryParam(request.query.channel_id);
 
-    const result = await historyModel.list({
+    const result = await this.listHistoryUseCase.execute({
       page,
       limit,
       from,
@@ -30,5 +40,5 @@ export const historyController = {
     });
 
     await reply.send(result);
-  },
-};
+  }
+}

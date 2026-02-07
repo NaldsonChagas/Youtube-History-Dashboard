@@ -1,4 +1,5 @@
-import { pool } from '../src/config/db.js';
+import { createDataSource } from "../src/infrastructure/data-source.js";
+import { env } from "../src/config/env.js";
 
 const CREATE_TABLE = `
 CREATE TABLE IF NOT EXISTS watch_history (
@@ -17,9 +18,14 @@ CREATE INDEX IF NOT EXISTS idx_watch_history_channel_id ON watch_history (channe
 `;
 
 async function migrate(): Promise<void> {
-  await pool.query(CREATE_TABLE);
-  console.log('Migration completed.');
-  await pool.end();
+  const dataSource = createDataSource(env.pg);
+  await dataSource.initialize();
+  try {
+    await dataSource.query(CREATE_TABLE);
+    console.log("Migration completed.");
+  } finally {
+    await dataSource.destroy();
+  }
 }
 
 migrate().catch((err) => {

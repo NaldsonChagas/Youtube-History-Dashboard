@@ -1,9 +1,8 @@
-import { describe, it, expect, beforeAll, afterAll } from 'vitest';
-import { buildApp } from '../src/app.js';
-import { pool } from '../src/config/db.js';
-import { ensureSchema } from './setup.js';
+import { describe, it, expect, beforeAll, afterAll } from "vitest";
+import { buildApp } from "../src/app.js";
+import { ensureSchema } from "./setup.js";
 
-describe('GET /api/stats', () => {
+describe("GET /api/stats", () => {
   let app: Awaited<ReturnType<typeof buildApp>>;
 
   beforeAll(async () => {
@@ -12,8 +11,7 @@ describe('GET /api/stats', () => {
   });
 
   afterAll(async () => {
-    await app.close();
-    await pool.end();
+    if (app) await app.close();
   });
 
   it('GET /api/stats/overview returns 200 and overview shape', async () => {

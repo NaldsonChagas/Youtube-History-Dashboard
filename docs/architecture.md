@@ -1,120 +1,56 @@
-# Arquitetura do backend (MVC)
+# Arquitetura do backend
 
-O backend segue o padrão **MVC** (Model-View-Controller). A “View” aqui é a resposta JSON; a lógica de apresentação está no frontend. Este documento descreve a estrutura e como **criar uma nova rota** seguindo os padrões do projeto.
+O backend segue uma arquitetura em camadas: **Controller → Use case → Repository**. A persistência é feita via **TypeORM** em `infrastructure/`. A injeção de dependências usa **injection-js**; o core da aplicação não depende de bibliotecas externas (TypeORM, injection-js, Fastify). Este documento descreve a estrutura e como **criar uma nova rota**.
 
 ## Estrutura de pastas
 
 ```
 backend/src/
-├── config/          # Configuração (env, db)
-├── controllers/     # Handlers HTTP: recebem request/reply, validam, chamam model, respondem
-├── middleware/      # Error handler e outros middlewares
-├── models/         # Acesso a dados (queries ao banco); sem lógica HTTP
-├── routes/         # Registro das rotas e mapeamento para controllers
-├── app.ts          # Factory do Fastify (usado pelo server e pelos testes)
-└── server.ts       # Entry point: buildApp + listen
+├── config/              # Configuração (env)
+├── controllers/         # Handlers HTTP: recebem request/reply, validam, chamam use case, respondem
+├── di/                  # Injeção de dependências (injection-js): tokens, providers, container
+├── domain/              # Interfaces de repositórios e tipos de domínio (sem libs externas)
+├── infrastructure/      # Detalhes de persistência e libs externas
+│   ├── data-source.ts   # Criação do DataSource TypeORM
+│   ├── entities/        # Entidades TypeORM
+│   └── repositories/    # Implementações dos repositórios (implementam interfaces do domain)
+├── middleware/          # Error handler e outros middlewares
+├── routes/              # Registro das rotas; recebem controller injetado
+├── use-cases/           # Casos de uso (lógica de negócio); dependem só de interfaces do domain
+├── app.ts               # Factory do Fastify: monta container, obtém controllers, registra rotas
+└── server.ts            # Entry point: buildApp + listen
 ```
 
-Fluxo de uma requisição:
+## Fluxo de uma requisição
 
-1. **Route** registra método e path e chama o **controller**.
-2. **Controller** lê/valida query/body, chama o **model** e envia a resposta com **reply.send()**.
-3. **Model** executa queries (pg) e retorna dados; não conhece request/reply.
+1. **Route** registra método e path; o handler é um método do **controller** (instância obtida do container).
+2. **Controller** lê/valida query/body, chama o **use case** injetado e envia a resposta com `reply.send()`.
+3. **Use case** orquestra a regra de negócio e delega ao **repositório** (interface injetada).
+4. **Repositório** (implementação em `infrastructure/repositories/`) acessa o banco via TypeORM.
+
+## Core e bibliotecas externas
+
+**Nenhum detalhe de biblioteca externa** (TypeORM, injection-js, Fastify) deve aparecer em `domain/` nem em `use-cases/`. Apenas interfaces e tipos TypeScript. As implementações e o uso de frameworks ficam em `infrastructure/`, `di/`, `controllers/` (Fastify) e `app.ts`.
 
 ## Convenções
 
-- **Rotas**: um arquivo por domínio (ex.: `history.ts`, `stats.ts`), registrado em `app.ts` com prefixo (ex.: `/api/history`, `/api/stats`).
-- **Controllers**: um arquivo por domínio; funções exportadas como objeto (ex.: `historyController.list`). Recebem `request` e `reply` do Fastify.
-- **Models**: um arquivo por entidade/agregação; funções que recebem parâmetros e retornam dados (objetos/arrays). Usam o `pool` de `config/db.ts`.
-- Nomes: **list**, **getById**, **overview**, **channels**, etc., conforme a ação.
+- **Rotas**: um arquivo por domínio (ex.: `history.ts`, `stats.ts`). Função que recebe `app` e o **controller** (obtido do container em `app.ts`) e registra os handlers com `controller.método.bind(controller)`.
+- **Controllers**: classes com `@Injectable()`; construtor recebe use cases via `@Inject(TOKEN)`. Não instanciam use cases nem repositórios.
+- **Use cases**: classes com método `execute(...)`; construtor recebe apenas a interface do repositório (ex.: `IStatsRepository`). Implementação do repositório é injetada pelo container.
+- **Repositórios**: interface em `domain/` (ex.: `IHistoryRepository`); implementação em `infrastructure/repositories/`, usando TypeORM (DataSource, QueryBuilder, entidades).
+- **DI**: tokens em `di/tokens.ts`; providers em `di/providers.ts`; container criado em `app.ts` com `buildContainerWithDataSource()`; controllers obtidos do container e passados para as funções de rota.
 
 ## Como criar uma nova rota
 
-Siga estes passos na ordem.
-
-### 1. Model
-
-- Arquivo: `src/models/<nome>Model.ts` (ou estender um existente).
-- Função que recebe os parâmetros necessários e executa a(s) query(s).
-- Retorno: tipo explícito (interface ou type); sem usar `request`/`reply`.
-
-Exemplo (conceitual):
-
-```ts
-// src/models/exampleModel.ts
-import { pool } from '../config/db.js';
-
-export const exampleModel = {
-  async getSomething(id: string): Promise<{ name: string } | null> {
-    const result = await pool.query('SELECT name FROM ... WHERE id = $1', [id]);
-    const row = result.rows[0];
-    return row ? { name: row.name } : null;
-  },
-};
-```
-
-### 2. Controller
-
-- Arquivo: `src/controllers/<nome>Controller.ts` (ou método novo em um existente).
-- Handler async que recebe `request` e `reply`.
-- Extrair e validar query/body (valores padrão, parseInt, etc.).
-- Chamar o model e responder com `reply.send(...)`.
-
-Exemplo:
-
-```ts
-// src/controllers/exampleController.ts
-import { FastifyRequest, FastifyReply } from 'fastify';
-import { exampleModel } from '../models/exampleModel.js';
-
-export const exampleController = {
-  async get(request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply): Promise<void> {
-    const id = request.params.id;
-    const data = await exampleModel.getSomething(id);
-    if (!data) {
-      await reply.status(404).send({ error: 'NotFound' });
-      return;
-    }
-    await reply.send(data);
-  },
-};
-```
-
-### 3. Rota
-
-- Arquivo: `src/routes/<nome>.ts`.
-- Registrar o método e o path e chamar o controller.
-
-Exemplo:
-
-```ts
-// src/routes/example.ts
-import { FastifyInstance } from 'fastify';
-import { exampleController } from '../controllers/exampleController.js';
-
-export async function exampleRoutes(app: FastifyInstance): Promise<void> {
-  app.get('/:id', exampleController.get);
-}
-```
-
-### 4. Registrar no app
-
-- Em `src/app.ts`, importar as rotas e registrá-las com prefixo:
-
-```ts
-import { exampleRoutes } from './routes/example.js';
-// ...
-await app.register(exampleRoutes, { prefix: '/api/example' });
-```
-
-### 5. Testes
-
-- Adicionar ou estender testes em `backend/tests/` (ex.: `example.test.ts`).
-- Usar `buildApp()` e `app.inject()` para chamar a nova rota e afirmar status e corpo JSON.
-- Seguir a regra do projeto: toda funcionalidade nova ou correção deve ter teste; em correção, escrever o teste que falha primeiro.
+1. **Interface no domain** (se for novo repositório): criar `domain/I<Nome>Repository.ts` com os métodos necessários; tipos/DTOs em `domain/` ou junto da interface.
+2. **Implementação em infrastructure**: criar entidade em `infrastructure/entities/` (se nova tabela) e classe em `infrastructure/repositories/` que implementa a interface e usa TypeORM.
+3. **Use case**: criar classe em `use-cases/<domínio>/` com `execute(...)` que recebe a interface do repositório no construtor (será injetada via factory em `di/providers.ts`).
+4. **Tokens e providers**: adicionar tokens em `di/tokens.ts`; registrar repositório, use case e controller em `di/providers.ts`.
+5. **Controller**: classe com `@Injectable()` e construtor recebendo o use case via `@Inject(TOKEN)`; método que extrai query/body, chama `useCase.execute(...)` e `reply.send()`.
+6. **Rotas e app**: em `routes/<nome>.ts`, função que recebe `app` e o controller e registra as rotas; em `app.ts`, obter o controller do container e chamar essa função com prefixo.
 
 ## Resumo
 
-- **Nova rota** = model (dados) → controller (HTTP) → route (registro) → app (prefixo) + testes.
-- Manter controllers finos (validação + chamada ao model + send); lógica de negócio e queries nos models.
-- Consultar [docs/coding-standards.md](coding-standards.md) para estilo e convenções de código.
+- **Nova rota** = interface (domain) → implementação repositório (infrastructure) → use case → tokens/providers (di) → controller → rota registrada em app + testes.
+- Controllers finos (validação + use case + send); lógica de negócio nos use cases; acesso a dados nos repositórios.
+- Consultar [docs/coding-standards.md](coding-standards.md) para estilo, injeção de dependências e regra do core sem libs externas.
