@@ -5,9 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>YouTube History – Lista completa</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="/css/styles.css" rel="stylesheet">
 </head>
-<body class="bg-gray-900 text-gray-100 min-h-screen">
+<body class="bg-gray-900 text-gray-100 min-h-screen" x-data="historyList">
   <div class="container mx-auto px-4 py-8 max-w-7xl">
     <header class="mb-8">
       <h1 class="text-3xl font-bold text-white">Lista completa do histórico</h1>
@@ -20,14 +19,17 @@
 
     <div class="mb-4 flex flex-wrap gap-4 items-center">
       <label class="text-gray-400 text-sm">Canal</label>
-      <select id="filter-channel" class="bg-gray-800 text-gray-100 border border-gray-700 rounded px-3 py-2 min-w-[200px]">
+      <select x-model="filterChannel" class="bg-gray-800 text-gray-100 border border-gray-700 rounded px-3 py-2 min-w-[200px]">
         <option value="">Todos</option>
+        <template x-for="ch in channels" :key="ch.channel_id">
+          <option :value="ch.channel_id" x-text="ch.channel_name"></option>
+        </template>
       </select>
       <label class="text-gray-400 text-sm">De</label>
-      <input type="date" id="filter-from" class="bg-gray-800 text-gray-100 border border-gray-700 rounded px-3 py-2">
+      <input type="date" x-model="filterFrom" class="bg-gray-800 text-gray-100 border border-gray-700 rounded px-3 py-2">
       <label class="text-gray-400 text-sm">Até</label>
-      <input type="date" id="filter-to" class="bg-gray-800 text-gray-100 border border-gray-700 rounded px-3 py-2">
-      <button id="btn-apply" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded font-medium">Aplicar</button>
+      <input type="date" x-model="filterTo" class="bg-gray-800 text-gray-100 border border-gray-700 rounded px-3 py-2">
+      <button type="button" @click="applyFilters()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded font-medium">Aplicar</button>
     </div>
 
     <div class="overflow-x-auto rounded-lg border border-gray-700">
@@ -40,17 +42,35 @@
             <th class="px-4 py-3">Link</th>
           </tr>
         </thead>
-        <tbody id="table-body" class="divide-y divide-gray-700">
+        <tbody class="divide-y divide-gray-700">
+          <template x-if="loadError">
+            <tr>
+              <td colspan="4" class="px-4 py-8 text-center text-red-400">Erro ao carregar.</td>
+            </tr>
+          </template>
+          <template x-for="item in items" :key="item.id">
+            <tr class="bg-gray-800/50 hover:bg-gray-800">
+              <td class="px-4 py-3 text-gray-300 whitespace-nowrap" x-text="formattedDate(item.watched_at)"></td>
+              <td class="px-4 py-3 text-white max-w-md truncate" :title="item.title" x-text="item.title"></td>
+              <td class="px-4 py-3 text-gray-300" x-text="item.channel_name"></td>
+              <td class="px-4 py-3">
+                <a :href="videoUrl(item)" target="_blank" rel="noopener" class="text-indigo-400 hover:underline">Abrir</a>
+              </td>
+            </tr>
+          </template>
         </tbody>
       </table>
     </div>
 
-    <div id="pagination" class="mt-4 flex justify-center gap-2 items-center">
+    <div class="mt-4 flex justify-center gap-2 items-center" x-show="totalPages > 1" x-cloak>
+      <button type="button" @click="goToPage(currentPage - 1)" x-show="currentPage > 1" class="bg-gray-700 hover:bg-gray-600 text-white px-3 py-1 rounded">Anterior</button>
+      <span class="text-gray-400 px-2">Página <span x-text="currentPage"></span> de <span x-text="totalPages"></span></span>
+      <button type="button" @click="goToPage(currentPage + 1)" x-show="currentPage < totalPages" class="bg-gray-700 hover:bg-gray-600 text-white px-3 py-1 rounded">Próxima</button>
     </div>
-    <p id="loading" class="text-gray-400 mt-4 text-center hidden">Carregando…</p>
+    <p class="text-gray-400 mt-4 text-center" x-show="loading" x-transition>Carregando…</p>
   </div>
 
-  <script type="module" src="/js/api.js"></script>
-  <script type="module" src="/js/history-list.js"></script>
+  <script type="module" src="/src/entry-history.ts"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
 </body>
 </html>

@@ -5,7 +5,7 @@ Dashboard for viewing and analyzing YouTube watch history, powered by data expor
 ## What it is
 
 - **Backend**: REST API in Fastify + TypeScript (MVC), with PostgreSQL. Takeout data is imported once (seed) and queried via the database.
-- **Frontend**: Static pages (HTML, Tailwind, Chart.js) with a dark theme: dashboard with charts and paginated history list.
+- **Frontend**: Static pages (HTML, Tailwind, Chart.js, Alpine.js) with TypeScript. Built with **Vite** (output in `frontend/dist`, minified); dashboard with charts and paginated history list.
 
 ## Prerequisites
 
@@ -22,7 +22,7 @@ Dashboard for viewing and analyzing YouTube watch history, powered by data expor
 docker compose up --build
 ```
 
-3. The backend runs at `http://localhost:3000`. On first run, the entrypoint runs the migration and seed (if the table is empty). The frontend is served by the backend at `/` (root). The backend runs in **development mode with watch**: code changes in `backend/src`, `backend/scripts`, and `frontend/` are picked up automatically (no rebuild needed).
+3. The backend runs at `http://localhost:3000`. On first run, the entrypoint runs the frontend build (Vite), then the migration and seed (if the table is empty). The frontend is served by the backend from `frontend/dist` at `/` (root). The backend runs in **development mode with watch** for backend code; frontend changes require re-running the frontend build (or restarting the container, which rebuilds the frontend).
 
 ## Environment variables
 
@@ -35,6 +35,7 @@ docker compose up --build
 | `PGPASSWORD`| PostgreSQL password            | `postgres`        |
 | `PGDATABASE`| Database name                  | `youtube_history` |
 | `DATA_PATH` | Path to Takeout folder         | `./youtube-metadata` |
+| `PUBLIC_PATH` | Path to static frontend build | `../frontend/dist` (from backend cwd) |
 | `NODE_ENV`  | Environment                    | `development`     |
 
 ## Local development (without Docker)
@@ -66,10 +67,24 @@ pnpm run test
 pnpm run lint
 ```
 
+## Frontend (standalone)
+
+The frontend is in `frontend/`. Source is TypeScript in `frontend/src/`; build output is **minified** and goes to `frontend/dist/` (Vite).
+
+```bash
+cd frontend
+pnpm install
+pnpm run build    # Vite build (minified JS/CSS to dist/)
+pnpm run test     # unit tests (Vitest)
+pnpm run lint     # ESLint
+```
+
+When running the full app (Docker or backend dev server), the backend serves static files from **`frontend/dist/`**. Run `pnpm run build` in `frontend/` after changing frontend source so the backend serves the latest build.
+
 ## Project documentation
 
 - [docs/coding-standards.md](docs/coding-standards.md) – Code standards (Google Style Guide, clean code).
-- [docs/architecture.md](docs/architecture.md) – Backend MVC architecture and how to add new routes.
+- [docs/architecture.md](docs/architecture.md) – Backend and frontend architecture; how to add new routes.
 
 ## API
 

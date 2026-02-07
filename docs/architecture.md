@@ -1,6 +1,10 @@
-# Backend architecture
+# Architecture
 
-The backend follows a layered architecture: **Controller → Use case → Repository**. Persistence is done via **TypeORM** in `infrastructure/`. Dependency injection uses **injection-js**; the application core does not depend on external libraries (TypeORM, injection-js, Fastify). This document describes the structure and how to **add a new route**.
+This document describes the structure of the backend and frontend.
+
+## Backend
+
+The backend follows a layered architecture: **Controller → Use case → Repository**. Persistence is done via **TypeORM** in `infrastructure/`. Dependency injection uses **injection-js**; the application core does not depend on external libraries (TypeORM, injection-js, Fastify). Below is the structure and how to **add a new route**.
 
 ## Folder structure
 
@@ -54,3 +58,42 @@ backend/src/
 - **New route** = interface (domain) → repository implementation (infrastructure) → use case → tokens/providers (di) → controller → route registered in app + tests.
 - Thin controllers (validation + use case + send); business logic in use cases; data access in repositories.
 - See [docs/coding-standards.md](coding-standards.md) for style, dependency injection and the core-without-external-libs rule.
+
+## Frontend
+
+The frontend is static HTML + **Alpine.js** (CDN) + **TypeScript** built with **Vite**. No SPA router; each page is a separate HTML file. The backend serves the built output from `frontend/dist/` (minified JS and CSS).
+
+### Folder structure
+
+```
+frontend/
+├── src/                   # TypeScript source
+│   ├── api.ts             # API client (fetch wrappers)
+│   ├── types.ts           # Interfaces for API responses
+│   ├── format.ts          # Helpers (formatDate, escapeHtml, etc.)
+│   ├── dashboard.ts       # Alpine component for dashboard (overview + charts)
+│   ├── history-list.ts    # Alpine component for history table + pagination
+│   ├── entry-dashboard.ts # Vite entry (imports CSS + dashboard)
+│   └── entry-history.ts  # Vite entry (imports CSS + history-list)
+├── dist/                  # Vite build output (minified); served by backend
+├── css/                   # Styles (imported by entries)
+├── tests/                 # Unit tests (Vitest)
+│   ├── api.test.ts
+│   └── format.test.ts
+├── index.html             # Dashboard page
+├── history.html           # History list page
+└── vite.config.ts         # Vite MPA config (outDir: dist)
+```
+
+### Flow
+
+1. HTML pages load Alpine (CDN), Tailwind (CDN), Chart.js (CDN where needed), and the built scripts via Vite entry points (`/src/entry-dashboard.ts`, `/src/entry-history.ts`). Vite bundles and minifies to `dist/assets/*.js` and `dist/assets/*.css`.
+2. Alpine components are registered via `Alpine.data()` from the TS modules (`dashboard.ts`, `history-list.ts`). State and methods are typed in TypeScript.
+3. The API client (`api.ts`) and types (`types.ts`) are shared; Chart.js is used imperatively (create/destroy) from Alpine init or methods.
+4. Build: run `pnpm run build` (Vite) in `frontend/`; output goes to `frontend/dist/`. The backend serves from `frontend/dist/` (default `PUBLIC_PATH`).
+
+### Tests
+
+- Unit tests live in **`frontend/tests/`** (Vitest).
+- Cover: API module (with mocked `fetch`), pure helpers (formatDate, escapeHtml), and any extracted logic used by Alpine components.
+- Same rules as backend: new feature → add/update tests; bug fix → failing test first, then fix.

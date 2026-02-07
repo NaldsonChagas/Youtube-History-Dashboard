@@ -11,5 +11,5 @@ export const env = {
     database: process.env.PGDATABASE ?? 'youtube_history',
   },
   dataPath: process.env.DATA_PATH ?? './youtube-metadata',
-  publicPath: process.env.PUBLIC_PATH ?? join(process.cwd(), '..', 'frontend'),
+  publicPath: process.env.PUBLIC_PATH ?? join(process.cwd(), '..', 'frontend', 'dist'),
 } as const;

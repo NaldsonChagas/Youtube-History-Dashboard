@@ -13,7 +13,7 @@ COPY frontend ./frontend
 COPY backend/entrypoint.dev.sh /app/entrypoint.dev.sh
 RUN chmod +x /app/entrypoint.dev.sh
 
-ENV PUBLIC_PATH=/app/frontend
+ENV PUBLIC_PATH=/app/frontend/dist
 EXPOSE 3000
 
 ENTRYPOINT ["/app/entrypoint.dev.sh"]
