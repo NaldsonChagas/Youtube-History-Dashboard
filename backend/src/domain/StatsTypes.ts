@@ -6,8 +6,8 @@ export interface StatsOverview {
 }
 
 export interface ChannelCount {
-  channel_id: string;
-  channel_name: string;
+  channelId: string;
+  channelName: string;
   count: number;
 }
 

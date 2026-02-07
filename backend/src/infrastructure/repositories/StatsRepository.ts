@@ -26,12 +26,12 @@ export class StatsRepository implements IStatsRepository {
       .getRepository(WatchHistory)
       .createQueryBuilder("w")
       .select("COUNT(*)", "total_views")
-      .addSelect("COUNT(DISTINCT w.channel_id)", "unique_channels")
-      .addSelect("MIN(w.watched_at)", "first_watched")
-      .addSelect("MAX(w.watched_at)", "last_watched");
+      .addSelect("COUNT(DISTINCT w.channelId)", "unique_channels")
+      .addSelect("MIN(w.watchedAt)", "first_watched")
+      .addSelect("MAX(w.watchedAt)", "last_watched");
 
-    if (from) qb.andWhere("w.watched_at >= :from", { from });
-    if (to) qb.andWhere("w.watched_at <= :to", { to });
+    if (from) qb.andWhere("w.watchedAt >= :from", { from });
+    if (to) qb.andWhere("w.watchedAt <= :to", { to });
 
     const row = await qb.getRawOne<{
       total_views: string;
@@ -56,25 +56,25 @@ export class StatsRepository implements IStatsRepository {
     const qb = this.dataSource
       .getRepository(WatchHistory)
       .createQueryBuilder("w")
-      .select("w.channel_id", "channel_id")
-      .addSelect("w.channel_name", "channel_name")
+      .select("w.channelId", "channelId")
+      .addSelect("w.channelName", "channelName")
       .addSelect("COUNT(*)", "count")
-      .groupBy("w.channel_id")
-      .addGroupBy("w.channel_name")
+      .groupBy("w.channelId")
+      .addGroupBy("w.channelName")
       .orderBy("count", "DESC")
       .limit(limit);
 
-    if (from) qb.andWhere("w.watched_at >= :from", { from });
-    if (to) qb.andWhere("w.watched_at <= :to", { to });
+    if (from) qb.andWhere("w.watchedAt >= :from", { from });
+    if (to) qb.andWhere("w.watchedAt <= :to", { to });
 
     const rows = await qb.getRawMany<{
-      channel_id: string;
-      channel_name: string;
+      channelId: string;
+      channelName: string;
       count: string;
     }>();
     return rows.map((r) => ({
-      channel_id: r.channel_id,
-      channel_name: r.channel_name,
+      channelId: r.channelId,
+      channelName: r.channelName,
       count: Number(r.count),
     }));
   }
@@ -84,15 +84,15 @@ export class StatsRepository implements IStatsRepository {
       .getRepository(WatchHistory)
       .createQueryBuilder("w")
       .select(
-        "EXTRACT(HOUR FROM w.watched_at AT TIME ZONE 'UTC')::int",
+        "EXTRACT(HOUR FROM w.watchedAt AT TIME ZONE 'UTC')::int",
         "hour"
       )
       .addSelect("COUNT(*)", "count")
-      .groupBy("EXTRACT(HOUR FROM w.watched_at AT TIME ZONE 'UTC')")
+      .groupBy("EXTRACT(HOUR FROM w.watchedAt AT TIME ZONE 'UTC')")
       .orderBy("hour", "ASC");
 
-    if (from) qb.andWhere("w.watched_at >= :from", { from });
-    if (to) qb.andWhere("w.watched_at <= :to", { to });
+    if (from) qb.andWhere("w.watchedAt >= :from", { from });
+    if (to) qb.andWhere("w.watchedAt <= :to", { to });
 
     const rows = await qb.getRawMany<{ hour: string; count: string }>();
     return rows.map((r) => ({ hour: Number(r.hour), count: Number(r.count) }));
@@ -102,13 +102,13 @@ export class StatsRepository implements IStatsRepository {
     const qb = this.dataSource
       .getRepository(WatchHistory)
       .createQueryBuilder("w")
-      .select("EXTRACT(DOW FROM w.watched_at)::int", "weekday")
+      .select("EXTRACT(DOW FROM w.watchedAt)::int", "weekday")
       .addSelect("COUNT(*)", "count")
-      .groupBy("EXTRACT(DOW FROM w.watched_at)")
+      .groupBy("EXTRACT(DOW FROM w.watchedAt)")
       .orderBy("weekday", "ASC");
 
-    if (from) qb.andWhere("w.watched_at >= :from", { from });
-    if (to) qb.andWhere("w.watched_at <= :to", { to });
+    if (from) qb.andWhere("w.watchedAt >= :from", { from });
+    if (to) qb.andWhere("w.watchedAt <= :to", { to });
 
     const rows = await qb.getRawMany<{ weekday: string; count: string }>();
     return rows.map((r) => ({
@@ -121,16 +121,16 @@ export class StatsRepository implements IStatsRepository {
     const qb = this.dataSource
       .getRepository(WatchHistory)
       .createQueryBuilder("w")
-      .select("EXTRACT(YEAR FROM w.watched_at)::int", "year")
-      .addSelect("EXTRACT(MONTH FROM w.watched_at)::int", "month")
+      .select("EXTRACT(YEAR FROM w.watchedAt)::int", "year")
+      .addSelect("EXTRACT(MONTH FROM w.watchedAt)::int", "month")
       .addSelect("COUNT(*)", "count")
-      .groupBy("EXTRACT(YEAR FROM w.watched_at)")
-      .addGroupBy("EXTRACT(MONTH FROM w.watched_at)")
+      .groupBy("EXTRACT(YEAR FROM w.watchedAt)")
+      .addGroupBy("EXTRACT(MONTH FROM w.watchedAt)")
       .orderBy("year", "ASC")
       .addOrderBy("month", "ASC");
 
-    if (from) qb.andWhere("w.watched_at >= :from", { from });
-    if (to) qb.andWhere("w.watched_at <= :to", { to });
+    if (from) qb.andWhere("w.watchedAt >= :from", { from });
+    if (to) qb.andWhere("w.watchedAt <= :to", { to });
 
     const rows = await qb.getRawMany<{ year: string; month: string; count: string }>();
     return rows.map((r) => ({

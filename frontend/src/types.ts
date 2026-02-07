@@ -6,8 +6,8 @@ export interface StatsOverview {
 }
 
 export interface ChannelCount {
-  channel_id: string;
-  channel_name: string;
+  channelId: string;
+  channelName: string;
   count: number;
 }
 
@@ -29,13 +29,13 @@ export interface MonthCount {
 
 export interface HistoryItem {
   id: number;
-  video_id: string | null;
+  videoId: string | null;
   title: string;
-  channel_id: string;
-  channel_name: string;
-  watched_at: string;
-  activity_type: string;
-  source_url: string | null;
+  channelId: string;
+  channelName: string;
+  watchedAt: string;
+  activityType: string;
+  sourceUrl: string | null;
 }
 
 export interface ListResult {
@@ -46,7 +46,7 @@ export interface ListResult {
 export interface HistoryParams {
   from?: string;
   to?: string;
-  channel_id?: string;
+  channelId?: string;
   page?: number;
   limit?: number;
 }

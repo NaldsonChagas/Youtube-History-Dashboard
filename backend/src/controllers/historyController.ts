@@ -9,7 +9,7 @@ interface ListQuerystring {
   limit?: string;
   from?: string;
   to?: string;
-  channel_id?: string;
+  channelId?: string;
 }
 
 @Injectable()
@@ -29,7 +29,7 @@ export class HistoryController {
     );
     const from = optionalQueryParam(request.query.from);
     const to = optionalQueryParam(request.query.to);
-    const channelId = optionalQueryParam(request.query.channel_id);
+    const channelId = optionalQueryParam(request.query.channelId);
 
     const result = await this.listHistoryUseCase.execute({
       page,

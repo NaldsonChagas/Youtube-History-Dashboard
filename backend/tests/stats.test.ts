@@ -38,8 +38,8 @@ describe("GET /api/stats", () => {
     const body = res.json();
     expect(Array.isArray(body)).toBe(true);
     if (body.length > 0) {
-      expect(body[0]).toHaveProperty('channel_id');
-      expect(body[0]).toHaveProperty('channel_name');
+      expect(body[0]).toHaveProperty('channelId');
+      expect(body[0]).toHaveProperty('channelName');
       expect(body[0]).toHaveProperty('count');
     }
   });

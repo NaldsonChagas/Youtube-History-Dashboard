@@ -32,13 +32,13 @@ async function seed(): Promise<void> {
     for (let i = 0; i < entries.length; i += BATCH_SIZE) {
       const batch = entries.slice(i, i + BATCH_SIZE);
       const toInsert = batch.map((e) => ({
-        video_id: e.videoId,
+        videoId: e.videoId,
         title: e.title,
-        channel_id: e.channelId,
-        channel_name: e.channelName,
-        watched_at: e.watchedAt,
-        activity_type: e.activityType,
-        source_url: e.sourceUrl,
+        channelId: e.channelId,
+        channelName: e.channelName,
+        watchedAt: e.watchedAt,
+        activityType: e.activityType,
+        sourceUrl: e.sourceUrl,
       }));
       await repo.insert(toInsert);
       console.log(

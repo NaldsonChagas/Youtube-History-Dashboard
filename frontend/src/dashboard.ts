@@ -42,7 +42,7 @@ function renderChannelsChart(data: ChannelCount[]): void {
   new Chart(ctx, {
     type: "bar",
     data: {
-      labels: slice.map((d) => d.channel_name),
+      labels: slice.map((d) => d.channelName),
       datasets: [
         {
           label: "Visualizações",

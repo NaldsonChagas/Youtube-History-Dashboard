@@ -37,8 +37,8 @@ const channelsResponse = {
     items: {
       type: "object",
       properties: {
-        channel_id: { type: "string" },
-        channel_name: { type: "string" },
+        channelId: { type: "string" },
+        channelName: { type: "string" },
         count: { type: "integer" },
       },
     },

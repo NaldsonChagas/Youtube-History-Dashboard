@@ -6,10 +6,10 @@ import type { ChannelCount, HistoryItem } from "./types.js";
 const PAGE_SIZE = 50;
 
 function videoUrlForItem(item: HistoryItem): string {
-  if (item.video_id) {
-    return `https://www.youtube.com/watch?v=${item.video_id}`;
+  if (item.videoId) {
+    return `https://www.youtube.com/watch?v=${item.videoId}`;
   }
-  return item.source_url ?? "#";
+  return item.sourceUrl ?? "#";
 }
 
 interface HistoryListState {
@@ -25,7 +25,7 @@ interface HistoryListState {
   loadError: boolean;
   pageSize: number;
   get totalPages(): number;
-  getFilters(): { from?: string; to?: string; channel_id?: string };
+  getFilters(): { from?: string; to?: string; channelId?: string };
   videoUrl(item: HistoryItem): string;
   formattedDate(iso: string | null | undefined): string;
   toggleTheme(): void;
@@ -54,11 +54,11 @@ export function registerHistoryList(): void {
       return Math.max(1, Math.ceil(this.totalItems / this.pageSize));
     },
 
-    getFilters(): { from?: string; to?: string; channel_id?: string } {
-      const params: { from?: string; to?: string; channel_id?: string } = {};
+    getFilters(): { from?: string; to?: string; channelId?: string } {
+      const params: { from?: string; to?: string; channelId?: string } = {};
       if (this.filterFrom) params.from = this.filterFrom;
       if (this.filterTo) params.to = this.filterTo;
-      if (this.filterChannel) params.channel_id = this.filterChannel;
+      if (this.filterChannel) params.channelId = this.filterChannel;
       return params;
     },
 

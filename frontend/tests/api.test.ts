@@ -57,7 +57,7 @@ describe("api", () => {
 
   it("getStatsChannels returns parsed json", async () => {
     const mockFetch = vi.mocked(fetch);
-    const channels = [{ channel_id: "1", channel_name: "C1", count: 10 }];
+    const channels = [{ channelId: "1", channelName: "C1", count: 10 }];
     mockFetch.mockResolvedValueOnce({
       ok: true,
       json: () => Promise.resolve(channels),

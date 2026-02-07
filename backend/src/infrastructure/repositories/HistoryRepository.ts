@@ -17,19 +17,19 @@ export class HistoryRepository implements IHistoryRepository {
     const qb = repo.createQueryBuilder("w");
 
     if (filters.from) {
-      qb.andWhere("w.watched_at >= :from", { from: filters.from });
+      qb.andWhere("w.watchedAt >= :from", { from: filters.from });
     }
     if (filters.to) {
-      qb.andWhere("w.watched_at <= :to", { to: filters.to });
+      qb.andWhere("w.watchedAt <= :to", { to: filters.to });
     }
     if (filters.channelId) {
-      qb.andWhere("w.channel_id = :channelId", { channelId: filters.channelId });
+      qb.andWhere("w.channelId = :channelId", { channelId: filters.channelId });
     }
 
     const total = await qb.getCount();
 
     const offset = (filters.page - 1) * filters.limit;
-    qb.orderBy("w.watched_at", "DESC")
+    qb.orderBy("w.watchedAt", "DESC")
       .skip(offset)
       .take(filters.limit);
 
@@ -39,16 +39,16 @@ export class HistoryRepository implements IHistoryRepository {
       total,
       items: items.map((row) => ({
         id: Number(row.id),
-        video_id: row.video_id,
+        videoId: row.videoId,
         title: row.title,
-        channel_id: row.channel_id,
-        channel_name: row.channel_name,
-        watched_at:
-          row.watched_at instanceof Date
-            ? row.watched_at.toISOString()
-            : String(row.watched_at),
-        activity_type: row.activity_type,
-        source_url: row.source_url ?? null,
+        channelId: row.channelId,
+        channelName: row.channelName,
+        watchedAt:
+          row.watchedAt instanceof Date
+            ? row.watchedAt.toISOString()
+            : String(row.watchedAt),
+        activityType: row.activityType,
+        sourceUrl: row.sourceUrl ?? null,
       })),
     };
   }

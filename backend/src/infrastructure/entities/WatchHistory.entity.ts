@@ -9,24 +9,24 @@ export class WatchHistory {
   @PrimaryGeneratedColumn("increment", { type: "bigint" })
   id!: string;
 
-  @Column({ type: "varchar", length: 20, nullable: true })
-  video_id!: string | null;
+  @Column({ name: "video_id", type: "varchar", length: 20, nullable: true })
+  videoId!: string | null;
 
   @Column({ type: "text" })
   title!: string;
 
-  @Column({ type: "varchar", length: 30 })
-  channel_id!: string;
+  @Column({ name: "channel_id", type: "varchar", length: 30 })
+  channelId!: string;
 
-  @Column({ type: "text" })
-  channel_name!: string;
+  @Column({ name: "channel_name", type: "text" })
+  channelName!: string;
 
-  @Column({ type: "timestamptz" })
-  watched_at!: Date;
+  @Column({ name: "watched_at", type: "timestamptz" })
+  watchedAt!: Date;
 
-  @Column({ type: "varchar", length: 20 })
-  activity_type!: string;
+  @Column({ name: "activity_type", type: "varchar", length: 20 })
+  activityType!: string;
 
-  @Column({ type: "text", nullable: true })
-  source_url!: string | null;
+  @Column({ name: "source_url", type: "text", nullable: true })
+  sourceUrl!: string | null;
 }
