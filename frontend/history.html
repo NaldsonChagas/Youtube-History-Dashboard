@@ -4,57 +4,96 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>YouTube History – Lista completa</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <script>
+    (function(){var t=localStorage.getItem('theme')||'dark';document.documentElement.className=t;})();
+  </script>
+  <script>
+    (function(){var w=window;w.tailwind=w.tailwind||{};w.tailwind.config=Object.assign(w.tailwind.config||{},{darkMode:'class'});})();
+  </script>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-900 text-gray-100 min-h-screen" x-data="historyList">
-  <div class="container mx-auto px-4 py-8 max-w-7xl">
-    <header class="mb-8">
-      <h1 class="text-3xl font-bold text-white">Lista completa do histórico</h1>
-      <p class="text-gray-400 mt-1">Todos os vídeos com data e canal</p>
-      <nav class="mt-4 flex gap-4">
-        <a href="/" class="text-gray-400 hover:text-gray-200">Dashboard</a>
-        <a href="/history" class="text-indigo-400 font-medium">Lista completa</a>
-      </nav>
+<body class="bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 min-h-screen theme-text-primary" x-data="historyList">
+  <div class="container mx-auto px-3 sm:px-4 py-6 sm:py-8 max-w-7xl">
+    <header class="flex flex-col sm:flex-row sm:flex-wrap sm:items-start sm:justify-between gap-4 pb-8 mb-12 border-b border-gray-200 dark:border-gray-700 theme-border">
+      <div class="flex items-center gap-4 min-w-0">
+        <svg class="w-10 h-10 sm:w-12 sm:h-12 text-red-600 shrink-0" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+        </svg>
+        <div class="min-w-0">
+          <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white theme-text-primary truncate">Lista completa do histórico</h1>
+          <p class="text-gray-500 dark:text-gray-400 mt-1 theme-text-secondary">Todos os vídeos com data e canal</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-4 shrink-0">
+        <button type="button" @click="toggleTheme()" class="p-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600 theme-bg-toggle" :aria-label="theme === 'dark' ? 'Ativar tema claro' : 'Ativar tema escuro'">
+          <span x-show="theme === 'dark'"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"/></svg></span>
+          <span x-show="theme === 'light'" x-cloak><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"/></svg></span>
+        </button>
+        <nav class="flex gap-4">
+          <a href="/" class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200">Dashboard</a>
+          <a href="/history" class="text-red-600 dark:text-red-500 font-medium">Lista completa</a>
+        </nav>
+      </div>
     </header>
 
-    <div class="mb-4 flex flex-wrap gap-4 items-center">
-      <label class="text-gray-400 text-sm">Canal</label>
-      <select x-model="filterChannel" class="bg-gray-800 text-gray-100 border border-gray-700 rounded px-3 py-2 min-w-[200px]">
-        <option value="">Todos</option>
-        <template x-for="ch in channels" :key="ch.channel_id">
-          <option :value="ch.channel_id" x-text="ch.channel_name"></option>
-        </template>
-      </select>
-      <label class="text-gray-400 text-sm">De</label>
-      <input type="date" x-model="filterFrom" class="bg-gray-800 text-gray-100 border border-gray-700 rounded px-3 py-2">
-      <label class="text-gray-400 text-sm">Até</label>
-      <input type="date" x-model="filterTo" class="bg-gray-800 text-gray-100 border border-gray-700 rounded px-3 py-2">
-      <button type="button" @click="applyFilters()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded font-medium">Aplicar</button>
+    <section class="mb-8">
+    <div class="flex flex-col sm:flex-row sm:flex-wrap gap-4 sm:items-center">
+      <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+        <label class="text-gray-600 dark:text-gray-400 text-sm theme-text-secondary">Canal</label>
+        <select x-model="filterChannel" class="w-full sm:w-auto sm:min-w-[200px] min-w-0 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-700 rounded px-3 py-2 theme-bg-input">
+          <option value="">Todos</option>
+          <template x-for="ch in channels" :key="ch.channel_id">
+            <option :value="ch.channel_id" x-text="ch.channel_name"></option>
+          </template>
+        </select>
+      </div>
+      <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+        <label class="text-gray-600 dark:text-gray-400 text-sm theme-text-secondary">De</label>
+        <input type="date" x-model="filterFrom" class="w-full sm:w-auto min-w-0 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-700 rounded px-3 py-2 theme-bg-input">
+      </div>
+      <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+        <label class="text-gray-600 dark:text-gray-400 text-sm theme-text-secondary">Até</label>
+        <input type="date" x-model="filterTo" class="w-full sm:w-auto min-w-0 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-700 rounded px-3 py-2 theme-bg-input">
+      </div>
+      <button type="button" @click="applyFilters()" class="w-full sm:w-auto bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded font-medium shrink-0">Aplicar</button>
     </div>
+    </section>
 
-    <div class="overflow-x-auto rounded-lg border border-gray-700">
-      <table class="w-full text-left">
-        <thead class="bg-gray-800 text-gray-300">
+    <div x-show="loadError" class="px-4 py-8 text-center text-red-400 sm:hidden">Erro ao carregar.</div>
+    <div class="space-y-3 sm:hidden" x-show="!loadError">
+      <template x-for="item in items" :key="item.id">
+        <div class="rounded-lg border border-gray-300 dark:border-gray-700 theme-border bg-white dark:bg-gray-800/50 theme-bg-table-row p-4 space-y-2">
+          <p class="text-gray-900 dark:text-white font-medium theme-text-primary break-words" :title="item.title" x-text="item.title"></p>
+          <p class="text-sm text-gray-600 dark:text-gray-300 theme-text-secondary" x-text="formattedDate(item.watched_at)"></p>
+          <p class="text-sm text-gray-600 dark:text-gray-300 theme-text-secondary truncate" x-text="item.channel_name"></p>
+          <a :href="videoUrl(item)" target="_blank" rel="noopener" class="inline-block text-red-600 dark:text-red-500 hover:underline font-medium">Abrir vídeo</a>
+        </div>
+      </template>
+    </div>
+    <div class="overflow-x-auto rounded-lg border border-gray-300 dark:border-gray-700 theme-border hidden sm:block">
+      <table class="w-full text-left min-w-[500px]">
+        <thead class="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 theme-bg-table-header">
           <tr>
-            <th class="px-4 py-3">Quando</th>
-            <th class="px-4 py-3">Título</th>
-            <th class="px-4 py-3">Canal</th>
-            <th class="px-4 py-3">Link</th>
+            <th class="px-2 sm:px-4 py-2 sm:py-3">Quando</th>
+            <th class="px-2 sm:px-4 py-2 sm:py-3">Título</th>
+            <th class="px-2 sm:px-4 py-2 sm:py-3 hidden md:table-cell">Canal</th>
+            <th class="px-2 sm:px-4 py-2 sm:py-3">Link</th>
           </tr>
         </thead>
-        <tbody class="divide-y divide-gray-700">
+        <tbody class="divide-y divide-gray-200 dark:divide-gray-700 theme-divide">
           <template x-if="loadError">
             <tr>
               <td colspan="4" class="px-4 py-8 text-center text-red-400">Erro ao carregar.</td>
             </tr>
           </template>
           <template x-for="item in items" :key="item.id">
-            <tr class="bg-gray-800/50 hover:bg-gray-800">
-              <td class="px-4 py-3 text-gray-300 whitespace-nowrap" x-text="formattedDate(item.watched_at)"></td>
-              <td class="px-4 py-3 text-white max-w-md truncate" :title="item.title" x-text="item.title"></td>
-              <td class="px-4 py-3 text-gray-300" x-text="item.channel_name"></td>
-              <td class="px-4 py-3">
-                <a :href="videoUrl(item)" target="_blank" rel="noopener" class="text-indigo-400 hover:underline">Abrir</a>
+            <tr class="bg-white dark:bg-gray-800/50 hover:bg-gray-50 dark:hover:bg-gray-800 theme-bg-table-row">
+              <td class="px-2 sm:px-4 py-2 sm:py-3 text-gray-600 dark:text-gray-300 whitespace-nowrap text-sm sm:text-base" x-text="formattedDate(item.watched_at)"></td>
+              <td class="px-2 sm:px-4 py-2 sm:py-3 text-gray-900 dark:text-white max-w-[200px] sm:max-w-md truncate" :title="item.title" x-text="item.title"></td>
+              <td class="px-2 sm:px-4 py-2 sm:py-3 text-gray-600 dark:text-gray-300 hidden md:table-cell" x-text="item.channel_name"></td>
+              <td class="px-2 sm:px-4 py-2 sm:py-3">
+                <a :href="videoUrl(item)" target="_blank" rel="noopener" class="text-red-600 dark:text-red-500 hover:underline text-sm sm:text-base">Abrir</a>
               </td>
             </tr>
           </template>
@@ -63,11 +102,11 @@
     </div>
 
     <div class="mt-4 flex justify-center gap-2 items-center" x-show="totalPages > 1" x-cloak>
-      <button type="button" @click="goToPage(currentPage - 1)" x-show="currentPage > 1" class="bg-gray-700 hover:bg-gray-600 text-white px-3 py-1 rounded">Anterior</button>
-      <span class="text-gray-400 px-2">Página <span x-text="currentPage"></span> de <span x-text="totalPages"></span></span>
-      <button type="button" @click="goToPage(currentPage + 1)" x-show="currentPage < totalPages" class="bg-gray-700 hover:bg-gray-600 text-white px-3 py-1 rounded">Próxima</button>
+      <button type="button" @click="goToPage(currentPage - 1)" x-show="currentPage > 1" class="bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-900 dark:text-white px-3 py-1 rounded theme-bg-muted theme-text-primary">Anterior</button>
+      <span class="text-gray-600 dark:text-gray-400 px-2 theme-text-secondary">Página <span x-text="currentPage"></span> de <span x-text="totalPages"></span></span>
+      <button type="button" @click="goToPage(currentPage + 1)" x-show="currentPage < totalPages" class="bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-900 dark:text-white px-3 py-1 rounded theme-bg-muted theme-text-primary">Próxima</button>
     </div>
-    <p class="text-gray-400 mt-4 text-center" x-show="loading" x-transition>Carregando…</p>
+    <p class="text-gray-600 dark:text-gray-400 mt-4 text-center theme-text-secondary" x-show="loading" x-transition>Carregando…</p>
   </div>
 
   <script type="module" src="/src/entry-history.ts"></script>

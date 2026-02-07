@@ -4,72 +4,98 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>YouTube History – Dashboard</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <script>
+    (function(){var t=localStorage.getItem('theme')||'dark';document.documentElement.className=t;})();
+  </script>
+  <script>
+    (function(){var w=window;w.tailwind=w.tailwind||{};w.tailwind.config=Object.assign(w.tailwind.config||{},{darkMode:'class'});})();
+  </script>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-<body class="bg-gray-900 text-gray-100 min-h-screen" x-data="dashboard">
-  <div class="container mx-auto px-4 py-8 max-w-7xl">
-    <header class="mb-8">
-      <h1 class="text-3xl font-bold text-white">YouTube History Dashboard</h1>
-      <p class="text-gray-400 mt-1">Visão geral do seu histórico de visualização</p>
-      <nav class="mt-4 flex gap-4">
-        <a href="/" class="text-indigo-400 font-medium">Dashboard</a>
-        <a href="/history" class="text-gray-400 hover:text-gray-200">Lista completa</a>
-      </nav>
+<body class="bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 min-h-screen theme-text-primary" x-data="dashboard">
+  <div class="container mx-auto px-3 sm:px-4 py-6 sm:py-8 max-w-7xl">
+    <header class="flex flex-col sm:flex-row sm:flex-wrap sm:items-start sm:justify-between gap-4 pb-8 mb-12 border-b border-gray-200 dark:border-gray-700 theme-border">
+      <div class="flex items-center gap-4 min-w-0">
+        <svg class="w-10 h-10 sm:w-12 sm:h-12 text-red-600 shrink-0" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+        </svg>
+        <div class="min-w-0">
+          <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white theme-text-primary truncate">YouTube History Dashboard</h1>
+          <p class="text-gray-500 dark:text-gray-400 mt-1 theme-text-secondary">Visão geral do seu histórico de visualização</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-4 shrink-0">
+        <button type="button" @click="toggleTheme()" class="p-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600 theme-bg-toggle" :aria-label="theme === 'dark' ? 'Ativar tema claro' : 'Ativar tema escuro'">
+          <span x-show="theme === 'dark'"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"/></svg></span>
+          <span x-show="theme === 'light'" x-cloak><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"/></svg></span>
+        </button>
+        <nav class="flex gap-4">
+          <a href="/" class="text-red-600 dark:text-red-500 font-medium">Dashboard</a>
+          <a href="/history" class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200">Lista completa</a>
+        </nav>
+      </div>
     </header>
 
-    <div class="mb-4 flex flex-wrap gap-4 items-center justify-end">
-      <label class="text-gray-400 text-sm">De</label>
-      <input type="date" x-model="filterFrom" id="filter-from" class="bg-gray-800 text-gray-100 border border-gray-700 rounded px-3 py-2">
-      <label class="text-gray-400 text-sm">Até</label>
-      <input type="date" x-model="filterTo" id="filter-to" class="bg-gray-800 text-gray-100 border border-gray-700 rounded px-3 py-2">
-      <button type="button" @click="loadDashboard()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded font-medium">Aplicar</button>
+    <section class="mb-8">
+    <div class="flex flex-col sm:flex-row sm:flex-wrap gap-4 sm:items-center sm:justify-end">
+      <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+        <label class="text-gray-600 dark:text-gray-400 text-sm theme-text-secondary">De</label>
+        <input type="date" x-model="filterFrom" id="filter-from" class="w-full sm:w-auto min-w-0 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-700 rounded px-3 py-2 theme-bg-input">
+      </div>
+      <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+        <label class="text-gray-600 dark:text-gray-400 text-sm theme-text-secondary">Até</label>
+        <input type="date" x-model="filterTo" id="filter-to" class="w-full sm:w-auto min-w-0 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-700 rounded px-3 py-2 theme-bg-input">
+      </div>
+      <button type="button" @click="loadDashboard()" class="w-full sm:w-auto bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded font-medium shrink-0">Aplicar</button>
     </div>
+    </section>
 
     <section id="overview" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-      <div class="bg-gray-800 rounded-lg p-4 shadow">
-        <p class="text-gray-400 text-sm">Total de visualizações</p>
-        <p id="stat-total-views" class="text-2xl font-bold text-white">–</p>
+      <div class="bg-white dark:bg-gray-800 rounded-lg p-4 shadow border border-gray-200 dark:border-gray-700 theme-bg-card theme-border">
+        <p class="text-gray-500 dark:text-gray-400 text-sm theme-text-secondary">Total de visualizações</p>
+        <p id="stat-total-views" class="text-2xl font-bold text-gray-900 dark:text-white theme-text-primary">–</p>
       </div>
-      <div class="bg-gray-800 rounded-lg p-4 shadow">
-        <p class="text-gray-400 text-sm">Canais únicos</p>
-        <p id="stat-unique-channels" class="text-2xl font-bold text-white">–</p>
+      <div class="bg-white dark:bg-gray-800 rounded-lg p-4 shadow border border-gray-200 dark:border-gray-700 theme-bg-card theme-border">
+        <p class="text-gray-500 dark:text-gray-400 text-sm theme-text-secondary">Canais únicos</p>
+        <p id="stat-unique-channels" class="text-2xl font-bold text-gray-900 dark:text-white theme-text-primary">–</p>
       </div>
-      <div class="bg-gray-800 rounded-lg p-4 shadow">
-        <p class="text-gray-400 text-sm">Primeira visualização</p>
-        <p id="stat-first-watched" class="text-lg font-semibold text-white">–</p>
+      <div class="bg-white dark:bg-gray-800 rounded-lg p-4 shadow border border-gray-200 dark:border-gray-700 theme-bg-card theme-border">
+        <p class="text-gray-500 dark:text-gray-400 text-sm theme-text-secondary">Primeira visualização</p>
+        <p id="stat-first-watched" class="text-lg font-semibold text-gray-900 dark:text-white theme-text-primary">–</p>
       </div>
-      <div class="bg-gray-800 rounded-lg p-4 shadow">
-        <p class="text-gray-400 text-sm">Última visualização</p>
-        <p id="stat-last-watched" class="text-lg font-semibold text-white">–</p>
+      <div class="bg-white dark:bg-gray-800 rounded-lg p-4 shadow border border-gray-200 dark:border-gray-700 theme-bg-card theme-border">
+        <p class="text-gray-500 dark:text-gray-400 text-sm theme-text-secondary">Última visualização</p>
+        <p id="stat-last-watched" class="text-lg font-semibold text-gray-900 dark:text-white theme-text-primary">–</p>
       </div>
     </section>
 
-    <section class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-      <div class="bg-gray-800 rounded-lg p-6 shadow">
-        <h2 class="text-xl font-semibold text-white mb-4">Canais mais vistos</h2>
-        <div class="h-80">
+    <section class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-8 mb-8">
+      <div class="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 shadow border border-gray-200 dark:border-gray-700 theme-bg-card theme-border">
+        <h2 class="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white mb-4 theme-text-primary">Canais mais vistos</h2>
+        <div class="h-64 sm:h-80">
           <canvas id="chart-channels"></canvas>
         </div>
       </div>
-      <div class="bg-gray-800 rounded-lg p-6 shadow">
-        <h2 class="text-xl font-semibold text-white mb-4">Visualizações por hora do dia</h2>
-        <div class="h-80">
+      <div class="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 shadow border border-gray-200 dark:border-gray-700 theme-bg-card theme-border">
+        <h2 class="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white mb-4 theme-text-primary">Visualizações por hora do dia</h2>
+        <div class="h-64 sm:h-80">
           <canvas id="chart-by-hour"></canvas>
         </div>
       </div>
     </section>
 
-    <section class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-      <div class="bg-gray-800 rounded-lg p-6 shadow">
-        <h2 class="text-xl font-semibold text-white mb-4">Visualizações por dia da semana</h2>
-        <div class="h-80">
+    <section class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-8 mb-8">
+      <div class="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 shadow border border-gray-200 dark:border-gray-700 theme-bg-card theme-border">
+        <h2 class="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white mb-4 theme-text-primary">Visualizações por dia da semana</h2>
+        <div class="h-64 sm:h-80">
           <canvas id="chart-by-weekday"></canvas>
         </div>
       </div>
-      <div class="bg-gray-800 rounded-lg p-6 shadow">
-        <h2 class="text-xl font-semibold text-white mb-4">Atividade por mês</h2>
-        <div class="h-80">
+      <div class="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 shadow border border-gray-200 dark:border-gray-700 theme-bg-card theme-border">
+        <h2 class="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white mb-4 theme-text-primary">Atividade por mês</h2>
+        <div class="h-64 sm:h-80">
           <canvas id="chart-by-month"></canvas>
         </div>
       </div>

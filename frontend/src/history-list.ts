@@ -1,5 +1,6 @@
 import { getHistory, getStatsChannels } from "./api.js";
 import { formatDate } from "./format.js";
+import { applyTheme, initTheme, setStoredTheme } from "./theme.js";
 import type { ChannelCount, HistoryItem } from "./types.js";
 
 const PAGE_SIZE = 50;
@@ -15,6 +16,7 @@ interface HistoryListState {
   filterChannel: string;
   filterFrom: string;
   filterTo: string;
+  theme: "dark" | "light";
   currentPage: number;
   totalItems: number;
   items: HistoryItem[];
@@ -26,6 +28,7 @@ interface HistoryListState {
   getFilters(): { from?: string; to?: string; channel_id?: string };
   videoUrl(item: HistoryItem): string;
   formattedDate(iso: string | null | undefined): string;
+  toggleTheme(): void;
   loadChannels(): Promise<void>;
   loadPage(): Promise<void>;
   applyFilters(): void;
@@ -38,6 +41,7 @@ export function registerHistoryList(): void {
     filterChannel: "",
     filterFrom: "",
     filterTo: "",
+    theme: initTheme(),
     currentPage: 1,
     totalItems: 0,
     items: [],
@@ -64,6 +68,12 @@ export function registerHistoryList(): void {
 
     formattedDate(iso: string | null | undefined): string {
       return formatDate(iso);
+    },
+
+    toggleTheme(): void {
+      this.theme = this.theme === "dark" ? "light" : "dark";
+      setStoredTheme(this.theme);
+      applyTheme(this.theme);
     },
 
     async loadChannels(): Promise<void> {

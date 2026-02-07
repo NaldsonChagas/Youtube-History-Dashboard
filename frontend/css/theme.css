@@ -1,0 +1,69 @@
+html.dark {
+  color-scheme: dark;
+}
+
+html.light {
+  color-scheme: light;
+}
+
+html.light body {
+  background-color: #f9fafb !important;
+  color: #111827 !important;
+}
+
+html.light .theme-bg-card {
+  background-color: #fff !important;
+  border-color: #e5e7eb !important;
+}
+
+html.light .theme-bg-input {
+  background-color: #fff !important;
+  border-color: #d1d5db !important;
+  color: #111827 !important;
+}
+
+html.light .theme-text-primary {
+  color: #111827 !important;
+}
+
+html.light .theme-text-secondary {
+  color: #4b5563 !important;
+}
+
+html.light .theme-border {
+  border-color: #e5e7eb !important;
+}
+
+html.light .theme-bg-muted {
+  background-color: #f3f4f6 !important;
+}
+
+html.light .theme-bg-toggle {
+  background-color: #e5e7eb !important;
+  color: #374151 !important;
+}
+
+html.light .theme-bg-toggle:hover {
+  background-color: #d1d5db !important;
+}
+
+html.light .theme-bg-table-header {
+  background-color: #f9fafb !important;
+  color: #374151 !important;
+}
+
+html.light .theme-bg-table-row {
+  background-color: #fff !important;
+}
+
+html.light .theme-bg-table-row:hover {
+  background-color: #f9fafb !important;
+}
+
+html.light .theme-divide {
+  border-color: #e5e7eb !important;
+}
+
+html.light table tbody tr {
+  border-top-color: #e5e7eb !important;
+}

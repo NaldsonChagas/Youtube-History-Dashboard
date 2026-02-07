@@ -1,15 +1,4 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-[x-cloak] {
-  display: none !important;
-}
-
-html.dark {
-  color-scheme: dark;
-}
-
-a:hover {
-  text-decoration: underline;
-}
+@import "./tailwind.css";
+@import "./utilities.css";
+@import "./theme.css";
+@import "./components.css";

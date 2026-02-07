@@ -6,9 +6,23 @@ import {
   getStatsOverview,
 } from "./api.js";
 import { formatDate } from "./format.js";
+import { applyTheme, initTheme, setStoredTheme } from "./theme.js";
 import type { ChannelCount, HourCount, MonthCount, WeekdayCount } from "./types.js";
 
 const WEEKDAY_LABELS = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
+
+const CHART_COLOR = {
+  backgroundColor: "rgba(204, 0, 0, 0.7)",
+  borderColor: "rgb(204, 0, 0)",
+  fillBackground: "rgba(204, 0, 0, 0.1)",
+};
+
+function getChartThemeColors(): { tickColor: string; gridColor: string } {
+  const isDark = document.documentElement.classList.contains("dark");
+  return isDark
+    ? { tickColor: "#9ca3af", gridColor: "#374151" }
+    : { tickColor: "#6b7280", gridColor: "#e5e7eb" };
+}
 
 function destroyChart(canvasId: string): void {
   const canvas = document.getElementById(canvasId) as HTMLCanvasElement | null;
@@ -24,6 +38,7 @@ function renderChannelsChart(data: ChannelCount[]): void {
   const ctx = canvas.getContext("2d");
   if (!ctx) return;
   const slice = data.slice(0, 15);
+  const { tickColor, gridColor } = getChartThemeColors();
   new Chart(ctx, {
     type: "bar",
     data: {
@@ -32,8 +47,8 @@ function renderChannelsChart(data: ChannelCount[]): void {
         {
           label: "Visualizações",
           data: slice.map((d) => d.count),
-          backgroundColor: "rgba(99, 102, 241, 0.7)",
-          borderColor: "rgb(99, 102, 241)",
+          backgroundColor: CHART_COLOR.backgroundColor,
+          borderColor: CHART_COLOR.borderColor,
           borderWidth: 1,
         },
       ],
@@ -44,8 +59,8 @@ function renderChannelsChart(data: ChannelCount[]): void {
       maintainAspectRatio: false,
       plugins: { legend: { display: false } },
       scales: {
-        x: { ticks: { color: "#9ca3af" }, grid: { color: "#374151" } },
-        y: { ticks: { color: "#9ca3af" }, grid: { color: "#374151" } },
+        x: { ticks: { color: tickColor }, grid: { color: gridColor } },
+        y: { ticks: { color: tickColor }, grid: { color: gridColor } },
       },
     },
   });
@@ -61,6 +76,7 @@ function renderByHourChart(data: HourCount[]): void {
     hour: i,
     count: data.find((d) => d.hour === i)?.count ?? 0,
   }));
+  const { tickColor, gridColor } = getChartThemeColors();
   new Chart(ctx, {
     type: "bar",
     data: {
@@ -69,8 +85,8 @@ function renderByHourChart(data: HourCount[]): void {
         {
           label: "Visualizações",
           data: byHour.map((d) => d.count),
-          backgroundColor: "rgba(99, 102, 241, 0.7)",
-          borderColor: "rgb(99, 102, 241)",
+          backgroundColor: CHART_COLOR.backgroundColor,
+          borderColor: CHART_COLOR.borderColor,
           borderWidth: 1,
         },
       ],
@@ -80,8 +96,8 @@ function renderByHourChart(data: HourCount[]): void {
       maintainAspectRatio: false,
       plugins: { legend: { display: false } },
       scales: {
-        x: { ticks: { color: "#9ca3af" }, grid: { color: "#374151" } },
-        y: { ticks: { color: "#9ca3af" }, grid: { color: "#374151" } },
+        x: { ticks: { color: tickColor }, grid: { color: gridColor } },
+        y: { ticks: { color: tickColor }, grid: { color: gridColor } },
       },
     },
   });
@@ -97,6 +113,7 @@ function renderByWeekdayChart(data: WeekdayCount[]): void {
     weekday: i,
     count: data.find((d) => d.weekday === i)?.count ?? 0,
   }));
+  const { tickColor, gridColor } = getChartThemeColors();
   new Chart(ctx, {
     type: "bar",
     data: {
@@ -105,8 +122,8 @@ function renderByWeekdayChart(data: WeekdayCount[]): void {
         {
           label: "Visualizações",
           data: byDay.map((d) => d.count),
-          backgroundColor: "rgba(99, 102, 241, 0.7)",
-          borderColor: "rgb(99, 102, 241)",
+          backgroundColor: CHART_COLOR.backgroundColor,
+          borderColor: CHART_COLOR.borderColor,
           borderWidth: 1,
         },
       ],
@@ -116,8 +133,8 @@ function renderByWeekdayChart(data: WeekdayCount[]): void {
       maintainAspectRatio: false,
       plugins: { legend: { display: false } },
       scales: {
-        x: { ticks: { color: "#9ca3af" }, grid: { color: "#374151" } },
-        y: { ticks: { color: "#9ca3af" }, grid: { color: "#374151" } },
+        x: { ticks: { color: tickColor }, grid: { color: gridColor } },
+        y: { ticks: { color: tickColor }, grid: { color: gridColor } },
       },
     },
   });
@@ -130,6 +147,7 @@ function renderByMonthChart(data: MonthCount[]): void {
   const ctx = canvas.getContext("2d");
   if (!ctx) return;
   const labels = data.map((d) => `${String(d.month).padStart(2, "0")}/${d.year}`);
+  const { tickColor, gridColor } = getChartThemeColors();
   new Chart(ctx, {
     type: "line",
     data: {
@@ -138,8 +156,8 @@ function renderByMonthChart(data: MonthCount[]): void {
         {
           label: "Visualizações",
           data: data.map((d) => d.count),
-          borderColor: "rgb(99, 102, 241)",
-          backgroundColor: "rgba(99, 102, 241, 0.1)",
+          borderColor: CHART_COLOR.borderColor,
+          backgroundColor: CHART_COLOR.fillBackground,
           fill: true,
           tension: 0.2,
         },
@@ -150,8 +168,8 @@ function renderByMonthChart(data: MonthCount[]): void {
       maintainAspectRatio: false,
       plugins: { legend: { display: false } },
       scales: {
-        x: { ticks: { color: "#9ca3af" }, grid: { color: "#374151" } },
-        y: { ticks: { color: "#9ca3af" }, grid: { color: "#374151" } },
+        x: { ticks: { color: tickColor }, grid: { color: gridColor } },
+        y: { ticks: { color: tickColor }, grid: { color: gridColor } },
       },
     },
   });
@@ -160,12 +178,14 @@ function renderByMonthChart(data: MonthCount[]): void {
 interface DashboardState {
   filterFrom: string;
   filterTo: string;
+  theme: "dark" | "light";
   totalViews: number | null;
   uniqueChannels: number | null;
   firstWatched: string | null;
   lastWatched: string | null;
   loadError: boolean;
   getFilters(): { from?: string; to?: string };
+  toggleTheme(): void;
   displayOverview(): void;
   loadDashboard(): Promise<void>;
   init(): void;
@@ -175,6 +195,7 @@ export function registerDashboard(): void {
   Alpine.data("dashboard", (): DashboardState => ({
     filterFrom: "",
     filterTo: "",
+    theme: initTheme(),
     totalViews: null,
     uniqueChannels: null,
     firstWatched: null,
@@ -186,6 +207,13 @@ export function registerDashboard(): void {
       if (this.filterFrom) params.from = this.filterFrom;
       if (this.filterTo) params.to = this.filterTo;
       return params;
+    },
+
+    toggleTheme(): void {
+      this.theme = this.theme === "dark" ? "light" : "dark";
+      setStoredTheme(this.theme);
+      applyTheme(this.theme);
+      this.loadDashboard();
     },
 
     displayOverview(): void {
