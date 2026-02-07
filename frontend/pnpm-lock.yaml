@@ -29,6 +29,10 @@ importers:
       vitest:
         specifier: ^2.1.6
         version: 2.1.9(happy-dom@15.11.7)
+    optionalDependencies:
+      '@rollup/rollup-linux-x64-musl':
+        specifier: 4.57.1
+        version: 4.57.1
 
 packages:
 

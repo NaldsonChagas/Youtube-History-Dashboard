@@ -7,7 +7,7 @@ import Fastify from "fastify";
 import { existsSync } from "fs";
 import type { HistoryController } from "./controllers/historyController.js";
 import type { StatsController } from "./controllers/statsController.js";
-import { env } from "./config/env.js";
+import { env, type BuildAppOptions } from "./config/env.js";
 import {
   buildContainerWithDataSource,
   DATA_SOURCE,
@@ -19,7 +19,7 @@ import { errorHandler } from "./middleware/errorHandler.js";
 import { registerHistoryRoutes } from "./routes/history.js";
 import { registerStatsRoutes } from "./routes/stats.js";
 
-export async function buildApp() {
+export async function buildApp(opts?: BuildAppOptions) {
   const app = Fastify({ logger: { level: 'warn' } });
 
   await app.register(cors, { origin: true });
@@ -67,9 +67,15 @@ export async function buildApp() {
     { prefix: "/api/stats" }
   );
 
-  const publicPath = env.publicPath;
+  const publicPath = opts?.publicPath ?? env.publicPath;
   if (existsSync(publicPath)) {
     await app.register(fastifyStatic, { root: publicPath });
+    app.addHook("onSend", async (request, reply, payload) => {
+      if (request.url.endsWith(".ts") || request.url.endsWith(".mts")) {
+        reply.header("Content-Type", "application/javascript");
+      }
+      return payload;
+    });
     app.get("/", { schema: { hide: true } }, (_request, reply) => reply.sendFile("index.html"));
     app.get("/history", { schema: { hide: true } }, (_request, reply) => reply.sendFile("history.html"));
   }
