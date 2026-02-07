@@ -46,7 +46,7 @@ export interface ListResult {
 export interface HistoryParams {
   from?: string;
   to?: string;
-  channelId?: string;
+  channelIds?: string[];
   page?: number;
   limit?: number;
 }

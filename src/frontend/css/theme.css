@@ -2,6 +2,44 @@ html.dark {
   color-scheme: dark;
 }
 
+html.dark .theme-bg-input,
+html.dark input.theme-bg-input,
+html.dark .ts-wrapper .ts-control,
+html.dark .flatpickr-input {
+  background-color: #111827 !important;
+  border-color: #374151 !important;
+  color: #f3f4f6 !important;
+}
+
+html.dark .ts-wrapper .ts-control input {
+  background-color: transparent !important;
+  color: #f3f4f6 !important;
+}
+
+html.dark .ts-wrapper .ts-control .item {
+  background-color: #374151 !important;
+  color: #f3f4f6 !important;
+  border-color: #4b5563 !important;
+}
+
+html.dark .ts-dropdown {
+  background-color: #111827 !important;
+  border-color: #374151 !important;
+}
+
+html.dark .ts-dropdown .option {
+  color: #f3f4f6 !important;
+}
+
+html.dark .ts-dropdown .option.active {
+  background-color: #374151 !important;
+  color: #f3f4f6 !important;
+}
+
+html.dark .ts-dropdown .option:hover {
+  background-color: #374151 !important;
+}
+
 html.light {
   color-scheme: light;
 }

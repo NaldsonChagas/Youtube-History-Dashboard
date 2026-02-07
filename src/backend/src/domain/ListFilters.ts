@@ -3,5 +3,5 @@ export interface ListFilters {
   limit: number;
   from?: string;
   to?: string;
-  channelId?: string;
+  channelIds?: string[];
 }

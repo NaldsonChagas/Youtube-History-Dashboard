@@ -42,14 +42,16 @@
     <div class="flex flex-col sm:flex-row sm:flex-wrap gap-4 sm:items-center sm:justify-end">
       <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
         <label class="text-gray-600 dark:text-gray-400 text-sm theme-text-secondary">De</label>
-        <input type="date" x-model="filterFrom" id="filter-from" class="w-full sm:w-auto min-w-0 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-700 rounded px-3 py-2 theme-bg-input">
+        <input type="text" x-ref="filterFromInput" placeholder="DD/MM/AAAA" id="filter-from" class="w-full sm:w-auto min-w-0 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-700 rounded px-3 py-2 theme-bg-input">
       </div>
       <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
         <label class="text-gray-600 dark:text-gray-400 text-sm theme-text-secondary">Até</label>
-        <input type="date" x-model="filterTo" id="filter-to" class="w-full sm:w-auto min-w-0 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-700 rounded px-3 py-2 theme-bg-input">
+        <input type="text" x-ref="filterToInput" placeholder="DD/MM/AAAA" id="filter-to" class="w-full sm:w-auto min-w-0 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-700 rounded px-3 py-2 theme-bg-input">
       </div>
       <button type="button" @click="loadDashboard()" class="w-full sm:w-auto bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded font-medium shrink-0">Aplicar</button>
     </div>
+    <p x-show="dateRangeError" class="text-red-500 text-sm mt-2" x-cloak>Data inicial não pode ser maior que a data final.</p>
+    <p x-show="dateFutureError" class="text-red-500 text-sm mt-2" x-cloak>Data não pode ser no futuro.</p>
     </section>
 
     <section id="overview" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">

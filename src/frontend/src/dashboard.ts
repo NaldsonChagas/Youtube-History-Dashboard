@@ -1,3 +1,5 @@
+import flatpickr from "flatpickr";
+import { Portuguese } from "flatpickr/dist/l10n/pt.js";
 import {
   getStatsByHour,
   getStatsByMonth,
@@ -184,6 +186,8 @@ interface DashboardState {
   firstWatched: string | null;
   lastWatched: string | null;
   loadError: boolean;
+  dateRangeError: boolean;
+  dateFutureError: boolean;
   getFilters(): { from?: string; to?: string };
   toggleTheme(): void;
   displayOverview(): void;
@@ -201,6 +205,8 @@ export function registerDashboard(): void {
     firstWatched: null,
     lastWatched: null,
     loadError: false,
+    dateRangeError: false,
+    dateFutureError: false,
 
     getFilters(): { from?: string; to?: string } {
       const params: { from?: string; to?: string } = {};
@@ -233,6 +239,21 @@ export function registerDashboard(): void {
 
     async loadDashboard(): Promise<void> {
       this.loadError = false;
+      this.dateRangeError = false;
+      this.dateFutureError = false;
+      const today = new Date().toISOString().slice(0, 10);
+      if (this.filterFrom && this.filterFrom > today) {
+        this.dateFutureError = true;
+        return;
+      }
+      if (this.filterTo && this.filterTo > today) {
+        this.dateFutureError = true;
+        return;
+      }
+      if (this.filterFrom && this.filterTo && this.filterFrom > this.filterTo) {
+        this.dateRangeError = true;
+        return;
+      }
       const params = this.getFilters();
       try {
         const overview = await getStatsOverview(params);
@@ -261,6 +282,36 @@ export function registerDashboard(): void {
 
     init(): void {
       this.loadDashboard();
+      this.$nextTick(() => {
+        const fromEl = this.$refs.filterFromInput as HTMLInputElement | undefined;
+        const toEl = this.$refs.filterToInput as HTMLInputElement | undefined;
+        const fpOptions = {
+          locale: Portuguese,
+          dateFormat: "Y-m-d",
+          altInput: true,
+          altFormat: "d/m/Y",
+          allowInput: false,
+          maxDate: "today",
+        };
+        if (fromEl) {
+          flatpickr(fromEl, {
+            ...fpOptions,
+            defaultDate: this.filterFrom || undefined,
+            onChange: (_selected, dateStr) => {
+              this.filterFrom = dateStr || "";
+            },
+          });
+        }
+        if (toEl) {
+          flatpickr(toEl, {
+            ...fpOptions,
+            defaultDate: this.filterTo || undefined,
+            onChange: (_selected, dateStr) => {
+              this.filterTo = dateStr || "";
+            },
+          });
+        }
+      });
     },
   } as DashboardState));
 }

@@ -22,8 +22,8 @@ export class HistoryRepository implements IHistoryRepository {
     if (filters.to) {
       qb.andWhere("w.watchedAt <= :to", { to: filters.to });
     }
-    if (filters.channelId) {
-      qb.andWhere("w.channelId = :channelId", { channelId: filters.channelId });
+    if (filters.channelIds?.length) {
+      qb.andWhere("w.channelId IN (:...channelIds)", { channelIds: filters.channelIds });
     }
 
     const total = await qb.getCount();

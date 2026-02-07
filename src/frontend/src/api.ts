@@ -11,10 +11,15 @@ import type {
 
 const API_BASE = "";
 
-function buildQueryString(params: Record<string, string | number | undefined>): string {
+function buildQueryString(
+  params: Record<string, string | number | undefined | string[]>
+): string {
   const filtered: Record<string, string> = {};
   for (const [k, v] of Object.entries(params)) {
-    if (v !== undefined && v !== "") {
+    if (v === undefined || v === "") continue;
+    if (Array.isArray(v)) {
+      if (v.length) filtered[k] = v.join(",");
+    } else {
       filtered[k] = String(v);
     }
   }
@@ -23,7 +28,9 @@ function buildQueryString(params: Record<string, string | number | undefined>): 
 }
 
 export async function getHistory(params: HistoryParams = {}): Promise<ListResult> {
-  const qs = buildQueryString(params as Record<string, string | number | undefined>);
+  const qs = buildQueryString(
+    params as Record<string, string | number | undefined | string[]>
+  );
   const res = await fetch(`${API_BASE}/api/history?${qs}`);
   if (!res.ok) throw new Error(res.statusText);
   return res.json() as Promise<ListResult>;

@@ -44,4 +44,17 @@ describe("GET /api/history", () => {
     });
     expect(res.statusCode).toBe(400);
   });
+
+  it("accepts channelIds query param (comma-separated) and returns 200", async () => {
+    const res = await app.inject({
+      method: "GET",
+      url: "/api/history?channelIds=id1,id2",
+    });
+    expect(res.statusCode).toBe(200);
+    const body = res.json();
+    expect(body).toHaveProperty("items");
+    expect(body).toHaveProperty("total");
+    expect(Array.isArray(body.items)).toBe(true);
+    expect(typeof body.total).toBe("number");
+  });
 });

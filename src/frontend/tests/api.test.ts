@@ -33,6 +33,20 @@ describe("api", () => {
     expect(result).toEqual(listResult);
   });
 
+  it("getHistory sends channelIds as comma-separated in query", async () => {
+    const mockFetch = vi.mocked(fetch);
+    const listResult = { items: [], total: 0 };
+    mockFetch.mockResolvedValueOnce({
+      ok: true,
+      json: () => Promise.resolve(listResult),
+    } as Response);
+
+    await getHistory({ channelIds: ["id1", "id2"] });
+
+    expect(mockFetch).toHaveBeenCalledWith(expect.stringContaining("/api/history?"));
+    expect(mockFetch).toHaveBeenCalledWith(expect.stringMatching(/channelIds=id1%2Cid2/));
+  });
+
   it("getHistory throws when response not ok", async () => {
     const mockFetch = vi.mocked(fetch);
     mockFetch.mockResolvedValueOnce({ ok: false, statusText: "Not Found" } as Response);

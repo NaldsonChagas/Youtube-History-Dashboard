@@ -11,7 +11,7 @@ const listHistorySchema = {
       limit: { type: "integer", minimum: 1, maximum: 100, default: 50, description: "Items per page" },
       from: { type: "string", format: "date", description: "Filter from date (ISO 8601)" },
       to: { type: "string", format: "date", description: "Filter to date (ISO 8601)" },
-      channelId: { type: "string", description: "Filter by channel ID" },
+      channelIds: { type: "string", description: "Filter by channel IDs (comma-separated)" },
     },
   },
   response: {

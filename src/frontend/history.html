@@ -41,23 +41,23 @@
     <div class="flex flex-col sm:flex-row sm:flex-wrap gap-4 sm:items-center">
       <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
         <label class="text-gray-600 dark:text-gray-400 text-sm theme-text-secondary">Canal</label>
-        <select x-model="filterChannel" class="w-full sm:w-auto sm:min-w-[200px] min-w-0 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-700 rounded px-3 py-2 theme-bg-input">
-          <option value="">Todos</option>
-          <template x-for="ch in channels" :key="ch.channelId">
-            <option :value="ch.channelId" x-text="ch.channelName"></option>
-          </template>
-        </select>
+        <div class="w-full sm:w-auto sm:min-w-[200px] min-w-0">
+          <select multiple x-ref="channelSelect" class="w-full bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-700 rounded px-3 py-2 theme-bg-input" aria-label="Filtrar por canal"></select>
+          <p x-show="channelsLoadError" class="text-red-500 text-sm mt-1">Não foi possível carregar os canais.</p>
+        </div>
       </div>
       <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
         <label class="text-gray-600 dark:text-gray-400 text-sm theme-text-secondary">De</label>
-        <input type="date" x-model="filterFrom" class="w-full sm:w-auto min-w-0 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-700 rounded px-3 py-2 theme-bg-input">
+        <input type="text" x-ref="filterFromInput" placeholder="DD/MM/AAAA" class="w-full sm:w-auto min-w-0 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-700 rounded px-3 py-2 theme-bg-input flatpickr-from">
       </div>
       <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
         <label class="text-gray-600 dark:text-gray-400 text-sm theme-text-secondary">Até</label>
-        <input type="date" x-model="filterTo" class="w-full sm:w-auto min-w-0 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-700 rounded px-3 py-2 theme-bg-input">
+        <input type="text" x-ref="filterToInput" placeholder="DD/MM/AAAA" class="w-full sm:w-auto min-w-0 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-700 rounded px-3 py-2 theme-bg-input flatpickr-to">
       </div>
       <button type="button" @click="applyFilters()" class="w-full sm:w-auto bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded font-medium shrink-0">Aplicar</button>
     </div>
+    <p x-show="dateRangeError" class="text-red-500 text-sm mt-2" x-cloak>Data inicial não pode ser maior que a data final.</p>
+    <p x-show="dateFutureError" class="text-red-500 text-sm mt-2" x-cloak>Data não pode ser no futuro.</p>
     </section>
 
     <div x-show="loadError" class="px-4 py-8 text-center text-red-400 sm:hidden">Erro ao carregar.</div>
