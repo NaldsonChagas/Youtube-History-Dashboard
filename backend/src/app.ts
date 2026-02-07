@@ -20,7 +20,7 @@ import { registerHistoryRoutes } from "./routes/history.js";
 import { registerStatsRoutes } from "./routes/stats.js";
 
 export async function buildApp() {
-  const app = Fastify({ logger: false });
+  const app = Fastify({ logger: { level: 'warn' } });
 
   await app.register(cors, { origin: true });
   app.setErrorHandler(errorHandler);

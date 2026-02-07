@@ -20,8 +20,23 @@ function formatDate(iso) {
   });
 }
 
-async function loadOverview() {
-  const data = await getStatsOverview();
+function getFilters() {
+  const from = document.getElementById('filter-from').value || undefined;
+  const to = document.getElementById('filter-to').value || undefined;
+  const params = {};
+  if (from) params.from = from;
+  if (to) params.to = to;
+  return params;
+}
+
+function destroyChart(canvasId) {
+  const canvas = document.getElementById(canvasId);
+  const chart = Chart.getChart(canvas);
+  if (chart) chart.destroy();
+}
+
+async function loadOverview(params) {
+  const data = await getStatsOverview(params);
   document.getElementById('stat-total-views').textContent = data.totalViews.toLocaleString('pt-BR');
   document.getElementById('stat-unique-channels').textContent = data.uniqueChannels.toLocaleString('pt-BR');
   document.getElementById('stat-first-watched').textContent = formatDate(data.firstWatched);
@@ -29,6 +44,7 @@ async function loadOverview() {
 }
 
 function renderChannelsChart(data) {
+  destroyChart('chart-channels');
   const ctx = document.getElementById('chart-channels').getContext('2d');
   new Chart(ctx, {
     type: 'bar',
@@ -60,6 +76,7 @@ function renderChannelsChart(data) {
 }
 
 function renderByHourChart(data) {
+  destroyChart('chart-by-hour');
   const byHour = Array.from({ length: 24 }, (_, i) => ({
     hour: i,
     count: data.find((d) => d.hour === i)?.count ?? 0,
@@ -94,6 +111,7 @@ function renderByHourChart(data) {
 }
 
 function renderByWeekdayChart(data) {
+  destroyChart('chart-by-weekday');
   const byDay = WEEKDAY_LABELS.map((label, i) => ({
     weekday: i,
     count: data.find((d) => d.weekday === i)?.count ?? 0,
@@ -128,6 +146,7 @@ function renderByWeekdayChart(data) {
 }
 
 function renderByMonthChart(data) {
+  destroyChart('chart-by-month');
   const labels = data.map((d) => `${String(d.month).padStart(2, '0')}/${d.year}`);
   const ctx = document.getElementById('chart-by-month').getContext('2d');
   new Chart(ctx, {
@@ -160,13 +179,14 @@ function renderByMonthChart(data) {
 }
 
 async function loadDashboard() {
+  const params = getFilters();
   try {
-    await loadOverview();
+    await loadOverview(params);
     const [channels, byHour, byWeekday, byMonth] = await Promise.all([
-      getStatsChannels({ limit: 15 }),
-      getStatsByHour(),
-      getStatsByWeekday(),
-      getStatsByMonth(),
+      getStatsChannels({ ...params, limit: 15 }),
+      getStatsByHour(params),
+      getStatsByWeekday(params),
+      getStatsByMonth(params),
     ]);
     renderChannelsChart(channels);
     renderByHourChart(byHour);
@@ -177,5 +197,7 @@ async function loadDashboard() {
     document.getElementById('stat-total-views').textContent = 'Erro ao carregar';
   }
 }
+
+document.getElementById('btn-apply').addEventListener('click', loadDashboard);
 
 loadDashboard();
