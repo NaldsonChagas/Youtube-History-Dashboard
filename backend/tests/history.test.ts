@@ -37,13 +37,11 @@ describe("GET /api/history", () => {
     expect(body.items.length).toBeLessThanOrEqual(5);
   });
 
-  it('invalid page defaults to 1', async () => {
+  it("returns 400 for invalid page (schema validation)", async () => {
     const res = await app.inject({
-      method: 'GET',
-      url: '/api/history?page=-1',
+      method: "GET",
+      url: "/api/history?page=-1",
     });
-    expect(res.statusCode).toBe(200);
-    const body = res.json();
-    expect(body.items).toBeDefined();
+    expect(res.statusCode).toBe(400);
   });
 });

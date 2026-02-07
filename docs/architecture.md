@@ -1,56 +1,56 @@
-# Arquitetura do backend
+# Backend architecture
 
-O backend segue uma arquitetura em camadas: **Controller → Use case → Repository**. A persistência é feita via **TypeORM** em `infrastructure/`. A injeção de dependências usa **injection-js**; o core da aplicação não depende de bibliotecas externas (TypeORM, injection-js, Fastify). Este documento descreve a estrutura e como **criar uma nova rota**.
+The backend follows a layered architecture: **Controller → Use case → Repository**. Persistence is done via **TypeORM** in `infrastructure/`. Dependency injection uses **injection-js**; the application core does not depend on external libraries (TypeORM, injection-js, Fastify). This document describes the structure and how to **add a new route**.
 
-## Estrutura de pastas
+## Folder structure
 
 ```
 backend/src/
-├── config/              # Configuração (env)
-├── controllers/         # Handlers HTTP: recebem request/reply, validam, chamam use case, respondem
-├── di/                  # Injeção de dependências (injection-js): tokens, providers, container
-├── domain/              # Interfaces de repositórios e tipos de domínio (sem libs externas)
-├── infrastructure/      # Detalhes de persistência e libs externas
-│   ├── data-source.ts   # Criação do DataSource TypeORM
-│   ├── entities/        # Entidades TypeORM
-│   └── repositories/    # Implementações dos repositórios (implementam interfaces do domain)
-├── middleware/          # Error handler e outros middlewares
-├── routes/              # Registro das rotas; recebem controller injetado
-├── use-cases/           # Casos de uso (lógica de negócio); dependem só de interfaces do domain
-├── app.ts               # Factory do Fastify: monta container, obtém controllers, registra rotas
+├── config/              # Configuration (env)
+├── controllers/         # HTTP handlers: receive request/reply, validate, call use case, respond
+├── di/                  # Dependency injection (injection-js): tokens, providers, container
+├── domain/              # Repository interfaces and domain types (no external libs)
+├── infrastructure/      # Persistence details and external libs
+│   ├── data-source.ts   # TypeORM DataSource creation
+│   ├── entities/        # TypeORM entities
+│   └── repositories/    # Repository implementations (implement domain interfaces)
+├── middleware/          # Error handler and other middlewares
+├── routes/              # Route registration; receive injected controller
+├── use-cases/           # Use cases (business logic); depend only on domain interfaces
+├── app.ts               # Fastify factory: builds container, gets controllers, registers routes
 └── server.ts            # Entry point: buildApp + listen
 ```
 
-## Fluxo de uma requisição
+## Request flow
 
-1. **Route** registra método e path; o handler é um método do **controller** (instância obtida do container).
-2. **Controller** lê/valida query/body, chama o **use case** injetado e envia a resposta com `reply.send()`.
-3. **Use case** orquestra a regra de negócio e delega ao **repositório** (interface injetada).
-4. **Repositório** (implementação em `infrastructure/repositories/`) acessa o banco via TypeORM.
+1. **Route** registers method and path; the handler is a **controller** method (instance obtained from the container).
+2. **Controller** reads/validates query/body, calls the injected **use case** and sends the response with `reply.send()`.
+3. **Use case** orchestrates the business rule and delegates to the **repository** (injected interface).
+4. **Repository** (implementation in `infrastructure/repositories/`) accesses the database via TypeORM.
 
-## Core e bibliotecas externas
+## Core and external libraries
 
-**Nenhum detalhe de biblioteca externa** (TypeORM, injection-js, Fastify) deve aparecer em `domain/` nem em `use-cases/`. Apenas interfaces e tipos TypeScript. As implementações e o uso de frameworks ficam em `infrastructure/`, `di/`, `controllers/` (Fastify) e `app.ts`.
+**No external library details** (TypeORM, injection-js, Fastify) should appear in `domain/` or `use-cases/`. Only TypeScript interfaces and types. Implementations and framework usage stay in `infrastructure/`, `di/`, `controllers/` (Fastify) and `app.ts`.
 
-## Convenções
+## Conventions
 
-- **Rotas**: um arquivo por domínio (ex.: `history.ts`, `stats.ts`). Função que recebe `app` e o **controller** (obtido do container em `app.ts`) e registra os handlers com `controller.método.bind(controller)`.
-- **Controllers**: classes com `@Injectable()`; construtor recebe use cases via `@Inject(TOKEN)`. Não instanciam use cases nem repositórios.
-- **Use cases**: classes com método `execute(...)`; construtor recebe apenas a interface do repositório (ex.: `IStatsRepository`). Implementação do repositório é injetada pelo container.
-- **Repositórios**: interface em `domain/` (ex.: `IHistoryRepository`); implementação em `infrastructure/repositories/`, usando TypeORM (DataSource, QueryBuilder, entidades).
-- **DI**: tokens em `di/tokens.ts`; providers em `di/providers.ts`; container criado em `app.ts` com `buildContainerWithDataSource()`; controllers obtidos do container e passados para as funções de rota.
+- **Routes**: one file per domain (e.g. `history.ts`, `stats.ts`). Function that receives `app` and the **controller** (obtained from the container in `app.ts`) and registers handlers with `controller.method.bind(controller)`.
+- **Controllers**: classes with `@Injectable()`; constructor receives use cases via `@Inject(TOKEN)`. They do not instantiate use cases or repositories.
+- **Use cases**: classes with an `execute(...)` method; constructor receives only the repository interface (e.g. `IStatsRepository`). Repository implementation is injected by the container.
+- **Repositories**: interface in `domain/` (e.g. `IHistoryRepository`); implementation in `infrastructure/repositories/`, using TypeORM (DataSource, QueryBuilder, entities).
+- **DI**: tokens in `di/tokens.ts`; providers in `di/providers.ts`; container created in `app.ts` with `buildContainerWithDataSource()`; controllers obtained from the container and passed to route functions.
 
-## Como criar uma nova rota
+## How to add a new route
 
-1. **Interface no domain** (se for novo repositório): criar `domain/I<Nome>Repository.ts` com os métodos necessários; tipos/DTOs em `domain/` ou junto da interface.
-2. **Implementação em infrastructure**: criar entidade em `infrastructure/entities/` (se nova tabela) e classe em `infrastructure/repositories/` que implementa a interface e usa TypeORM.
-3. **Use case**: criar classe em `use-cases/<domínio>/` com `execute(...)` que recebe a interface do repositório no construtor (será injetada via factory em `di/providers.ts`).
-4. **Tokens e providers**: adicionar tokens em `di/tokens.ts`; registrar repositório, use case e controller em `di/providers.ts`.
-5. **Controller**: classe com `@Injectable()` e construtor recebendo o use case via `@Inject(TOKEN)`; método que extrai query/body, chama `useCase.execute(...)` e `reply.send()`.
-6. **Rotas e app**: em `routes/<nome>.ts`, função que recebe `app` e o controller e registra as rotas; em `app.ts`, obter o controller do container e chamar essa função com prefixo.
+1. **Interface in domain** (if new repository): create `domain/I<Name>Repository.ts` with the required methods; types/DTOs in `domain/` or next to the interface.
+2. **Implementation in infrastructure**: create entity in `infrastructure/entities/` (if new table) and class in `infrastructure/repositories/` that implements the interface and uses TypeORM.
+3. **Use case**: create class in `use-cases/<domain>/` with `execute(...)` that receives the repository interface in the constructor (injected via factory in `di/providers.ts`).
+4. **Tokens and providers**: add tokens in `di/tokens.ts`; register repository, use case and controller in `di/providers.ts`.
+5. **Controller**: class with `@Injectable()` and constructor receiving the use case via `@Inject(TOKEN)`; method that extracts query/body, calls `useCase.execute(...)` and `reply.send()`.
+6. **Routes and app**: in `routes/<name>.ts`, function that receives `app` and the controller and registers the routes; in `app.ts`, get the controller from the container and call that function with the prefix.
 
-## Resumo
+## Summary
 
-- **Nova rota** = interface (domain) → implementação repositório (infrastructure) → use case → tokens/providers (di) → controller → rota registrada em app + testes.
-- Controllers finos (validação + use case + send); lógica de negócio nos use cases; acesso a dados nos repositórios.
-- Consultar [docs/coding-standards.md](coding-standards.md) para estilo, injeção de dependências e regra do core sem libs externas.
+- **New route** = interface (domain) → repository implementation (infrastructure) → use case → tokens/providers (di) → controller → route registered in app + tests.
+- Thin controllers (validation + use case + send); business logic in use cases; data access in repositories.
+- See [docs/coding-standards.md](coding-standards.md) for style, dependency injection and the core-without-external-libs rule.

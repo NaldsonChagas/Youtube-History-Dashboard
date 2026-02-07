@@ -18,7 +18,7 @@ services:
   backend:
     build:
       context: .
-      dockerfile: backend/Dockerfile
+      dockerfile: backend/Dockerfile.dev
     depends_on:
       postgres:
         condition: service_healthy
@@ -30,12 +30,14 @@ services:
       PGDATABASE: youtube_history
       PORT: 3000
       DATA_PATH: /app/youtube-metadata
-      NODE_ENV: production
+      NODE_ENV: development
     volumes:
       - ./youtube-metadata:/app/youtube-metadata:ro
+      - ./backend/src:/app/src
+      - ./backend/scripts:/app/scripts
+      - ./frontend:/app/frontend
     ports:
       - "3000:3000"
-    entrypoint: ["/app/entrypoint.sh"]
 
 volumes:
   postgres_data:

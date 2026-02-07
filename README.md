@@ -1,45 +1,45 @@
 # YouTube History Dashboard
 
-Dashboard para visualização e análise do histórico de visualização do YouTube, alimentado por dados exportados via Google Takeout.
+Dashboard for viewing and analyzing YouTube watch history, powered by data exported via Google Takeout.
 
-## O que é
+## What it is
 
-- **Backend**: API REST em Fastify + TypeScript (MVC), com PostgreSQL. Os dados do Takeout são importados uma vez (seed) e consultados via banco.
-- **Frontend**: Páginas estáticas (HTML, Tailwind, Chart.js) com tema escuro: dashboard com gráficos e lista paginada do histórico.
+- **Backend**: REST API in Fastify + TypeScript (MVC), with PostgreSQL. Takeout data is imported once (seed) and queried via the database.
+- **Frontend**: Static pages (HTML, Tailwind, Chart.js) with a dark theme: dashboard with charts and paginated history list.
 
-## Pré-requisitos
+## Prerequisites
 
-- Docker e Docker Compose (o build usa pnpm via Corepack)
-- (Opcional, para desenvolvimento local) Node.js 20+, pnpm, PostgreSQL 16
+- Docker and Docker Compose (build uses pnpm via Corepack)
+- (Optional, for local development) Node.js 20+, pnpm, PostgreSQL 16
 
-## Como rodar
+## How to run
 
-1. Coloque o export do Takeout na pasta `youtube-metadata/` (estrutura esperada: `youtube-metadata/histórico/histórico-de-visualização.html`).
+1. Place the Takeout export in the `youtube-metadata/` folder (expected structure: `youtube-metadata/histórico/histórico-de-visualização.html`).
 
-2. Suba os serviços:
+2. Start the services:
 
 ```bash
 docker compose up --build
 ```
 
-3. O backend sobe em `http://localhost:3000`. Na primeira execução, o entrypoint roda a migration e o seed (se a tabela estiver vazia). O frontend é servido pelo backend em `/` (raiz).
+3. The backend runs at `http://localhost:3000`. On first run, the entrypoint runs the migration and seed (if the table is empty). The frontend is served by the backend at `/` (root). The backend runs in **development mode with watch**: code changes in `backend/src`, `backend/scripts`, and `frontend/` are picked up automatically (no rebuild needed).
 
-## Variáveis de ambiente
+## Environment variables
 
-| Variável     | Descrição                          | Default        |
-|-------------|-------------------------------------|----------------|
-| `PORT`      | Porta do servidor                   | `3000`         |
-| `PGHOST`    | Host do PostgreSQL                  | `localhost`    |
-| `PGPORT`    | Porta do PostgreSQL                 | `5432`         |
-| `PGUSER`    | Usuário do PostgreSQL              | `postgres`     |
-| `PGPASSWORD`| Senha do PostgreSQL                | `postgres`     |
-| `PGDATABASE`| Nome do banco                       | `youtube_history` |
-| `DATA_PATH` | Caminho para a pasta do Takeout    | `./youtube-metadata` |
-| `NODE_ENV`  | Ambiente                            | `development`  |
+| Variable     | Description                    | Default           |
+|-------------|--------------------------------|-------------------|
+| `PORT`      | Server port                    | `3000`            |
+| `PGHOST`    | PostgreSQL host                | `localhost`       |
+| `PGPORT`    | PostgreSQL port                | `5432`            |
+| `PGUSER`    | PostgreSQL user                | `postgres`        |
+| `PGPASSWORD`| PostgreSQL password            | `postgres`        |
+| `PGDATABASE`| Database name                  | `youtube_history` |
+| `DATA_PATH` | Path to Takeout folder         | `./youtube-metadata` |
+| `NODE_ENV`  | Environment                    | `development`     |
 
-## Desenvolvimento local (sem Docker)
+## Local development (without Docker)
 
-1. Instale dependências e rode a migration e o seed:
+1. Install dependencies and run migration and seed:
 
 ```bash
 cd backend
@@ -48,13 +48,13 @@ pnpm run migrate
 pnpm run seed
 ```
 
-2. Inicie o servidor:
+2. Start the server:
 
 ```bash
 pnpm run dev
 ```
 
-3. Rode os testes (PostgreSQL deve estar acessível com as variáveis acima):
+3. Run tests (PostgreSQL must be reachable with the variables above):
 
 ```bash
 pnpm run test
@@ -66,18 +66,20 @@ pnpm run test
 pnpm run lint
 ```
 
-## Documentação do projeto
+## Project documentation
 
-- [docs/coding-standards.md](docs/coding-standards.md) – Padrões de código (Google Style Guide, código limpo).
-- [docs/architecture.md](docs/architecture.md) – Arquitetura MVC do backend e como criar novas rotas.
+- [docs/coding-standards.md](docs/coding-standards.md) – Code standards (Google Style Guide, clean code).
+- [docs/architecture.md](docs/architecture.md) – Backend MVC architecture and how to add new routes.
 
 ## API
 
-- `GET /api/history` – Lista paginada do histórico. Query: `page`, `limit`, `from`, `to`, `channel_id`.
-- `GET /api/stats/overview` – Totais (visualizações, canais, primeira/última data).
-- `GET /api/stats/channels` – Canais mais vistos. Query: `limit`, `from`, `to`.
-- `GET /api/stats/by-hour` – Contagem por hora do dia.
-- `GET /api/stats/by-weekday` – Contagem por dia da semana.
-- `GET /api/stats/by-month` – Contagem por mês/ano.
+- `GET /api/history` – Paginated history list. Query: `page`, `limit`, `from`, `to`, `channel_id`.
+- `GET /api/stats/overview` – Totals (views, channels, first/last date).
+- `GET /api/stats/channels` – Most watched channels. Query: `limit`, `from`, `to`.
+- `GET /api/stats/by-hour` – Count by hour of day.
+- `GET /api/stats/by-weekday` – Count by weekday.
+- `GET /api/stats/by-month` – Count by month/year.
 
-Respostas em JSON. Filtros `from` e `to` em formato ISO 8601 (ex.: `2025-01-01`, `2025-12-31`).
+Responses are JSON. Filters `from` and `to` use ISO 8601 format (e.g. `2025-01-01`, `2025-12-31`).
+
+API documentation is available via **Swagger UI** at `/documentation` when the backend is running.
