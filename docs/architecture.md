@@ -9,7 +9,7 @@ The backend follows a layered architecture: **Controller → Use case → Reposi
 ## Folder structure
 
 ```
-backend/src/
+src/backend/src/
 ├── config/              # Configuration (env)
 ├── controllers/         # HTTP handlers: receive request/reply, validate, call use case, respond
 ├── di/                  # Dependency injection (injection-js): tokens, providers, container
@@ -61,12 +61,12 @@ backend/src/
 
 ## Frontend
 
-The frontend is static HTML + **Alpine.js** (CDN) + **TypeScript** built with **Vite**. No SPA router; each page is a separate HTML file. The backend serves the built output from `frontend/dist/` (minified JS and CSS).
+The frontend is static HTML + **Alpine.js** (CDN) + **TypeScript** built with **Vite**. No SPA router; each page is a separate HTML file. The backend serves the built output from `src/frontend/dist/` (minified JS and CSS).
 
 ### Folder structure
 
 ```
-frontend/
+src/frontend/
 ├── src/                   # TypeScript source
 │   ├── api.ts             # API client (fetch wrappers)
 │   ├── types.ts           # Interfaces for API responses
@@ -90,10 +90,10 @@ frontend/
 1. HTML pages load Alpine (CDN), Tailwind (CDN), Chart.js (CDN where needed), and the built scripts via Vite entry points (`/src/entry-dashboard.ts`, `/src/entry-history.ts`). Vite bundles and minifies to `dist/assets/*.js` and `dist/assets/*.css`.
 2. Alpine components are registered via `Alpine.data()` from the TS modules (`dashboard.ts`, `history-list.ts`). State and methods are typed in TypeScript.
 3. The API client (`api.ts`) and types (`types.ts`) are shared; Chart.js is used imperatively (create/destroy) from Alpine init or methods.
-4. Build: run `pnpm run build` (Vite) in `frontend/`; output goes to `frontend/dist/`. The backend serves from `frontend/dist/` (default `PUBLIC_PATH`).
+4. Build: run `pnpm run build` (Vite) in `src/frontend/`; output goes to `src/frontend/dist/`. The backend serves from `src/frontend/dist/` (default `PUBLIC_PATH`).
 
 ### Tests
 
-- Unit tests live in **`frontend/tests/`** (Vitest).
+- Unit tests live in **`src/frontend/tests/`** (Vitest).
 - Cover: API module (with mocked `fetch`), pure helpers (formatDate, escapeHtml), and any extracted logic used by Alpine components.
 - Same rules as backend: new feature → add/update tests; bug fix → failing test first, then fix.

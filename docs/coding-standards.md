@@ -54,13 +54,13 @@ This document defines the project's code standards, aligned with the **Google Ty
 ## Frontend
 
 - **Stack**: Alpine.js + TypeScript; no dependency injection. Build with `tsc`; output served as static JS.
-- **Structure**: Source in `frontend/src/` (api, types, Alpine components); compiled output in `frontend/js/`. Same naming, formatting and style as above (camelCase, small functions, one concept per file).
-- **Lint**: ESLint with typescript-eslint in the frontend; run `pnpm run lint` in `frontend/` before committing.
+- **Structure**: Source in `src/frontend/src/` (api, types, Alpine components); compiled output in `src/frontend/js/`. Same naming, formatting and style as above (camelCase, small functions, one concept per file).
+- **Lint**: ESLint with typescript-eslint in the frontend; run `pnpm run lint` in `src/frontend/` before committing.
 
 ## Lint
 
-- **Backend**: ESLint with typescript-eslint. Run `pnpm run lint` in `backend/` before committing.
-- **Frontend**: ESLint with typescript-eslint for `frontend/src` and `frontend/tests`. Run `pnpm run lint` in `frontend/` before committing.
+- **Backend**: ESLint with typescript-eslint. Run `pnpm run lint` in `src/backend/` before committing.
+- **Frontend**: ESLint with typescript-eslint for `src/frontend/src` and `src/frontend/tests`. Run `pnpm run lint` in `src/frontend/` before committing.
 - Main rules: no unused variables (except with `_` prefix), warning for `any`, consistent style.
 
 ## Reference

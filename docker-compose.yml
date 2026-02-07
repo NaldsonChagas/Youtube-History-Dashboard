@@ -18,7 +18,7 @@ services:
   backend:
     build:
       context: .
-      dockerfile: backend/Dockerfile.dev
+      dockerfile: src/backend/Dockerfile.dev
     depends_on:
       postgres:
         condition: service_healthy
@@ -33,9 +33,9 @@ services:
       NODE_ENV: development
     volumes:
       - ./youtube-metadata:/app/youtube-metadata:ro
-      - ./backend/src:/app/src
-      - ./backend/scripts:/app/scripts
-      - ./frontend:/app/frontend
+      - ./src/backend/src:/app/src
+      - ./src/backend/scripts:/app/scripts
+      - ./src/frontend:/app/frontend
     ports:
       - "3000:3000"
 

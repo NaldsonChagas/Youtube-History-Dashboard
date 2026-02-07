@@ -5,6 +5,6 @@ alwaysApply: true
 
 # Testes obrigatórios
 
-- **Nova funcionalidade**: sempre criar ou atualizar testes que cubram o comportamento alterado. Backend: testes de integração em `backend/tests/`. Frontend: testes unitários em `frontend/tests/` (api, helpers, lógica pura).
+- **Nova funcionalidade**: sempre criar ou atualizar testes que cubram o comportamento alterado. Backend: testes de integração em `src/backend/tests/`. Frontend: testes unitários em `src/frontend/tests/` (api, helpers, lógica pura).
 - **Correção de bug**: usar abordagem test-first. Primeiro escrever (ou ajustar) o teste que reproduz o bug (teste que falha); depois implementar a correção até o teste passar. Vale para backend e frontend.
 - Não considerar a tarefa concluída sem os testes correspondentes.

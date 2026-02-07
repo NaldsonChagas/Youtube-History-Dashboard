@@ -5,7 +5,7 @@ Dashboard for viewing and analyzing YouTube watch history, powered by data expor
 ## What it is
 
 - **Backend**: REST API in Fastify + TypeScript (MVC), with PostgreSQL. Takeout data is imported once (seed) and queried via the database.
-- **Frontend**: Static pages (HTML, Tailwind, Chart.js, Alpine.js) with TypeScript. Built with **Vite** (output in `frontend/dist`, minified); dashboard with charts and paginated history list.
+- **Frontend**: Static pages (HTML, Tailwind, Chart.js, Alpine.js) with TypeScript. Built with **Vite** (output in `src/frontend/dist`, minified); dashboard with charts and paginated history list.
 
 ## Prerequisites
 
@@ -22,7 +22,7 @@ Dashboard for viewing and analyzing YouTube watch history, powered by data expor
 docker compose up --build
 ```
 
-3. The backend runs at `http://localhost:3000`. On first run, the entrypoint runs the frontend build (Vite), then the migration and seed (if the table is empty). The frontend is served by the backend from `frontend/dist` at `/` (root). The backend runs in **development mode with watch** for backend code; frontend changes require re-running the frontend build (or restarting the container, which rebuilds the frontend).
+3. The backend runs at `http://localhost:3000`. On first run, the entrypoint runs the frontend build (Vite), then the migration and seed (if the table is empty). The frontend is served by the backend from `src/frontend/dist` at `/` (root). The backend runs in **development mode with watch** for backend code; frontend changes require re-running the frontend build (or restarting the container, which rebuilds the frontend).
 
 ## Environment variables
 
@@ -43,7 +43,7 @@ docker compose up --build
 1. Install dependencies and run migration and seed:
 
 ```bash
-cd backend
+cd src/backend
 pnpm install
 pnpm run migrate
 pnpm run seed
@@ -69,17 +69,17 @@ pnpm run lint
 
 ## Frontend (standalone)
 
-The frontend is in `frontend/`. Source is TypeScript in `frontend/src/`; build output is **minified** and goes to `frontend/dist/` (Vite).
+The frontend is in `src/frontend/`. Source is TypeScript in `src/frontend/src/`; build output is **minified** and goes to `src/frontend/dist/` (Vite).
 
 ```bash
-cd frontend
+cd src/frontend
 pnpm install
 pnpm run build    # Vite build (minified JS/CSS to dist/)
 pnpm run test     # unit tests (Vitest)
 pnpm run lint     # ESLint
 ```
 
-When running the full app (Docker or backend dev server), the backend serves static files from **`frontend/dist/`**. Run `pnpm run build` in `frontend/` after changing frontend source so the backend serves the latest build.
+When running the full app (Docker or backend dev server), the backend serves static files from **`src/frontend/dist/`**. Run `pnpm run build` in `src/frontend/` after changing frontend source so the backend serves the latest build.
 
 ## Project documentation
 

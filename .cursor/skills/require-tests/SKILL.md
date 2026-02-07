@@ -13,20 +13,20 @@ description: Enforces writing or updating tests for every new feature and every 
 
 ## Rules
 
-1. **New feature**: Backend — add or update integration tests in `backend/tests/`. Frontend — add or update unit tests in `frontend/tests/` for the changed behavior.
+1. **New feature**: Backend — add or update integration tests in `src/backend/tests/`. Frontend — add or update unit tests in `src/frontend/tests/` for the changed behavior.
 2. **Bug fix**: First add or adjust a test that reproduces the bug (the test must fail). Then implement the fix until the test passes. Applies to both backend and frontend.
 3. Do not mark the task done without the corresponding tests.
 
 ## Backend tests
 
 - Framework: Vitest.
-- Location: `backend/tests/*.test.ts`.
+- Location: `src/backend/tests/*.test.ts`.
 - Setup: `ensureSchema()` in `tests/setup.ts` so the table exists; tests use the same DB config as the app (env vars).
 - Pattern: `beforeAll` build app and ensure schema; `afterAll` close app and pool; each test uses `app.inject()` and asserts on `statusCode` and `res.json()`.
 
 ## Frontend tests
 
 - Framework: Vitest.
-- Location: `frontend/tests/*.test.ts`.
+- Location: `src/frontend/tests/*.test.ts`.
 - Unit tests for: `api.ts` (mock `fetch`, assert on requests and parsed response); pure helpers (e.g. `formatDate`, `escapeHtml`); any extracted logic used by Alpine components.
 - Bug fix: write the failing test first, then fix the implementation.
