@@ -77,7 +77,7 @@ export class StatsRepository implements IStatsRepository {
     const searchTrimmed = search?.trim();
     if (searchTrimmed) {
       const pattern = `%${escapeIlikePattern(searchTrimmed)}%`;
-      qb.andWhere("w.channelName ILIKE :search", { search: pattern });
+      qb.andWhere("w.channelName LIKE :search COLLATE NOCASE", { search: pattern });
     }
 
     const rows = await qb.getRawMany<{
@@ -96,12 +96,9 @@ export class StatsRepository implements IStatsRepository {
     const qb = this.dataSource
       .getRepository(WatchHistory)
       .createQueryBuilder("w")
-      .select(
-        "EXTRACT(HOUR FROM w.watchedAt AT TIME ZONE 'UTC')::int",
-        "hour"
-      )
+      .select("CAST(strftime('%H', w.watchedAt) AS INTEGER)", "hour")
       .addSelect("COUNT(*)", "count")
-      .groupBy("EXTRACT(HOUR FROM w.watchedAt AT TIME ZONE 'UTC')")
+      .groupBy("strftime('%H', w.watchedAt)")
       .orderBy("hour", "ASC");
 
     if (from) qb.andWhere("w.watchedAt >= :from", { from });
@@ -115,9 +112,9 @@ export class StatsRepository implements IStatsRepository {
     const qb = this.dataSource
       .getRepository(WatchHistory)
       .createQueryBuilder("w")
-      .select("EXTRACT(DOW FROM w.watchedAt)::int", "weekday")
+      .select("CAST(strftime('%w', w.watchedAt) AS INTEGER)", "weekday")
       .addSelect("COUNT(*)", "count")
-      .groupBy("EXTRACT(DOW FROM w.watchedAt)")
+      .groupBy("strftime('%w', w.watchedAt)")
       .orderBy("weekday", "ASC");
 
     if (from) qb.andWhere("w.watchedAt >= :from", { from });
@@ -134,11 +131,11 @@ export class StatsRepository implements IStatsRepository {
     const qb = this.dataSource
       .getRepository(WatchHistory)
       .createQueryBuilder("w")
-      .select("EXTRACT(YEAR FROM w.watchedAt)::int", "year")
-      .addSelect("EXTRACT(MONTH FROM w.watchedAt)::int", "month")
+      .select("CAST(strftime('%Y', w.watchedAt) AS INTEGER)", "year")
+      .addSelect("CAST(strftime('%m', w.watchedAt) AS INTEGER)", "month")
       .addSelect("COUNT(*)", "count")
-      .groupBy("EXTRACT(YEAR FROM w.watchedAt)")
-      .addGroupBy("EXTRACT(MONTH FROM w.watchedAt)")
+      .groupBy("strftime('%Y', w.watchedAt)")
+      .addGroupBy("strftime('%m', w.watchedAt)")
       .orderBy("year", "ASC")
       .addOrderBy("month", "ASC");
 

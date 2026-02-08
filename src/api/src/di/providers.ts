@@ -29,7 +29,7 @@ import { GetStatsByMonthUseCase } from "../use-cases/stats/GetStatsByMonthUseCas
 export const providers = [
   {
     provide: DATA_SOURCE,
-    useFactory: () => createDataSource(env.pg),
+    useFactory: () => createDataSource({ databasePath: env.databasePath }),
     deps: [],
   },
   { provide: HISTORY_REPOSITORY, useClass: HistoryRepository },

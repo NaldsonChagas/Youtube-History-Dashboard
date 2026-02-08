@@ -4,13 +4,13 @@ Dashboard for viewing and analyzing YouTube watch history, powered by data expor
 
 ## What it is
 
-- **API**: REST API in Fastify + TypeScript (MVC), with PostgreSQL. Takeout data is imported once (seed) and queried via the database.
+- **API**: REST API in Fastify + TypeScript (MVC), with SQLite. Takeout data is imported once (seed) and queried via the database.
 - **Web**: Static pages (HTML, Tailwind, Chart.js, Alpine.js) with TypeScript. Built with **Vite** (output in `src/web/dist`, minified); dashboard with charts and paginated history list.
 
 ## Prerequisites
 
 - Docker and Docker Compose (build uses pnpm via Corepack)
-- (Optional, for local development) Node.js 20+, pnpm, PostgreSQL 16
+- (Optional, for local development) Node.js 20+, pnpm
 
 ## How to run
 
@@ -26,15 +26,11 @@ docker compose up --build
 
 ## Environment variables
 
-| Variable     | Description                    | Default           |
-|-------------|--------------------------------|-------------------|
-| `PORT`      | Server port                    | `3000`            |
-| `PGHOST`    | PostgreSQL host                | `localhost`       |
-| `PGPORT`    | PostgreSQL port                | `5432`            |
-| `PGUSER`    | PostgreSQL user                | `postgres`        |
-| `PGPASSWORD`| PostgreSQL password            | `postgres`        |
-| `PGDATABASE`| Database name                  | `youtube_history` |
-| `DATA_PATH` | Path to Takeout folder         | `./youtube-metadata` |
+| Variable       | Description                    | Default               |
+|----------------|--------------------------------|-----------------------|
+| `PORT`         | Server port                    | `3000`                |
+| `DATABASE_PATH`| Path to SQLite database file   | `./data/youtube_history.db` |
+| `DATA_PATH`    | Path to Takeout folder         | `./youtube-metadata`  |
 | `PUBLIC_PATH` | Path to static web build | `../web/dist` (from API cwd) |
 | `NODE_ENV`  | Environment                    | `development`     |
 
@@ -55,7 +51,7 @@ pnpm run seed
 pnpm run dev
 ```
 
-3. Run tests (PostgreSQL must be reachable with the variables above):
+3. Run tests (uses in-memory SQLite; no external database required):
 
 ```bash
 pnpm run test

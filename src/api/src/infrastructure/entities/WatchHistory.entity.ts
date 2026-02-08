@@ -6,7 +6,7 @@ import {
 
 @Entity("watch_history")
 export class WatchHistory {
-  @PrimaryGeneratedColumn("increment", { type: "bigint" })
+  @PrimaryGeneratedColumn("increment", { type: "integer" })
   id!: string;
 
   @Column({ name: "video_id", type: "varchar", length: 20, nullable: true })
@@ -21,7 +21,7 @@ export class WatchHistory {
   @Column({ name: "channel_name", type: "text" })
   channelName!: string;
 
-  @Column({ name: "watched_at", type: "timestamptz" })
+  @Column({ name: "watched_at", type: "datetime" })
   watchedAt!: Date;
 
   @Column({ name: "activity_type", type: "varchar", length: 20 })

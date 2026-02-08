@@ -8,7 +8,7 @@ import { parseHistoryHtml } from "./parse-history-html.js";
 const BATCH_SIZE = 1000;
 
 async function seed(): Promise<void> {
-  const dataSource = createDataSource(env.pg);
+  const dataSource = createDataSource({ databasePath: env.databasePath });
   await dataSource.initialize();
 
   try {
