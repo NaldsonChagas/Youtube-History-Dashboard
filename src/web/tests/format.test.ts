@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { escapeHtml, formatDate } from "../src/format";
+import { escapeHtml, formatDate } from "../src/lib/format";
 
 describe("formatDate", () => {
   it("returns dash for null", () => {

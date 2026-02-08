@@ -7,7 +7,7 @@ import type {
   StatsOverview,
   StatsParams,
   WeekdayCount,
-} from "./types.js";
+} from "../types.js";
 
 const API_BASE = "";
 

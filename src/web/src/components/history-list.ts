@@ -1,11 +1,11 @@
 import flatpickr from "flatpickr";
 import { Portuguese } from "flatpickr/dist/l10n/pt.js";
 import TomSelect from "tom-select";
-import { getHistory, getStatsChannels } from "./api.js";
-import { formatDate } from "./format.js";
-import { requireImportData } from "./guards.js";
-import { applyTheme, initTheme, setStoredTheme } from "./theme.js";
-import type { HistoryItem } from "./types.js";
+import { getHistory, getStatsChannels } from "../lib/api.js";
+import { formatDate } from "../lib/format.js";
+import { requireImportData } from "../lib/guards.js";
+import { applyTheme, initTheme, setStoredTheme } from "../lib/theme.js";
+import type { HistoryItem } from "../types.js";
 
 const PAGE_SIZE = 50;
 

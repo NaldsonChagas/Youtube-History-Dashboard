@@ -94,9 +94,15 @@ export async function buildApp(opts?: BuildAppOptions) {
       }
       return payload;
     });
-    app.get("/", { schema: { hide: true } }, (_request, reply) => reply.sendFile("setup.html"));
-    app.get("/dashboard", { schema: { hide: true } }, (_request, reply) => reply.sendFile("index.html"));
-    app.get("/history", { schema: { hide: true } }, (_request, reply) => reply.sendFile("history.html"));
+    app.get("/", { schema: { hide: true } }, (_request, reply) =>
+      reply.sendFile("pages/setup.html")
+    );
+    app.get("/dashboard", { schema: { hide: true } }, (_request, reply) =>
+      reply.sendFile("pages/index.html")
+    );
+    app.get("/history", { schema: { hide: true } }, (_request, reply) =>
+      reply.sendFile("pages/history.html")
+    );
   }
 
   return app;

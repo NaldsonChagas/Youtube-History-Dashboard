@@ -1,5 +1,5 @@
-import { getImportStatus, importHistory } from "./api.js";
-import { applyTheme, initTheme, setStoredTheme } from "./theme.js";
+import { getImportStatus, importHistory } from "../lib/api.js";
+import { applyTheme, initTheme, setStoredTheme } from "../lib/theme.js";
 
 type Theme = "dark" | "light";
 

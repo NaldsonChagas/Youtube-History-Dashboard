@@ -8,7 +8,7 @@ import {
   getStatsByHour,
   getStatsByWeekday,
   getStatsByMonth,
-} from "../src/api";
+} from "../src/lib/api";
 
 describe("api", () => {
   beforeEach(() => {

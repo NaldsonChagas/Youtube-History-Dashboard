@@ -6,11 +6,11 @@ import {
   getStatsByWeekday,
   getStatsChannels,
   getStatsOverview,
-} from "./api.js";
-import { formatDate } from "./format.js";
-import { requireImportData } from "./guards.js";
-import { applyTheme, initTheme, setStoredTheme } from "./theme.js";
-import type { ChannelCount, HourCount, MonthCount, WeekdayCount } from "./types.js";
+} from "../lib/api.js";
+import { formatDate } from "../lib/format.js";
+import { requireImportData } from "../lib/guards.js";
+import { applyTheme, initTheme, setStoredTheme } from "../lib/theme.js";
+import type { ChannelCount, HourCount, MonthCount, WeekdayCount } from "../types.js";
 
 const WEEKDAY_LABELS = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
 

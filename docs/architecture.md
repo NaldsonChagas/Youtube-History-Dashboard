@@ -67,33 +67,45 @@ The web app is static HTML + **Alpine.js** (CDN) + **TypeScript** built with **V
 
 ```
 src/web/
-├── src/                   # TypeScript source
-│   ├── api.ts             # API client (fetch wrappers)
+├── pages/                 # HTML pages
+│   ├── index.html         # Dashboard page
+│   ├── history.html       # History list page
+│   └── setup.html         # Setup page
+├── src/
+│   ├── lib/               # Shared utilities and API client
+│   │   ├── api.ts         # API client (fetch wrappers)
+│   │   ├── format.ts      # Helpers (formatDate, escapeHtml, etc.)
+│   │   ├── guards.ts      # Guards (requireImportData)
+│   │   └── theme.ts       # Theme utilities
+│   ├── components/        # Alpine components
+│   │   ├── dashboard.ts   # Dashboard (overview + charts)
+│   │   ├── history-list.ts# History table + pagination
+│   │   └── setup.ts       # Setup/import page
+│   ├── entries/           # Vite entry points
+│   │   ├── dashboard.ts   # Imports CSS + dashboard component
+│   │   ├── history.ts     # Imports CSS + history-list component
+│   │   └── setup.ts       # Imports CSS + setup component
 │   ├── types.ts           # Interfaces for API responses
-│   ├── format.ts          # Helpers (formatDate, escapeHtml, etc.)
-│   ├── dashboard.ts       # Alpine component for dashboard (overview + charts)
-│   ├── history-list.ts    # Alpine component for history table + pagination
-│   ├── entry-dashboard.ts # Vite entry (imports CSS + dashboard)
-│   └── entry-history.ts  # Vite entry (imports CSS + history-list)
+│   └── globals.d.ts       # Global declarations (Alpine, Chart)
 ├── dist/                  # Vite build output (minified); served by API
 ├── css/                   # Styles (imported by entries)
 ├── tests/                 # Unit tests (Vitest)
 │   ├── api.test.ts
-│   └── format.test.ts
-├── index.html             # Dashboard page
-├── history.html           # History list page
+│   ├── format.test.ts
+│   ├── guards.test.ts
+│   └── theme.test.ts
 └── vite.config.ts         # Vite MPA config (outDir: dist)
 ```
 
 ### Flow
 
-1. HTML pages load Alpine (CDN), Tailwind (CDN), Chart.js (CDN where needed), and the built scripts via Vite entry points (`/src/entry-dashboard.ts`, `/src/entry-history.ts`). Vite bundles and minifies to `dist/assets/*.js` and `dist/assets/*.css`.
-2. Alpine components are registered via `Alpine.data()` from the TS modules (`dashboard.ts`, `history-list.ts`). State and methods are typed in TypeScript.
-3. The API client (`api.ts`) and types (`types.ts`) are shared; Chart.js is used imperatively (create/destroy) from Alpine init or methods.
+1. HTML pages in `pages/` load Alpine (CDN), Tailwind (CDN), Chart.js (CDN where needed), and the built scripts via Vite entry points (`/src/entries/dashboard.ts`, `/src/entries/history.ts`, `/src/entries/setup.ts`). Vite bundles and minifies to `dist/assets/*.js` and `dist/assets/*.css`.
+2. Alpine components are registered via `Alpine.data()` from the TS modules in `components/`. State and methods are typed in TypeScript.
+3. The API client (`lib/api.ts`) and types (`types.ts`) are shared; Chart.js is used imperatively (create/destroy) from Alpine init or methods.
 4. Build: run `pnpm run build` (Vite) in `src/web/`; output goes to `src/web/dist/`. The API serves from `src/web/dist/` (default `PUBLIC_PATH`).
 
 ### Tests
 
 - Unit tests live in **`src/web/tests/`** (Vitest).
-- Cover: API module (with mocked `fetch`), pure helpers (formatDate, escapeHtml), and any extracted logic used by Alpine components.
+- Cover: API module (with mocked `fetch`), pure helpers (formatDate, escapeHtml), guards, theme utilities, and any extracted logic used by Alpine components.
 - Same rules as API: new feature → add/update tests; bug fix → failing test first, then fix.

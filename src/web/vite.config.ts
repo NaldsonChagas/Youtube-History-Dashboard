@@ -6,7 +6,7 @@ export default defineConfig({
     outDir: "dist",
     emptyOutDir: true,
     rollupOptions: {
-      input: ["index.html", "history.html", "setup.html"],
+      input: ["pages/index.html", "pages/history.html", "pages/setup.html"],
     },
   },
 });

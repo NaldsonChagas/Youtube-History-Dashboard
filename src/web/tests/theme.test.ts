@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { getStoredTheme, setStoredTheme } from "../src/theme";
+import { getStoredTheme, setStoredTheme } from "../src/lib/theme";
 
 describe("theme", () => {
   const storage: Record<string, string> = {};

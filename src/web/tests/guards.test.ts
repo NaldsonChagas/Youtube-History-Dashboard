@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { requireImportData } from "../src/guards";
+import { requireImportData } from "../src/lib/guards";
 
 describe("guards", () => {
   let locationHref: string;
