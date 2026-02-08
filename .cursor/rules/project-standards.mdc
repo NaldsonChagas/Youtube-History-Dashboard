@@ -1,13 +1,13 @@
 ---
-description: Padrões e arquitetura do projeto - consultar docs em toda alteração
+description: Project standards and architecture - consult docs on every change
 alwaysApply: true
 ---
 
-# Padrões do projeto
+# Project standards
 
-- **Código**: seguir [docs/coding-standards.md](../docs/coding-standards.md). Código limpo, sem comentários desnecessários, Google TypeScript Style Guide. ESLint no backend e no frontend.
-- **Backend**: seguir [docs/architecture.md](../docs/architecture.md). Nova rota = model → controller → route → registro em app. Manter controllers finos; lógica e queries nos models.
-- **Frontend**: seguir [docs/architecture.md](../docs/architecture.md) para estrutura (src, js, tests) e fluxo Alpine + tsc.
-- **Testes**: seguir a skill e a rule de testes: sempre criar ou atualizar testes para funcionalidades e correções; em correção de bug, escrever o teste que falha primeiro. Backend: `src/backend/tests/`. Frontend: `src/frontend/tests/`.
+- **Code**: follow [docs/coding-standards.md](../docs/coding-standards.md). Clean code, no unnecessary comments, Google TypeScript Style Guide. ESLint on API and web.
+- **API**: follow [docs/architecture.md](../docs/architecture.md). New route = model → controller → route → register in app. Keep controllers thin; logic and queries in models.
+- **Web**: follow [docs/architecture.md](../docs/architecture.md) for structure (src, js, tests) and Alpine + tsc flow.
+- **Tests**: follow the test skill and rule: always create or update tests for features and fixes; for bug fixes, write the failing test first. API: `src/api/tests/`. Web: `src/web/tests/`.
 
-Consultar esses documentos ao implementar ou revisar código.
+Consult these documents when implementing or reviewing code.

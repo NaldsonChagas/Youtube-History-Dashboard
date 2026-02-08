@@ -1,5 +1,5 @@
 {
-  "name": "youtube-history-backend",
+  "name": "youtube-history-api",
   "version": "1.0.0",
   "description": "Backend API for YouTube history dashboard",
   "type": "module",

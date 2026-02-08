@@ -15,10 +15,10 @@ services:
       timeout: 5s
       retries: 5
 
-  backend:
+  api:
     build:
       context: .
-      dockerfile: src/backend/Dockerfile.dev
+      dockerfile: src/api/Dockerfile.dev
     depends_on:
       postgres:
         condition: service_healthy
@@ -33,9 +33,9 @@ services:
       NODE_ENV: development
     volumes:
       - ./youtube-metadata:/app/youtube-metadata:ro
-      - ./src/backend/src:/app/src
-      - ./src/backend/scripts:/app/scripts
-      - ./src/frontend:/app/frontend
+      - ./src/api/src:/app/src
+      - ./src/api/scripts:/app/scripts
+      - ./src/web:/app/web
     ports:
       - "3000:3000"
 

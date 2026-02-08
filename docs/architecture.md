@@ -1,15 +1,15 @@
 # Architecture
 
-This document describes the structure of the backend and frontend.
+This document describes the structure of the API and web app.
 
-## Backend
+## API
 
-The backend follows a layered architecture: **Controller → Use case → Repository**. Persistence is done via **TypeORM** in `infrastructure/`. Dependency injection uses **injection-js**; the application core does not depend on external libraries (TypeORM, injection-js, Fastify). Below is the structure and how to **add a new route**.
+The API follows a layered architecture: **Controller → Use case → Repository**. Persistence is done via **TypeORM** in `infrastructure/`. Dependency injection uses **injection-js**; the application core does not depend on external libraries (TypeORM, injection-js, Fastify). Below is the structure and how to **add a new route**.
 
 ## Folder structure
 
 ```
-src/backend/src/
+src/api/src/
 ├── config/              # Configuration (env)
 ├── controllers/         # HTTP handlers: receive request/reply, validate, call use case, respond
 ├── di/                  # Dependency injection (injection-js): tokens, providers, container
@@ -59,14 +59,14 @@ src/backend/src/
 - Thin controllers (validation + use case + send); business logic in use cases; data access in repositories.
 - See [docs/coding-standards.md](coding-standards.md) for style, dependency injection and the core-without-external-libs rule.
 
-## Frontend
+## Web
 
-The frontend is static HTML + **Alpine.js** (CDN) + **TypeScript** built with **Vite**. No SPA router; each page is a separate HTML file. The backend serves the built output from `src/frontend/dist/` (minified JS and CSS).
+The web app is static HTML + **Alpine.js** (CDN) + **TypeScript** built with **Vite**. No SPA router; each page is a separate HTML file. The API serves the built output from `src/web/dist/` (minified JS and CSS).
 
 ### Folder structure
 
 ```
-src/frontend/
+src/web/
 ├── src/                   # TypeScript source
 │   ├── api.ts             # API client (fetch wrappers)
 │   ├── types.ts           # Interfaces for API responses
@@ -75,7 +75,7 @@ src/frontend/
 │   ├── history-list.ts    # Alpine component for history table + pagination
 │   ├── entry-dashboard.ts # Vite entry (imports CSS + dashboard)
 │   └── entry-history.ts  # Vite entry (imports CSS + history-list)
-├── dist/                  # Vite build output (minified); served by backend
+├── dist/                  # Vite build output (minified); served by API
 ├── css/                   # Styles (imported by entries)
 ├── tests/                 # Unit tests (Vitest)
 │   ├── api.test.ts
@@ -90,10 +90,10 @@ src/frontend/
 1. HTML pages load Alpine (CDN), Tailwind (CDN), Chart.js (CDN where needed), and the built scripts via Vite entry points (`/src/entry-dashboard.ts`, `/src/entry-history.ts`). Vite bundles and minifies to `dist/assets/*.js` and `dist/assets/*.css`.
 2. Alpine components are registered via `Alpine.data()` from the TS modules (`dashboard.ts`, `history-list.ts`). State and methods are typed in TypeScript.
 3. The API client (`api.ts`) and types (`types.ts`) are shared; Chart.js is used imperatively (create/destroy) from Alpine init or methods.
-4. Build: run `pnpm run build` (Vite) in `src/frontend/`; output goes to `src/frontend/dist/`. The backend serves from `src/frontend/dist/` (default `PUBLIC_PATH`).
+4. Build: run `pnpm run build` (Vite) in `src/web/`; output goes to `src/web/dist/`. The API serves from `src/web/dist/` (default `PUBLIC_PATH`).
 
 ### Tests
 
-- Unit tests live in **`src/frontend/tests/`** (Vitest).
+- Unit tests live in **`src/web/tests/`** (Vitest).
 - Cover: API module (with mocked `fetch`), pure helpers (formatDate, escapeHtml), and any extracted logic used by Alpine components.
-- Same rules as backend: new feature → add/update tests; bug fix → failing test first, then fix.
+- Same rules as API: new feature → add/update tests; bug fix → failing test first, then fix.

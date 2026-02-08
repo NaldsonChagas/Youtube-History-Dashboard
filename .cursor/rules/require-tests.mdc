@@ -1,10 +1,10 @@
 ---
-description: Obriga criação de testes para features e correções; correção = teste primeiro
+description: Requires creating tests for features and fixes; fixes = test first
 alwaysApply: true
 ---
 
-# Testes obrigatórios
+# Required tests
 
-- **Nova funcionalidade**: sempre criar ou atualizar testes que cubram o comportamento alterado. Backend: testes de integração em `src/backend/tests/`. Frontend: testes unitários em `src/frontend/tests/` (api, helpers, lógica pura).
-- **Correção de bug**: usar abordagem test-first. Primeiro escrever (ou ajustar) o teste que reproduz o bug (teste que falha); depois implementar a correção até o teste passar. Vale para backend e frontend.
-- Não considerar a tarefa concluída sem os testes correspondentes.
+- **New feature**: always create or update tests that cover the changed behavior. API: integration tests in `src/api/tests/`. Web: unit tests in `src/web/tests/` (api, helpers, pure logic).
+- **Bug fix**: use test-first approach. First write (or adjust) the test that reproduces the bug (failing test); then implement the fix until the test passes. Applies to API and web.
+- Do not consider the task complete without the corresponding tests.

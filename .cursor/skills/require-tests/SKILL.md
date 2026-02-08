@@ -7,26 +7,26 @@ description: Enforces writing or updating tests for every new feature and every 
 
 ## When to apply
 
-- Adding or changing a feature in the backend (new route, new behavior) or in the frontend (new component, API usage, helpers).
+- Adding or changing a feature in the API (new route, new behavior) or in the web app (new component, API usage, helpers).
 - Fixing a bug (always: test first, then fix).
 - User asks for tests or mentions test coverage.
 
 ## Rules
 
-1. **New feature**: Backend — add or update integration tests in `src/backend/tests/`. Frontend — add or update unit tests in `src/frontend/tests/` for the changed behavior.
-2. **Bug fix**: First add or adjust a test that reproduces the bug (the test must fail). Then implement the fix until the test passes. Applies to both backend and frontend.
+1. **New feature**: API — add or update integration tests in `src/api/tests/`. Web — add or update unit tests in `src/web/tests/` for the changed behavior.
+2. **Bug fix**: First add or adjust a test that reproduces the bug (the test must fail). Then implement the fix until the test passes. Applies to both API and web.
 3. Do not mark the task done without the corresponding tests.
 
-## Backend tests
+## API tests
 
 - Framework: Vitest.
-- Location: `src/backend/tests/*.test.ts`.
+- Location: `src/api/tests/*.test.ts`.
 - Setup: `ensureSchema()` in `tests/setup.ts` so the table exists; tests use the same DB config as the app (env vars).
 - Pattern: `beforeAll` build app and ensure schema; `afterAll` close app and pool; each test uses `app.inject()` and asserts on `statusCode` and `res.json()`.
 
-## Frontend tests
+## Web tests
 
 - Framework: Vitest.
-- Location: `src/frontend/tests/*.test.ts`.
+- Location: `src/web/tests/*.test.ts`.
 - Unit tests for: `api.ts` (mock `fetch`, assert on requests and parsed response); pure helpers (e.g. `formatDate`, `escapeHtml`); any extracted logic used by Alpine components.
 - Bug fix: write the failing test first, then fix the implementation.

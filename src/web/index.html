@@ -50,8 +50,10 @@
       </div>
       <button type="button" @click="loadDashboard()" class="w-full sm:w-auto bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded font-medium shrink-0">Aplicar</button>
     </div>
-    <p x-show="dateRangeError" class="text-red-500 text-sm mt-2" x-cloak>Data inicial não pode ser maior que a data final.</p>
-    <p x-show="dateFutureError" class="text-red-500 text-sm mt-2" x-cloak>Data não pode ser no futuro.</p>
+    <div class="text-right mt-2">
+      <p x-show="dateRangeError" class="text-red-500 text-sm" x-cloak>Data inicial não pode ser maior que a data final.</p>
+      <p x-show="dateFutureError" class="text-red-500 text-sm" x-cloak>Data não pode ser no futuro.</p>
+    </div>
     </section>
 
     <section id="overview" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">

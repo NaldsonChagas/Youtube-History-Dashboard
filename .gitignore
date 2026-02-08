@@ -1,7 +1,7 @@
 node_modules/
 .pnpm-store/
 dist/
-src/frontend/js/
+src/web/js/
 .env
 .env.local
 *.log

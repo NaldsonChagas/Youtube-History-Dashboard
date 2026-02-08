@@ -6,7 +6,7 @@ until nc -z "${PGHOST:-localhost}" "${PGPORT:-5432}"; do
   sleep 2
 done
 
-cd /app/frontend && rm -rf node_modules && pnpm install && pnpm run build
+cd /app/web && rm -rf node_modules && pnpm install && pnpm run build
 cd /app
 pnpm run migrate
 pnpm run seed

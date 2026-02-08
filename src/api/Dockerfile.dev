@@ -1,0 +1,19 @@
+FROM node:20-alpine
+
+WORKDIR /app
+
+RUN corepack enable && corepack prepare pnpm@9.15.0 --activate
+
+COPY src/api/package.json src/api/pnpm-lock.yaml src/api/tsconfig.json ./
+RUN pnpm install --frozen-lockfile
+
+COPY src/api/src ./src
+COPY src/api/scripts ./scripts
+COPY src/web ./web
+COPY src/api/entrypoint.dev.sh /app/entrypoint.dev.sh
+RUN chmod +x /app/entrypoint.dev.sh
+
+ENV PUBLIC_PATH=/app/web/dist
+EXPOSE 3000
+
+ENTRYPOINT ["/app/entrypoint.dev.sh"]

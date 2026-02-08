@@ -4,8 +4,8 @@ Dashboard for viewing and analyzing YouTube watch history, powered by data expor
 
 ## What it is
 
-- **Backend**: REST API in Fastify + TypeScript (MVC), with PostgreSQL. Takeout data is imported once (seed) and queried via the database.
-- **Frontend**: Static pages (HTML, Tailwind, Chart.js, Alpine.js) with TypeScript. Built with **Vite** (output in `src/frontend/dist`, minified); dashboard with charts and paginated history list.
+- **API**: REST API in Fastify + TypeScript (MVC), with PostgreSQL. Takeout data is imported once (seed) and queried via the database.
+- **Web**: Static pages (HTML, Tailwind, Chart.js, Alpine.js) with TypeScript. Built with **Vite** (output in `src/web/dist`, minified); dashboard with charts and paginated history list.
 
 ## Prerequisites
 
@@ -22,7 +22,7 @@ Dashboard for viewing and analyzing YouTube watch history, powered by data expor
 docker compose up --build
 ```
 
-3. The backend runs at `http://localhost:3000`. On first run, the entrypoint runs the frontend build (Vite), then the migration and seed (if the table is empty). The frontend is served by the backend from `src/frontend/dist` at `/` (root). The backend runs in **development mode with watch** for backend code; frontend changes require re-running the frontend build (or restarting the container, which rebuilds the frontend).
+3. The API runs at `http://localhost:3000`. On first run, the entrypoint runs the web build (Vite), then the migration and seed (if the table is empty). The web app is served by the API from `src/web/dist` at `/` (root). The API runs in **development mode with watch** for API code; web changes require re-running the web build (or restarting the container, which rebuilds the web app).
 
 ## Environment variables
 
@@ -35,7 +35,7 @@ docker compose up --build
 | `PGPASSWORD`| PostgreSQL password            | `postgres`        |
 | `PGDATABASE`| Database name                  | `youtube_history` |
 | `DATA_PATH` | Path to Takeout folder         | `./youtube-metadata` |
-| `PUBLIC_PATH` | Path to static frontend build | `../frontend/dist` (from backend cwd) |
+| `PUBLIC_PATH` | Path to static web build | `../web/dist` (from API cwd) |
 | `NODE_ENV`  | Environment                    | `development`     |
 
 ## Local development (without Docker)
@@ -43,7 +43,7 @@ docker compose up --build
 1. Install dependencies and run migration and seed:
 
 ```bash
-cd src/backend
+cd src/api
 pnpm install
 pnpm run migrate
 pnpm run seed
@@ -67,24 +67,24 @@ pnpm run test
 pnpm run lint
 ```
 
-## Frontend (standalone)
+## Web (standalone)
 
-The frontend is in `src/frontend/`. Source is TypeScript in `src/frontend/src/`; build output is **minified** and goes to `src/frontend/dist/` (Vite).
+The web app is in `src/web/`. Source is TypeScript in `src/web/src/`; build output is **minified** and goes to `src/web/dist/` (Vite).
 
 ```bash
-cd src/frontend
+cd src/web
 pnpm install
 pnpm run build    # Vite build (minified JS/CSS to dist/)
 pnpm run test     # unit tests (Vitest)
 pnpm run lint     # ESLint
 ```
 
-When running the full app (Docker or backend dev server), the backend serves static files from **`src/frontend/dist/`**. Run `pnpm run build` in `src/frontend/` after changing frontend source so the backend serves the latest build.
+When running the full app (Docker or API dev server), the API serves static files from **`src/web/dist/`**. Run `pnpm run build` in `src/web/` after changing web source so the API serves the latest build.
 
 ## Project documentation
 
 - [docs/coding-standards.md](docs/coding-standards.md) – Code standards (Google Style Guide, clean code).
-- [docs/architecture.md](docs/architecture.md) – Backend and frontend architecture; how to add new routes.
+- [docs/architecture.md](docs/architecture.md) – API and web architecture; how to add new routes.
 
 ## API
 
@@ -97,4 +97,4 @@ When running the full app (Docker or backend dev server), the backend serves sta
 
 Responses are JSON. Filters `from` and `to` use ISO 8601 format (e.g. `2025-01-01`, `2025-12-31`).
 
-API documentation is available via **Swagger UI** at `/documentation` when the backend is running.
+API documentation is available via **Swagger UI** at `/documentation` when the API is running.
