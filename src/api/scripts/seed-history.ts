@@ -1,20 +1,17 @@
 import { readFile } from "fs/promises";
 import { join } from "path";
 import { createDataSource } from "../src/infrastructure/data-source.js";
-import { WatchHistory } from "../src/infrastructure/entities/WatchHistory.entity.js";
 import { env } from "../src/config/env.js";
-import { parseHistoryHtml } from "./parse-history-html.js";
-
-const BATCH_SIZE = 1000;
+import { HistoryRepository } from "../src/infrastructure/repositories/HistoryRepository.js";
+import { seedFromHtml } from "../src/lib/seed-from-html.js";
 
 async function seed(): Promise<void> {
   const dataSource = createDataSource({ databasePath: env.databasePath });
   await dataSource.initialize();
 
   try {
-    const repo = dataSource.getRepository(WatchHistory);
-    const count = await repo.count();
-    if (count > 0) {
+    const repo = new HistoryRepository(dataSource);
+    if (await repo.hasAny()) {
       console.log("watch_history already has data; skipping seed.");
       return;
     }
@@ -26,30 +23,8 @@ async function seed(): Promise<void> {
     );
     console.log("Reading", historyPath);
     const html = await readFile(historyPath, "utf-8");
-    const entries = parseHistoryHtml(html);
-    console.log("Parsed", entries.length, "entries.");
-
-    for (let i = 0; i < entries.length; i += BATCH_SIZE) {
-      const batch = entries.slice(i, i + BATCH_SIZE);
-      const toInsert = batch.map((e) => ({
-        videoId: e.videoId,
-        title: e.title,
-        channelId: e.channelId,
-        channelName: e.channelName,
-        watchedAt: e.watchedAt,
-        activityType: e.activityType,
-        sourceUrl: e.sourceUrl,
-      }));
-      await repo.insert(toInsert);
-      console.log(
-        "Inserted",
-        Math.min(i + BATCH_SIZE, entries.length),
-        "/",
-        entries.length
-      );
-    }
-
-    console.log("Seed completed.");
+    const { inserted } = await seedFromHtml(html, repo);
+    console.log("Seed completed. Inserted", inserted, "entries.");
   } finally {
     await dataSource.destroy();
   }

@@ -2,7 +2,10 @@ import { Inject, Injectable } from "injection-js";
 import type { DataSource } from "typeorm";
 import type { ListFilters } from "../../domain/ListFilters.js";
 import type { ListResult } from "../../domain/ListResult.js";
-import type { IHistoryRepository } from "../../domain/IHistoryRepository.js";
+import type {
+  IHistoryRepository,
+  WatchHistoryInsert,
+} from "../../domain/IHistoryRepository.js";
 import { DATA_SOURCE } from "../../di/tokens.js";
 import { WatchHistory } from "../entities/WatchHistory.entity.js";
 
@@ -11,6 +14,27 @@ export class HistoryRepository implements IHistoryRepository {
   constructor(
     @Inject(DATA_SOURCE) private readonly dataSource: DataSource
   ) {}
+
+  async hasAny(): Promise<boolean> {
+    const repo = this.dataSource.getRepository(WatchHistory);
+    const count = await repo.count();
+    return count > 0;
+  }
+
+  async insertBatch(entries: WatchHistoryInsert[]): Promise<void> {
+    if (entries.length === 0) return;
+    const repo = this.dataSource.getRepository(WatchHistory);
+    const toInsert = entries.map((e) => ({
+      videoId: e.videoId,
+      title: e.title,
+      channelId: e.channelId,
+      channelName: e.channelName,
+      watchedAt: e.watchedAt,
+      activityType: e.activityType,
+      sourceUrl: e.sourceUrl,
+    }));
+    await repo.insert(toInsert);
+  }
 
   async list(filters: ListFilters): Promise<ListResult> {
     const repo = this.dataSource.getRepository(WatchHistory);

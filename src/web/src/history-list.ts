@@ -3,6 +3,7 @@ import { Portuguese } from "flatpickr/dist/l10n/pt.js";
 import TomSelect from "tom-select";
 import { getHistory, getStatsChannels } from "./api.js";
 import { formatDate } from "./format.js";
+import { requireImportData } from "./guards.js";
 import { applyTheme, initTheme, setStoredTheme } from "./theme.js";
 import type { HistoryItem } from "./types.js";
 
@@ -132,6 +133,7 @@ export function registerHistoryList(): void {
     },
 
     async init(): Promise<void> {
+      if (!(await requireImportData())) return;
       await this.loadPage();
       this.$nextTick(() => {
         const el = this.$refs.channelSelect as HTMLSelectElement | undefined;

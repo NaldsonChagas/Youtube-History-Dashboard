@@ -1,6 +1,8 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import {
   getHistory,
+  getImportStatus,
+  importHistory,
   getStatsOverview,
   getStatsChannels,
   getStatsByHour,
@@ -134,5 +136,48 @@ describe("api", () => {
 
     expect(mockFetch).toHaveBeenCalledWith(expect.stringContaining("/api/stats/by-month"));
     expect(result).toEqual([{ year: 2024, month: 1, count: 10 }]);
+  });
+
+  it("getImportStatus returns hasData from /api/import/status", async () => {
+    const mockFetch = vi.mocked(fetch);
+    mockFetch.mockResolvedValueOnce({
+      ok: true,
+      json: () => Promise.resolve({ hasData: false }),
+    } as Response);
+
+    const result = await getImportStatus();
+
+    expect(mockFetch).toHaveBeenCalledWith("/api/import/status");
+    expect(result).toEqual({ hasData: false });
+  });
+
+  it("importHistory POSTs HTML to /api/import and returns inserted count", async () => {
+    const mockFetch = vi.mocked(fetch);
+    const html = "<p>test</p>";
+    mockFetch.mockResolvedValueOnce({
+      ok: true,
+      json: () => Promise.resolve({ inserted: 42 }),
+    } as Response);
+
+    const result = await importHistory(html);
+
+    expect(mockFetch).toHaveBeenCalledWith("/api/import", {
+      method: "POST",
+      headers: { "Content-Type": "text/html; charset=utf-8" },
+      body: html,
+    });
+    expect(result).toEqual({ inserted: 42 });
+  });
+
+  it("importHistory throws with response message when not ok", async () => {
+    const mockFetch = vi.mocked(fetch);
+    mockFetch.mockResolvedValueOnce({
+      ok: false,
+      json: () => Promise.resolve({ message: "Database already has history data." }),
+    } as Response);
+
+    await expect(importHistory("<html></html>")).rejects.toThrow(
+      "Database already has history data."
+    );
   });
 });

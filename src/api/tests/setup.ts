@@ -25,3 +25,13 @@ export async function ensureSchema(): Promise<void> {
     await dataSource.destroy();
   }
 }
+
+export async function truncateWatchHistory(): Promise<void> {
+  const dataSource = createDataSource({ databasePath: env.databasePath });
+  await dataSource.initialize();
+  try {
+    await dataSource.query("DELETE FROM watch_history");
+  } finally {
+    await dataSource.destroy();
+  }
+}

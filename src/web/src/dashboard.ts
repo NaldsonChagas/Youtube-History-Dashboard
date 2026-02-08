@@ -8,6 +8,7 @@ import {
   getStatsOverview,
 } from "./api.js";
 import { formatDate } from "./format.js";
+import { requireImportData } from "./guards.js";
 import { applyTheme, initTheme, setStoredTheme } from "./theme.js";
 import type { ChannelCount, HourCount, MonthCount, WeekdayCount } from "./types.js";
 
@@ -192,7 +193,7 @@ interface DashboardState {
   toggleTheme(): void;
   displayOverview(): void;
   loadDashboard(): Promise<void>;
-  init(): void;
+  init(): Promise<void>;
 }
 
 export function registerDashboard(): void {
@@ -280,7 +281,8 @@ export function registerDashboard(): void {
       }
     },
 
-    init(): void {
+    async init(): Promise<void> {
+      if (!(await requireImportData())) return;
       this.loadDashboard();
       this.$nextTick(() => {
         const fromEl = this.$refs.filterFromInput as HTMLInputElement | undefined;

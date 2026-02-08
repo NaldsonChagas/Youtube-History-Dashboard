@@ -70,3 +70,31 @@ export async function getStatsByMonth(params: StatsParams = {}): Promise<MonthCo
   if (!res.ok) throw new Error(res.statusText);
   return res.json() as Promise<MonthCount[]>;
 }
+
+export interface ImportStatus {
+  hasData: boolean;
+}
+
+export async function getImportStatus(): Promise<ImportStatus> {
+  const res = await fetch(`${API_BASE}/api/import/status`);
+  if (!res.ok) throw new Error(res.statusText);
+  return res.json() as Promise<ImportStatus>;
+}
+
+export interface ImportResult {
+  inserted: number;
+}
+
+export async function importHistory(html: string): Promise<ImportResult> {
+  const res = await fetch(`${API_BASE}/api/import`, {
+    method: "POST",
+    headers: { "Content-Type": "text/html; charset=utf-8" },
+    body: html,
+  });
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    const message = (data as { message?: string }).message ?? res.statusText;
+    throw new Error(message);
+  }
+  return res.json() as Promise<ImportResult>;
+}

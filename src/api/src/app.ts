@@ -6,17 +6,20 @@ import swaggerUi from "@fastify/swagger-ui";
 import Fastify from "fastify";
 import { existsSync } from "fs";
 import type { HistoryController } from "./controllers/historyController.js";
+import type { ImportController } from "./controllers/importController.js";
 import type { StatsController } from "./controllers/statsController.js";
 import { env, type BuildAppOptions } from "./config/env.js";
 import {
   buildContainerWithDataSource,
   DATA_SOURCE,
   getHistoryController,
+  getImportController,
   getStatsController,
 } from "./di/index.js";
 import type { DataSource } from "typeorm";
 import { errorHandler } from "./middleware/errorHandler.js";
 import { registerHistoryRoutes } from "./routes/history.js";
+import { registerImportRoutes } from "./routes/import.js";
 import { registerStatsRoutes } from "./routes/stats.js";
 
 export async function buildApp(opts?: BuildAppOptions) {
@@ -24,6 +27,13 @@ export async function buildApp(opts?: BuildAppOptions) {
 
   await app.register(cors, { origin: true });
   app.setErrorHandler(errorHandler);
+  app.addContentTypeParser(
+    "text/html",
+    { parseAs: "string", bodyLimit: 100 * 1024 * 1024 * 1024 },
+    (_req: unknown, payload: string, done: (err: Error | null, body?: string) => void) => {
+      done(null, payload);
+    }
+  );
 
   await app.register(swagger, {
     openapi: {
@@ -36,6 +46,7 @@ export async function buildApp(opts?: BuildAppOptions) {
       servers: [{ url: `http://localhost:${env.port}`, description: "Local" }],
       tags: [
         { name: "history", description: "Watch history list" },
+        { name: "import", description: "Import Takeout HTML" },
         { name: "stats", description: "Aggregated statistics" },
       ],
     },
@@ -52,6 +63,7 @@ export async function buildApp(opts?: BuildAppOptions) {
   });
 
   const historyController = getHistoryController(container) as HistoryController;
+  const importController = getImportController(container) as ImportController;
   const statsController = getStatsController(container) as StatsController;
 
   await app.register(
@@ -59,6 +71,12 @@ export async function buildApp(opts?: BuildAppOptions) {
       await registerHistoryRoutes(instance, historyController);
     },
     { prefix: "/api/history" }
+  );
+  await app.register(
+    async (instance) => {
+      await registerImportRoutes(instance, importController);
+    },
+    { prefix: "/api/import" }
   );
   await app.register(
     async (instance) => {
@@ -76,7 +94,8 @@ export async function buildApp(opts?: BuildAppOptions) {
       }
       return payload;
     });
-    app.get("/", { schema: { hide: true } }, (_request, reply) => reply.sendFile("index.html"));
+    app.get("/", { schema: { hide: true } }, (_request, reply) => reply.sendFile("setup.html"));
+    app.get("/dashboard", { schema: { hide: true } }, (_request, reply) => reply.sendFile("index.html"));
     app.get("/history", { schema: { hide: true } }, (_request, reply) => reply.sendFile("history.html"));
   }
 
