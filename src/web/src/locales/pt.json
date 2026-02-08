@@ -1,0 +1,61 @@
+{
+  "common": {
+    "apply": "Aplicar",
+    "from": "De",
+    "to": "Até",
+    "datePlaceholder": "DD/MM/AAAA",
+    "loadError": "Erro ao carregar",
+    "open": "Abrir",
+    "openVideo": "Abrir vídeo",
+    "loading": "Carregando…",
+    "themeLight": "Ativar tema claro",
+    "themeDark": "Ativar tema escuro",
+    "dashboard": "Dashboard",
+    "fullList": "Lista completa",
+    "previous": "Anterior",
+    "next": "Próxima",
+    "pageOf": "Página {current} de {total}",
+    "channel": "Canal",
+    "channelFilterAria": "Filtrar por canal",
+    "dateRangeError": "Data inicial não pode ser maior que a data final.",
+    "dateFutureError": "Data não pode ser no futuro."
+  },
+  "dashboard": {
+    "title": "YouTube History Dashboard",
+    "subtitle": "Visão geral do seu histórico de visualização",
+    "totalViews": "Total de visualizações",
+    "uniqueChannels": "Canais únicos",
+    "firstWatched": "Primeira visualização",
+    "lastWatched": "Última visualização",
+    "topChannels": "Canais mais vistos",
+    "viewsByHour": "Visualizações por hora do dia",
+    "viewsByWeekday": "Visualizações por dia da semana",
+    "activityByMonth": "Atividade por mês"
+  },
+  "history": {
+    "title": "Lista completa do histórico",
+    "subtitle": "Todos os vídeos com data e canal",
+    "when": "Quando",
+    "videoTitle": "Título",
+    "channel": "Canal",
+    "link": "Link",
+    "channelPlaceholder": "Digite para buscar canais"
+  },
+  "setup": {
+    "title": "Configuração do YouTube History",
+    "subtitle": "Importe seu histórico de visualização",
+    "whereToFind": "Onde encontrar o arquivo:",
+    "step1Prefix": "Acesse ",
+    "step2": "Selecione apenas YouTube (ou YouTube e YouTube Music)",
+    "step3": "Exporte e baixe o arquivo ZIP",
+    "step4": "Dentro do ZIP, abra a pasta do YouTube e localize histórico → histórico-de-visualização.html",
+    "import": "Importar",
+    "importing": "Importando…",
+    "selectFile": "Selecione um arquivo HTML.",
+    "importFailed": "Falha ao importar."
+  },
+  "chart": {
+    "views": "Visualizações",
+    "weekdays": ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"]
+  }
+}

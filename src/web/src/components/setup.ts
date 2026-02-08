@@ -1,4 +1,5 @@
 import { getImportStatus, importHistory } from "../lib/api.js";
+import { t } from "../lib/i18n.js";
 import { applyTheme, initTheme, setStoredTheme } from "../lib/theme.js";
 
 type Theme = "dark" | "light";
@@ -38,7 +39,7 @@ function registerSetup(): void {
 
       async confirm(): Promise<void> {
         if (!this.file) {
-          this.error = "Selecione um arquivo HTML.";
+          this.error = t("setup.selectFile");
           return;
         }
         this.loading = true;
@@ -48,7 +49,7 @@ function registerSetup(): void {
           await importHistory(html);
           window.location.href = "/dashboard";
         } catch (err) {
-          this.error = err instanceof Error ? err.message : "Falha ao importar.";
+          this.error = err instanceof Error ? err.message : t("setup.importFailed");
         } finally {
           this.loading = false;
         }

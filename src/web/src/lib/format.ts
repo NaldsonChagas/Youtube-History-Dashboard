@@ -1,7 +1,10 @@
-export function formatDate(iso: string | null | undefined): string {
+import { getLocaleForIntl } from "./i18n.js";
+
+export function formatDate(iso: string | null | undefined, locale?: string): string {
   if (iso == null || iso === "") return "–";
   const d = new Date(iso);
-  return d.toLocaleDateString("pt-BR", {
+  const loc = locale ?? getLocaleForIntl();
+  return d.toLocaleDateString(loc, {
     day: "2-digit",
     month: "2-digit",
     year: "numeric",

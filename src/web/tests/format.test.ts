@@ -19,6 +19,19 @@ describe("formatDate", () => {
     expect(result).toMatch(/\d{2}\/\d{2}\/\d{4}/);
     expect(result).toMatch(/\d{2}:\d{2}/);
   });
+
+  it("formats with pt-BR locale", () => {
+    const result = formatDate("2024-06-15T14:30:00.000Z", "pt-BR");
+    expect(result).toMatch(/\d{2}\/\d{2}\/\d{4}/);
+    expect(result).toMatch(/\d{2}:\d{2}/);
+    expect(result).toContain("2024");
+  });
+
+  it("formats with en-US locale", () => {
+    const result = formatDate("2024-06-15T14:30:00.000Z", "en-US");
+    expect(result).not.toBe("–");
+    expect(result).toContain("2024");
+  });
 });
 
 describe("escapeHtml", () => {

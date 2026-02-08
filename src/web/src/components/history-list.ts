@@ -3,6 +3,7 @@ import { Portuguese } from "flatpickr/dist/l10n/pt.js";
 import TomSelect from "tom-select";
 import { getHistory, getStatsChannels } from "../lib/api.js";
 import { formatDate } from "../lib/format.js";
+import { getLocale, t } from "../lib/i18n.js";
 import { requireImportData } from "../lib/guards.js";
 import { applyTheme, initTheme, setStoredTheme } from "../lib/theme.js";
 import type { HistoryItem } from "../types.js";
@@ -144,7 +145,7 @@ export function registerHistoryList(): void {
           searchField: ["text"],
           maxOptions: null,
           maxItems: null,
-          placeholder: "Digite para buscar canais",
+          placeholder: t("history.channelPlaceholder"),
           load: (query: string, callback: (options?: { value: string; text: string }[]) => void) => {
             getStatsChannels({
               search: query,
@@ -166,11 +167,12 @@ export function registerHistoryList(): void {
       this.$nextTick(() => {
         const fromEl = this.$refs.filterFromInput as HTMLInputElement | undefined;
         const toEl = this.$refs.filterToInput as HTMLInputElement | undefined;
+        const locale = getLocale();
         const fpOptions = {
-          locale: Portuguese,
+          locale: locale === "pt" ? Portuguese : undefined,
           dateFormat: "Y-m-d",
           altInput: true,
-          altFormat: "d/m/Y",
+          altFormat: locale === "pt" ? "d/m/Y" : "m/d/Y",
           allowInput: false,
           maxDate: "today",
         };

@@ -2,6 +2,27 @@ html.dark {
   color-scheme: dark;
 }
 
+html.dark .theme-border {
+  border-color: #374151 !important;
+}
+
+html.dark .theme-bg-toggle {
+  background-color: #374151 !important;
+  color: #e5e7eb !important;
+}
+
+html.dark .theme-bg-toggle:hover {
+  background-color: #4b5563 !important;
+}
+
+html.dark .theme-text-primary {
+  color: #f3f4f6 !important;
+}
+
+html.dark .theme-text-secondary {
+  color: #9ca3af !important;
+}
+
 html.dark .theme-bg-input,
 html.dark input.theme-bg-input,
 html.dark .ts-wrapper .ts-control,
@@ -38,6 +59,14 @@ html.dark .ts-dropdown .option.active {
 
 html.dark .ts-dropdown .option:hover {
   background-color: #374151 !important;
+}
+
+html.light .lang-switcher-selected {
+  color: #111827 !important;
+}
+
+html.dark .lang-switcher-selected {
+  color: #fca5a5 !important;
 }
 
 html.light {

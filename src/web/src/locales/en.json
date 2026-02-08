@@ -1,0 +1,61 @@
+{
+  "common": {
+    "apply": "Apply",
+    "from": "From",
+    "to": "To",
+    "datePlaceholder": "MM/DD/YYYY",
+    "loadError": "Error loading",
+    "open": "Open",
+    "openVideo": "Open video",
+    "loading": "Loading…",
+    "themeLight": "Enable light theme",
+    "themeDark": "Enable dark theme",
+    "dashboard": "Dashboard",
+    "fullList": "Full list",
+    "previous": "Previous",
+    "next": "Next",
+    "pageOf": "Page {current} of {total}",
+    "channel": "Channel",
+    "channelFilterAria": "Filter by channel",
+    "dateRangeError": "Start date cannot be greater than end date.",
+    "dateFutureError": "Date cannot be in the future."
+  },
+  "dashboard": {
+    "title": "YouTube History Dashboard",
+    "subtitle": "Overview of your watch history",
+    "totalViews": "Total views",
+    "uniqueChannels": "Unique channels",
+    "firstWatched": "First watched",
+    "lastWatched": "Last watched",
+    "topChannels": "Most watched channels",
+    "viewsByHour": "Views by hour of day",
+    "viewsByWeekday": "Views by day of week",
+    "activityByMonth": "Activity by month"
+  },
+  "history": {
+    "title": "Full history list",
+    "subtitle": "All videos with date and channel",
+    "when": "When",
+    "videoTitle": "Title",
+    "channel": "Channel",
+    "link": "Link",
+    "channelPlaceholder": "Type to search channels"
+  },
+  "setup": {
+    "title": "YouTube History Setup",
+    "subtitle": "Import your watch history",
+    "whereToFind": "Where to find the file:",
+    "step1Prefix": "Go to ",
+    "step2": "Select only YouTube (or YouTube and YouTube Music)",
+    "step3": "Export and download the ZIP file",
+    "step4": "Inside the ZIP, open the YouTube folder and locate history → watch-history.html",
+    "import": "Import",
+    "importing": "Importing…",
+    "selectFile": "Please select an HTML file.",
+    "importFailed": "Import failed."
+  },
+  "chart": {
+    "views": "Views",
+    "weekdays": ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+  }
+}

@@ -1,5 +1,6 @@
 declare const Alpine: {
   data: (name: string, component: () => object) => void;
+  store: (name: string, state?: object) => object;
 };
 
 interface ChartInstance {

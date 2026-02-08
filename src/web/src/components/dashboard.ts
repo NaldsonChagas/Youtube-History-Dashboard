@@ -8,11 +8,10 @@ import {
   getStatsOverview,
 } from "../lib/api.js";
 import { formatDate } from "../lib/format.js";
+import { getLocale, getLocaleForIntl, getWeekdays, t } from "../lib/i18n.js";
 import { requireImportData } from "../lib/guards.js";
 import { applyTheme, initTheme, setStoredTheme } from "../lib/theme.js";
 import type { ChannelCount, HourCount, MonthCount, WeekdayCount } from "../types.js";
-
-const WEEKDAY_LABELS = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
 
 const CHART_COLOR = {
   backgroundColor: "rgba(204, 0, 0, 0.7)",
@@ -48,7 +47,7 @@ function renderChannelsChart(data: ChannelCount[]): void {
       labels: slice.map((d) => d.channelName),
       datasets: [
         {
-          label: "Visualizações",
+          label: t("chart.views"),
           data: slice.map((d) => d.count),
           backgroundColor: CHART_COLOR.backgroundColor,
           borderColor: CHART_COLOR.borderColor,
@@ -86,7 +85,7 @@ function renderByHourChart(data: HourCount[]): void {
       labels: byHour.map((d) => `${d.hour}h`),
       datasets: [
         {
-          label: "Visualizações",
+          label: t("chart.views"),
           data: byHour.map((d) => d.count),
           backgroundColor: CHART_COLOR.backgroundColor,
           borderColor: CHART_COLOR.borderColor,
@@ -112,7 +111,8 @@ function renderByWeekdayChart(data: WeekdayCount[]): void {
   if (!canvas) return;
   const ctx = canvas.getContext("2d");
   if (!ctx) return;
-  const byDay = WEEKDAY_LABELS.map((_, i) => ({
+  const weekdayLabels = getWeekdays();
+  const byDay = weekdayLabels.map((_, i) => ({
     weekday: i,
     count: data.find((d) => d.weekday === i)?.count ?? 0,
   }));
@@ -120,10 +120,10 @@ function renderByWeekdayChart(data: WeekdayCount[]): void {
   new Chart(ctx, {
     type: "bar",
     data: {
-      labels: WEEKDAY_LABELS,
+      labels: weekdayLabels,
       datasets: [
         {
-          label: "Visualizações",
+          label: t("chart.views"),
           data: byDay.map((d) => d.count),
           backgroundColor: CHART_COLOR.backgroundColor,
           borderColor: CHART_COLOR.borderColor,
@@ -157,7 +157,7 @@ function renderByMonthChart(data: MonthCount[]): void {
       labels,
       datasets: [
         {
-          label: "Visualizações",
+          label: t("chart.views"),
           data: data.map((d) => d.count),
           borderColor: CHART_COLOR.borderColor,
           backgroundColor: CHART_COLOR.fillBackground,
@@ -229,11 +229,12 @@ export function registerDashboard(): void {
       const elFirst = document.getElementById("stat-first-watched");
       const elLast = document.getElementById("stat-last-watched");
       if (this.loadError && elTotal) {
-        elTotal.textContent = "Erro ao carregar";
+        elTotal.textContent = t("common.loadError");
         return;
       }
-      if (elTotal) elTotal.textContent = this.totalViews != null ? this.totalViews.toLocaleString("pt-BR") : "–";
-      if (elChannels) elChannels.textContent = this.uniqueChannels != null ? this.uniqueChannels.toLocaleString("pt-BR") : "–";
+      const locale = getLocaleForIntl();
+      if (elTotal) elTotal.textContent = this.totalViews != null ? this.totalViews.toLocaleString(locale) : "–";
+      if (elChannels) elChannels.textContent = this.uniqueChannels != null ? this.uniqueChannels.toLocaleString(locale) : "–";
       if (elFirst) elFirst.textContent = formatDate(this.firstWatched);
       if (elLast) elLast.textContent = formatDate(this.lastWatched);
     },
@@ -287,11 +288,12 @@ export function registerDashboard(): void {
       this.$nextTick(() => {
         const fromEl = this.$refs.filterFromInput as HTMLInputElement | undefined;
         const toEl = this.$refs.filterToInput as HTMLInputElement | undefined;
+        const locale = getLocale();
         const fpOptions = {
-          locale: Portuguese,
+          locale: locale === "pt" ? Portuguese : undefined,
           dateFormat: "Y-m-d",
           altInput: true,
-          altFormat: "d/m/Y",
+          altFormat: locale === "pt" ? "d/m/Y" : "m/d/Y",
           allowInput: false,
           maxDate: "today",
         };

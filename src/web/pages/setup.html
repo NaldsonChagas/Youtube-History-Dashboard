@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="pt-BR" class="light">
+<html lang="en" class="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Configuração – YouTube History</title>
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <script>
-    (function(){var t=localStorage.getItem('theme')||'light';document.documentElement.className=t;})();
+    (function(){var t=localStorage.getItem('theme')||'light';document.documentElement.className=t;var l=localStorage.getItem('locale')||'en';document.documentElement.lang=l==='en'?'en':'pt-BR';})();
   </script>
   <script>
     (function(){var w=window;w.tailwind=w.tailwind||{};w.tailwind.config=Object.assign(w.tailwind.config||{},{darkMode:'class'});})();
@@ -14,8 +14,8 @@
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 min-h-screen theme-text-primary flex flex-col" x-data="setup" x-init="init()">
-  <header class="flex justify-end p-4 shrink-0">
-    <button type="button" @click="toggleTheme()" class="p-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600 theme-bg-toggle" :aria-label="theme === 'dark' ? 'Ativar tema claro' : 'Ativar tema escuro'">
+  <header class="flex justify-end items-center gap-2 p-4 shrink-0">
+    <button type="button" @click="toggleTheme()" class="p-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600 theme-bg-toggle" :aria-label="theme === 'dark' ? $store.i18n.t('common.themeLight') : $store.i18n.t('common.themeDark')">
       <span x-show="theme === 'dark'"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"/></svg></span>
       <span x-show="theme === 'light'" x-cloak><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"/></svg></span>
     </button>
@@ -28,18 +28,18 @@
           <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
         </svg>
         <div>
-          <h1 class="text-2xl font-bold text-gray-900 dark:text-white theme-text-primary">Configuração do YouTube History</h1>
-          <p class="text-gray-500 dark:text-gray-400 mt-1 theme-text-secondary text-sm">Importe seu histórico de visualização</p>
+          <h1 class="text-2xl font-bold text-gray-900 dark:text-white theme-text-primary" x-text="$store.i18n.t('setup.title')">Configuração do YouTube History</h1>
+          <p class="text-gray-500 dark:text-gray-400 mt-1 theme-text-secondary text-sm" x-text="$store.i18n.t('setup.subtitle')">Importe seu histórico de visualização</p>
         </div>
       </div>
 
       <div class="text-left w-full bg-white dark:bg-gray-800 rounded-lg p-4 shadow border border-gray-200 dark:border-gray-700 theme-bg-card theme-border">
-        <p class="text-gray-600 dark:text-gray-400 text-sm theme-text-secondary mb-2">Onde encontrar o arquivo:</p>
+        <p class="text-gray-600 dark:text-gray-400 text-sm theme-text-secondary mb-2" x-text="$store.i18n.t('setup.whereToFind')">Onde encontrar o arquivo:</p>
         <ol class="list-decimal list-inside text-sm space-y-1 text-gray-700 dark:text-gray-300 theme-text-primary">
-          <li>Acesse <a href="https://takeout.google.com" target="_blank" rel="noopener noreferrer" class="text-red-600 dark:text-red-500 underline">takeout.google.com</a></li>
-          <li>Selecione apenas <strong>YouTube</strong> (ou YouTube e YouTube Music)</li>
-          <li>Exporte e baixe o arquivo ZIP</li>
-          <li>Dentro do ZIP, abra a pasta do YouTube e localize <strong>histórico</strong> → <strong>histórico-de-visualização.html</strong></li>
+          <li><span x-text="$store.i18n.t('setup.step1Prefix')"></span><a href="https://takeout.google.com" target="_blank" rel="noopener noreferrer" class="text-red-600 dark:text-red-500 underline">takeout.google.com</a></li>
+          <li x-text="$store.i18n.t('setup.step2')">Selecione apenas YouTube (ou YouTube e YouTube Music)</li>
+          <li x-text="$store.i18n.t('setup.step3')">Exporte e baixe o arquivo ZIP</li>
+          <li x-text="$store.i18n.t('setup.step4')">Dentro do ZIP, abra a pasta do YouTube e localize histórico → histórico-de-visualização.html</li>
         </ol>
       </div>
 
@@ -58,7 +58,7 @@
             :disabled="loading"
             class="w-full bg-red-600 hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed text-white px-6 py-2 rounded font-medium"
           >
-            <span x-text="loading ? 'Importando…' : 'Importar'"></span>
+            <span x-text="loading ? $store.i18n.t('setup.importing') : $store.i18n.t('setup.import')"></span>
           </button>
         </div>
       </form>
@@ -67,6 +67,10 @@
     </div>
   </main>
 
+  <div class="lang-switcher fixed bottom-3 right-3 z-10 flex gap-1 rounded-lg border p-1 shadow-sm theme-border theme-bg-toggle" aria-label="Language">
+    <button type="button" @click="$store.i18n.changeLocale('en')" :class="$store.i18n.locale === 'en' ? 'lang-switcher-selected ring-1 ring-red-500 bg-red-100 dark:bg-red-900/20' : 'theme-bg-toggle theme-text-secondary'" class="w-8 h-8 rounded text-xs font-medium transition-colors hover:opacity-90" aria-label="English">EN</button>
+    <button type="button" @click="$store.i18n.changeLocale('pt')" :class="$store.i18n.locale === 'pt' ? 'lang-switcher-selected ring-1 ring-red-500 bg-red-100 dark:bg-red-900/20' : 'theme-bg-toggle theme-text-secondary'" class="w-8 h-8 rounded text-xs font-medium transition-colors hover:opacity-90" aria-label="Português">PT</button>
+  </div>
   <script type="module" src="/src/entries/setup.ts"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
 </body>

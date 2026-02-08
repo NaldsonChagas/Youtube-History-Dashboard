@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="pt-BR" class="light">
+<html lang="en" class="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>YouTube History – Dashboard</title>
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <script>
-    (function(){var t=localStorage.getItem('theme')||'light';document.documentElement.className=t;})();
+    (function(){var t=localStorage.getItem('theme')||'light';document.documentElement.className=t;var l=localStorage.getItem('locale')||'en';document.documentElement.lang=l==='en'?'en':'pt-BR';})();
   </script>
   <script>
     (function(){var w=window;w.tailwind=w.tailwind||{};w.tailwind.config=Object.assign(w.tailwind.config||{},{darkMode:'class'});})();
@@ -22,18 +22,18 @@
           <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
         </svg>
         <div class="min-w-0">
-          <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white theme-text-primary truncate">YouTube History Dashboard</h1>
-          <p class="text-gray-500 dark:text-gray-400 mt-1 theme-text-secondary">Visão geral do seu histórico de visualização</p>
+          <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white theme-text-primary truncate" x-text="$store.i18n.t('dashboard.title')">YouTube History Dashboard</h1>
+          <p class="text-gray-500 dark:text-gray-400 mt-1 theme-text-secondary" x-text="$store.i18n.t('dashboard.subtitle')">Visão geral do seu histórico de visualização</p>
         </div>
       </div>
       <div class="flex items-center gap-4 shrink-0">
-        <button type="button" @click="toggleTheme()" class="p-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600 theme-bg-toggle" :aria-label="theme === 'dark' ? 'Ativar tema claro' : 'Ativar tema escuro'">
+        <button type="button" @click="toggleTheme()" class="p-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600 theme-bg-toggle" :aria-label="theme === 'dark' ? $store.i18n.t('common.themeLight') : $store.i18n.t('common.themeDark')">
           <span x-show="theme === 'dark'"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"/></svg></span>
           <span x-show="theme === 'light'" x-cloak><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"/></svg></span>
         </button>
         <nav class="flex gap-4">
-          <a href="/dashboard" class="text-red-600 dark:text-red-500 font-medium hover:underline">Dashboard</a>
-          <a href="/history" class="text-gray-500 dark:text-gray-400 hover:underline">Lista completa</a>
+          <a href="/dashboard" class="text-red-600 dark:text-red-500 font-medium hover:underline" x-text="$store.i18n.t('common.dashboard')"></a>
+          <a href="/history" class="text-gray-500 dark:text-gray-400 hover:underline" x-text="$store.i18n.t('common.fullList')"></a>
         </nav>
       </div>
     </header>
@@ -41,49 +41,49 @@
     <section class="mb-8">
     <div class="flex flex-col sm:flex-row sm:flex-wrap gap-4 sm:items-center sm:justify-end">
       <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-        <label class="text-gray-600 dark:text-gray-400 text-sm theme-text-secondary">De</label>
-        <input type="text" x-ref="filterFromInput" placeholder="DD/MM/AAAA" id="filter-from" class="w-full sm:w-auto min-w-0 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-700 rounded px-3 py-2 theme-bg-input">
+        <label class="text-gray-600 dark:text-gray-400 text-sm theme-text-secondary" x-text="$store.i18n.t('common.from')">De</label>
+        <input type="text" x-ref="filterFromInput" :placeholder="$store.i18n.t('common.datePlaceholder')" id="filter-from" class="w-full sm:w-auto min-w-0 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-700 rounded px-3 py-2 theme-bg-input">
       </div>
       <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-        <label class="text-gray-600 dark:text-gray-400 text-sm theme-text-secondary">Até</label>
-        <input type="text" x-ref="filterToInput" placeholder="DD/MM/AAAA" id="filter-to" class="w-full sm:w-auto min-w-0 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-700 rounded px-3 py-2 theme-bg-input">
+        <label class="text-gray-600 dark:text-gray-400 text-sm theme-text-secondary" x-text="$store.i18n.t('common.to')">Até</label>
+        <input type="text" x-ref="filterToInput" :placeholder="$store.i18n.t('common.datePlaceholder')" id="filter-to" class="w-full sm:w-auto min-w-0 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-700 rounded px-3 py-2 theme-bg-input">
       </div>
-      <button type="button" @click="loadDashboard()" class="w-full sm:w-auto bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded font-medium shrink-0">Aplicar</button>
+      <button type="button" @click="loadDashboard()" class="w-full sm:w-auto bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded font-medium shrink-0" x-text="$store.i18n.t('common.apply')">Aplicar</button>
     </div>
     <div class="text-right mt-2">
-      <p x-show="dateRangeError" class="text-red-500 text-sm" x-cloak>Data inicial não pode ser maior que a data final.</p>
-      <p x-show="dateFutureError" class="text-red-500 text-sm" x-cloak>Data não pode ser no futuro.</p>
+      <p x-show="dateRangeError" class="text-red-500 text-sm" x-cloak x-text="$store.i18n.t('common.dateRangeError')">Data inicial não pode ser maior que a data final.</p>
+      <p x-show="dateFutureError" class="text-red-500 text-sm" x-cloak x-text="$store.i18n.t('common.dateFutureError')">Data não pode ser no futuro.</p>
     </div>
     </section>
 
     <section id="overview" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
       <div class="bg-white dark:bg-gray-800 rounded-lg p-4 shadow border border-gray-200 dark:border-gray-700 theme-bg-card theme-border">
-        <p class="text-gray-500 dark:text-gray-400 text-sm theme-text-secondary">Total de visualizações</p>
+        <p class="text-gray-500 dark:text-gray-400 text-sm theme-text-secondary" x-text="$store.i18n.t('dashboard.totalViews')">Total de visualizações</p>
         <p id="stat-total-views" class="text-2xl font-bold text-gray-900 dark:text-white theme-text-primary">–</p>
       </div>
       <div class="bg-white dark:bg-gray-800 rounded-lg p-4 shadow border border-gray-200 dark:border-gray-700 theme-bg-card theme-border">
-        <p class="text-gray-500 dark:text-gray-400 text-sm theme-text-secondary">Canais únicos</p>
+        <p class="text-gray-500 dark:text-gray-400 text-sm theme-text-secondary" x-text="$store.i18n.t('dashboard.uniqueChannels')">Canais únicos</p>
         <p id="stat-unique-channels" class="text-2xl font-bold text-gray-900 dark:text-white theme-text-primary">–</p>
       </div>
       <div class="bg-white dark:bg-gray-800 rounded-lg p-4 shadow border border-gray-200 dark:border-gray-700 theme-bg-card theme-border">
-        <p class="text-gray-500 dark:text-gray-400 text-sm theme-text-secondary">Primeira visualização</p>
+        <p class="text-gray-500 dark:text-gray-400 text-sm theme-text-secondary" x-text="$store.i18n.t('dashboard.firstWatched')">Primeira visualização</p>
         <p id="stat-first-watched" class="text-lg font-semibold text-gray-900 dark:text-white theme-text-primary">–</p>
       </div>
       <div class="bg-white dark:bg-gray-800 rounded-lg p-4 shadow border border-gray-200 dark:border-gray-700 theme-bg-card theme-border">
-        <p class="text-gray-500 dark:text-gray-400 text-sm theme-text-secondary">Última visualização</p>
+        <p class="text-gray-500 dark:text-gray-400 text-sm theme-text-secondary" x-text="$store.i18n.t('dashboard.lastWatched')">Última visualização</p>
         <p id="stat-last-watched" class="text-lg font-semibold text-gray-900 dark:text-white theme-text-primary">–</p>
       </div>
     </section>
 
     <section class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-8 mb-8">
       <div class="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 shadow border border-gray-200 dark:border-gray-700 theme-bg-card theme-border">
-        <h2 class="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white mb-4 theme-text-primary">Canais mais vistos</h2>
+        <h2 class="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white mb-4 theme-text-primary" x-text="$store.i18n.t('dashboard.topChannels')">Canais mais vistos</h2>
         <div class="h-64 sm:h-80">
           <canvas id="chart-channels"></canvas>
         </div>
       </div>
       <div class="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 shadow border border-gray-200 dark:border-gray-700 theme-bg-card theme-border">
-        <h2 class="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white mb-4 theme-text-primary">Visualizações por hora do dia</h2>
+        <h2 class="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white mb-4 theme-text-primary" x-text="$store.i18n.t('dashboard.viewsByHour')">Visualizações por hora do dia</h2>
         <div class="h-64 sm:h-80">
           <canvas id="chart-by-hour"></canvas>
         </div>
@@ -92,13 +92,13 @@
 
     <section class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-8 mb-8">
       <div class="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 shadow border border-gray-200 dark:border-gray-700 theme-bg-card theme-border">
-        <h2 class="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white mb-4 theme-text-primary">Visualizações por dia da semana</h2>
+        <h2 class="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white mb-4 theme-text-primary" x-text="$store.i18n.t('dashboard.viewsByWeekday')">Visualizações por dia da semana</h2>
         <div class="h-64 sm:h-80">
           <canvas id="chart-by-weekday"></canvas>
         </div>
       </div>
       <div class="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 shadow border border-gray-200 dark:border-gray-700 theme-bg-card theme-border">
-        <h2 class="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white mb-4 theme-text-primary">Atividade por mês</h2>
+        <h2 class="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white mb-4 theme-text-primary" x-text="$store.i18n.t('dashboard.activityByMonth')">Atividade por mês</h2>
         <div class="h-64 sm:h-80">
           <canvas id="chart-by-month"></canvas>
         </div>
@@ -106,6 +106,10 @@
     </section>
   </div>
 
+  <div class="lang-switcher fixed bottom-3 right-3 z-10 flex gap-1 rounded-lg border p-1 shadow-sm theme-border theme-bg-toggle" aria-label="Language">
+    <button type="button" @click="$store.i18n.changeLocale('en')" :class="$store.i18n.locale === 'en' ? 'lang-switcher-selected ring-1 ring-red-500 bg-red-100 dark:bg-red-900/20' : 'theme-bg-toggle theme-text-secondary'" class="w-8 h-8 rounded text-xs font-medium transition-colors hover:opacity-90" aria-label="English">EN</button>
+    <button type="button" @click="$store.i18n.changeLocale('pt')" :class="$store.i18n.locale === 'pt' ? 'lang-switcher-selected ring-1 ring-red-500 bg-red-100 dark:bg-red-900/20' : 'theme-bg-toggle theme-text-secondary'" class="w-8 h-8 rounded text-xs font-medium transition-colors hover:opacity-90" aria-label="Português">PT</button>
+  </div>
   <script type="module" src="/src/entries/dashboard.ts"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
 </body>
