@@ -138,7 +138,6 @@ export function registerHistoryList(): void {
       this.$nextTick(() => {
         const el = this.$refs.channelSelect as HTMLSelectElement | undefined;
         if (!el) return;
-        const self = this;
         new TomSelect(el, {
           valueField: "value",
           labelField: "text",
@@ -150,8 +149,8 @@ export function registerHistoryList(): void {
             getStatsChannels({
               search: query,
               limit: 50,
-              from: self.filterFrom || undefined,
-              to: self.filterTo || undefined,
+              from: this.filterFrom || undefined,
+              to: this.filterTo || undefined,
             })
               .then((channels) =>
                 callback(channels.map((ch) => ({ value: ch.channelId, text: ch.channelName })))

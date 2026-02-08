@@ -23,9 +23,7 @@ COPY --from=builder /app/pnpm-lock.yaml ./
 RUN pnpm install --prod --frozen-lockfile
 
 COPY --from=builder /app/dist ./dist
-COPY src/api/entrypoint.sh /app/entrypoint.sh
 COPY src/web /app/web
-RUN chmod +x /app/entrypoint.sh
 ENV PUBLIC_PATH=/app/web
 
 USER node

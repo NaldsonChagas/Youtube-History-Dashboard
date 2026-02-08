@@ -5,6 +5,7 @@ This document defines the project's code standards, aligned with the **Google Ty
 ## General principles
 
 - **Clean code**: names that explain intent; small functions with a single responsibility; low cognitive load per function.
+- **No dead code**: remove unused files, exports, imports, and scripts. Do not leave copied or imported code that is never executed (e.g. orphaned entrypoints). ESLint catches unused variables; review builds and Docker for orphaned artifacts.
 - **No unnecessary comments**: code should be self-explanatory. Comment only when the business decision or a workaround is not obvious.
 - **Consistency**: follow the standards below across the repository.
 

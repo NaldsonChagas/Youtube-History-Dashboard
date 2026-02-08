@@ -60,7 +60,9 @@ function registerSetup(): void {
           if (status.hasData) {
             window.location.href = "/dashboard";
           }
-        } catch {}
+        } catch {
+          void 0;
+        }
       },
     })
   );

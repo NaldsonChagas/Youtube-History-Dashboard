@@ -5,7 +5,7 @@ alwaysApply: true
 
 # Project standards
 
-- **Code**: follow [docs/coding-standards.md](../docs/coding-standards.md). Clean code, no unnecessary comments, Google TypeScript Style Guide. ESLint on API and web.
+- **Code**: follow [docs/coding-standards.md](../docs/coding-standards.md). Clean code, no unnecessary comments, no dead code, Google TypeScript Style Guide. ESLint on API and web.
 - **API**: follow [docs/architecture.md](../docs/architecture.md). New route = model → controller → route → register in app. Keep controllers thin; logic and queries in models.
 - **Web**: follow [docs/architecture.md](../docs/architecture.md) for structure (src, js, tests) and Alpine + tsc flow.
 - **Tests**: follow the test skill and rule: always create or update tests for features and fixes; for bug fixes, write the failing test first. API: `src/api/tests/`. Web: `src/web/tests/`.
