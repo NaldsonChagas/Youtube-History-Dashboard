@@ -4,7 +4,7 @@ import TomSelect from "tom-select";
 import { getHistory, getStatsChannels } from "./api.js";
 import { formatDate } from "./format.js";
 import { applyTheme, initTheme, setStoredTheme } from "./theme.js";
-import type { ChannelCount, HistoryItem } from "./types.js";
+import type { HistoryItem } from "./types.js";
 
 const PAGE_SIZE = 50;
 
@@ -28,8 +28,6 @@ interface HistoryListState {
   currentPage: number;
   totalItems: number;
   items: HistoryItem[];
-  channels: ChannelCount[];
-  channelsLoadError: boolean;
   dateRangeError: boolean;
   dateFutureError: boolean;
   loading: boolean;
@@ -40,7 +38,6 @@ interface HistoryListState {
   videoUrl(item: HistoryItem): string;
   formattedDate(iso: string | null | undefined): string;
   toggleTheme(): void;
-  loadChannels(): Promise<void>;
   loadPage(): Promise<void>;
   applyFilters(): void;
   goToPage(page: number): void;
@@ -56,8 +53,6 @@ export function registerHistoryList(): void {
     currentPage: 1,
     totalItems: 0,
     items: [],
-    channels: [],
-    channelsLoadError: false,
     dateRangeError: false,
     dateFutureError: false,
     loading: false,
@@ -88,16 +83,6 @@ export function registerHistoryList(): void {
       this.theme = this.theme === "dark" ? "light" : "dark";
       setStoredTheme(this.theme);
       applyTheme(this.theme);
-    },
-
-    async loadChannels(): Promise<void> {
-      try {
-        this.channelsLoadError = false;
-        this.channels = await getStatsChannels({ limit: 50 });
-      } catch {
-        this.channels = [];
-        this.channelsLoadError = true;
-      }
     },
 
     async loadPage(): Promise<void> {
@@ -147,23 +132,31 @@ export function registerHistoryList(): void {
     },
 
     async init(): Promise<void> {
-      await this.loadChannels();
       await this.loadPage();
       this.$nextTick(() => {
         const el = this.$refs.channelSelect as HTMLSelectElement | undefined;
         if (!el) return;
-        const options = this.channels.map((ch) => ({
-          value: ch.channelId,
-          text: ch.channelName,
-        }));
+        const self = this;
         new TomSelect(el, {
-          options,
           valueField: "value",
           labelField: "text",
           searchField: ["text"],
           maxOptions: null,
           maxItems: null,
-          placeholder: "Todos os canais",
+          placeholder: "Digite para buscar canais",
+          load: (query: string, callback: (options?: { value: string; text: string }[]) => void) => {
+            getStatsChannels({
+              search: query,
+              limit: 50,
+              from: self.filterFrom || undefined,
+              to: self.filterTo || undefined,
+            })
+              .then((channels) =>
+                callback(channels.map((ch) => ({ value: ch.channelId, text: ch.channelName })))
+              )
+              .catch(() => callback());
+          },
+          shouldLoad: (query: string) => query.length >= 1,
           onChange: (value: string | string[]) => {
             this.filterChannels = Array.isArray(value) ? value : value ? [value] : [];
           },

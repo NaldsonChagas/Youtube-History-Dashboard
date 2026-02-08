@@ -55,4 +55,5 @@ export interface StatsParams {
   from?: string;
   to?: string;
   limit?: number;
+  search?: string;
 }

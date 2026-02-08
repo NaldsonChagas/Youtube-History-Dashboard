@@ -3,10 +3,10 @@ const STORAGE_KEY = "theme";
 export type Theme = "dark" | "light";
 
 export function getStoredTheme(): Theme {
-  if (typeof localStorage === "undefined") return "dark";
+  if (typeof localStorage === "undefined") return "light";
   const stored = localStorage.getItem(STORAGE_KEY);
   if (stored === "light" || stored === "dark") return stored;
-  return "dark";
+  return "light";
 }
 
 export function setStoredTheme(theme: Theme): void {

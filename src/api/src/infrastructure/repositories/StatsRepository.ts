@@ -17,6 +17,13 @@ function formatDate(val: unknown): string | null {
   return String(val);
 }
 
+function escapeIlikePattern(raw: string): string {
+  return raw
+    .replace(/\\/g, "\\\\")
+    .replace(/%/g, "\\%")
+    .replace(/_/g, "\\_");
+}
+
 @Injectable()
 export class StatsRepository implements IStatsRepository {
   constructor(@Inject(DATA_SOURCE) private readonly dataSource: DataSource) {}
@@ -51,7 +58,8 @@ export class StatsRepository implements IStatsRepository {
   async channels(
     from?: string,
     to?: string,
-    limit = 10
+    limit = 10,
+    search?: string
   ): Promise<ChannelCount[]> {
     const qb = this.dataSource
       .getRepository(WatchHistory)
@@ -66,6 +74,11 @@ export class StatsRepository implements IStatsRepository {
 
     if (from) qb.andWhere("w.watchedAt >= :from", { from });
     if (to) qb.andWhere("w.watchedAt <= :to", { to });
+    const searchTrimmed = search?.trim();
+    if (searchTrimmed) {
+      const pattern = `%${escapeIlikePattern(searchTrimmed)}%`;
+      qb.andWhere("w.channelName ILIKE :search", { search: pattern });
+    }
 
     const rows = await qb.getRawMany<{
       channelId: string;

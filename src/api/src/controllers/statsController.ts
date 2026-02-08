@@ -42,7 +42,7 @@ export class StatsController {
 
   async channels(
     request: FastifyRequest<{
-      Querystring: StatsQuerystring & { limit?: string };
+      Querystring: StatsQuerystring & { limit?: string; search?: string };
     }>,
     reply: FastifyReply
   ): Promise<void> {
@@ -53,7 +53,8 @@ export class StatsController {
     const result = await this.getStatsChannels.execute(
       optionalQueryParam(request.query.from),
       optionalQueryParam(request.query.to),
-      limit
+      limit,
+      optionalQueryParam(request.query.search)
     );
     await reply.send(result);
   }

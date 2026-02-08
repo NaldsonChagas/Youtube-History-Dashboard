@@ -28,6 +28,7 @@ const channelsQuerystring = {
     from: { type: "string", format: "date", description: "Filter from date (ISO 8601)" },
     to: { type: "string", format: "date", description: "Filter to date (ISO 8601)" },
     limit: { type: "integer", minimum: 1, maximum: 50, default: 10, description: "Max channels to return" },
+    search: { type: "string", description: "Filter by channel name (case-insensitive partial match)" },
   },
 };
 

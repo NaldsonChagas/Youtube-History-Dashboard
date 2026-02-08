@@ -83,6 +83,20 @@ describe("api", () => {
     expect(result).toEqual(channels);
   });
 
+  it("getStatsChannels sends search param when provided", async () => {
+    const mockFetch = vi.mocked(fetch);
+    mockFetch.mockResolvedValueOnce({
+      ok: true,
+      json: () => Promise.resolve([]),
+    } as Response);
+
+    await getStatsChannels({ search: "linkin", limit: 50 });
+
+    expect(mockFetch).toHaveBeenCalledWith(expect.stringContaining("/api/stats/channels?"));
+    expect(mockFetch).toHaveBeenCalledWith(expect.stringMatching(/search=linkin/));
+    expect(mockFetch).toHaveBeenCalledWith(expect.stringMatching(/limit=50/));
+  });
+
   it("getStatsByHour returns parsed json", async () => {
     const mockFetch = vi.mocked(fetch);
     mockFetch.mockResolvedValueOnce({

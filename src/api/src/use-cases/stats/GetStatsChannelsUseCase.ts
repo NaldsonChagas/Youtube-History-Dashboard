@@ -7,8 +7,9 @@ export class GetStatsChannelsUseCase {
   async execute(
     from?: string,
     to?: string,
-    limit?: number
+    limit?: number,
+    search?: string
   ): Promise<ChannelCount[]> {
-    return this.statsRepository.channels(from, to, limit);
+    return this.statsRepository.channels(from, to, limit, search);
   }
 }

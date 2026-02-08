@@ -15,8 +15,8 @@ describe("theme", () => {
   });
 
   describe("getStoredTheme", () => {
-    it("returns dark when localStorage is empty", () => {
-      expect(getStoredTheme()).toBe("dark");
+    it("returns light when localStorage is empty", () => {
+      expect(getStoredTheme()).toBe("light");
     });
 
     it("returns stored theme when valid", () => {
@@ -26,9 +26,9 @@ describe("theme", () => {
       expect(getStoredTheme()).toBe("dark");
     });
 
-    it("returns dark when stored value is invalid", () => {
+    it("returns light when stored value is invalid", () => {
       storage.theme = "invalid";
-      expect(getStoredTheme()).toBe("dark");
+      expect(getStoredTheme()).toBe("light");
     });
   });
 

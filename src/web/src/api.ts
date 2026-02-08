@@ -43,7 +43,7 @@ export async function getStatsOverview(params: StatsParams = {}): Promise<StatsO
   return res.json() as Promise<StatsOverview>;
 }
 
-export async function getStatsChannels(params: StatsParams & { limit?: number } = {}): Promise<ChannelCount[]> {
+export async function getStatsChannels(params: StatsParams = {}): Promise<ChannelCount[]> {
   const qs = buildQueryString(params as Record<string, string | number | undefined>);
   const res = await fetch(`${API_BASE}/api/stats/channels?${qs}`);
   if (!res.ok) throw new Error(res.statusText);

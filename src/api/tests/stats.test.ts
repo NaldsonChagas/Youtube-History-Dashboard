@@ -44,6 +44,20 @@ describe("GET /api/stats", () => {
     }
   });
 
+  it('GET /api/stats/channels?search= returns 200 and only matching channels (case-insensitive)', async () => {
+    const search = 'linkin';
+    const res = await app.inject({
+      method: 'GET',
+      url: `/api/stats/channels?search=${encodeURIComponent(search)}&limit=50`,
+    });
+    expect(res.statusCode).toBe(200);
+    const body = res.json();
+    expect(Array.isArray(body)).toBe(true);
+    for (const ch of body) {
+      expect(ch.channelName.toLowerCase()).toContain(search.toLowerCase());
+    }
+  });
+
   it('GET /api/stats/by-hour returns 200 and array', async () => {
     const res = await app.inject({
       method: 'GET',

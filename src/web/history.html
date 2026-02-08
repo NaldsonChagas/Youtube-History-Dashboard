@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="pt-BR" class="dark">
+<html lang="pt-BR" class="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>YouTube History – Lista completa</title>
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <script>
-    (function(){var t=localStorage.getItem('theme')||'dark';document.documentElement.className=t;})();
+    (function(){var t=localStorage.getItem('theme')||'light';document.documentElement.className=t;})();
   </script>
   <script>
     (function(){var w=window;w.tailwind=w.tailwind||{};w.tailwind.config=Object.assign(w.tailwind.config||{},{darkMode:'class'});})();
@@ -43,7 +43,6 @@
         <label class="text-gray-600 dark:text-gray-400 text-sm theme-text-secondary">Canal</label>
         <div class="w-full sm:w-auto sm:min-w-[200px] min-w-0">
           <select multiple x-ref="channelSelect" class="w-full bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-700 rounded px-3 py-2 theme-bg-input" aria-label="Filtrar por canal"></select>
-          <p x-show="channelsLoadError" class="text-red-500 text-sm mt-1">Não foi possível carregar os canais.</p>
         </div>
       </div>
       <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
@@ -89,9 +88,9 @@
           </template>
           <template x-for="item in items" :key="item.id">
             <tr class="bg-white dark:bg-gray-800/50 hover:bg-gray-50 dark:hover:bg-gray-800 theme-bg-table-row">
-              <td class="px-2 sm:px-4 py-2 sm:py-3 text-gray-600 dark:text-gray-300 whitespace-nowrap text-sm sm:text-base" x-text="formattedDate(item.watchedAt)"></td>
-              <td class="px-2 sm:px-4 py-2 sm:py-3 text-gray-900 dark:text-white max-w-[200px] sm:max-w-md truncate" :title="item.title" x-text="item.title"></td>
-              <td class="px-2 sm:px-4 py-2 sm:py-3 text-gray-600 dark:text-gray-300 hidden md:table-cell" x-text="item.channelName"></td>
+              <td class="px-2 sm:px-4 py-2 sm:py-3 text-gray-600 dark:text-gray-300 theme-text-secondary whitespace-nowrap text-sm sm:text-base" x-text="formattedDate(item.watchedAt)"></td>
+              <td class="px-2 sm:px-4 py-2 sm:py-3 text-gray-900 dark:text-white theme-text-primary max-w-[200px] sm:max-w-md truncate" :title="item.title" x-text="item.title"></td>
+              <td class="px-2 sm:px-4 py-2 sm:py-3 text-gray-600 dark:text-gray-300 theme-text-secondary hidden md:table-cell" x-text="item.channelName"></td>
               <td class="px-2 sm:px-4 py-2 sm:py-3">
                 <a :href="videoUrl(item)" target="_blank" rel="noopener" class="text-red-600 dark:text-red-500 hover:underline text-sm sm:text-base">Abrir</a>
               </td>
