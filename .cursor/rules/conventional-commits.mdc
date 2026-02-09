@@ -1,0 +1,44 @@
+---
+description: Usar Conventional Commits em todos os commits do projeto
+alwaysApply: true
+---
+
+# Conventional Commits
+
+- **Commits**: usar **somente** o formato [Conventional Commits](https://www.conventionalcommits.org/).
+
+Formato:
+
+```
+<type>(<scope>): <description>
+
+[optional body]
+
+[optional footer(s)]
+```
+
+## Tipos comuns
+
+| Tipo     | Uso                          |
+|----------|------------------------------|
+| `feat`   | Nova funcionalidade          |
+| `fix`    | Correção de bug              |
+| `docs`   | Apenas documentação          |
+| `style`  | Formatação (sem mudar lógica)|
+| `refactor` | Refatoração (sem feat/fix) |
+| `test`   | Testes                       |
+| `chore`  | Build, CI, deps, etc.        |
+
+## Exemplos
+
+```
+feat(web): add dark mode toggle
+fix(api): handle empty history on import
+docs: update development setup
+test(api): add server-info integration tests
+chore(deps): bump eslint to 9.x
+```
+
+- `scope` é opcional; use quando fizer sentido (ex.: `api`, `web`, `electron`).
+- Para breaking change: `feat(api)!: remove legacy endpoint` ou footer `BREAKING CHANGE: ...`.
+- Descrição em minúsculas, sem ponto no final; imperativo: "add" não "adds" ou "added".
