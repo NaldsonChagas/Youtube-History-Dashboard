@@ -2,6 +2,8 @@
 
 View and analyze your YouTube watch history on your computer and on your network.
 
+![Dashboard](docs/assets/dashboard.jpg)
+
 ## What it does
 
 Use your history exported from Google Takeout: see charts by hour, day of week and month, most watched channels, and a full list of videos. Everything runs locally and can be accessed from other devices on your network.
