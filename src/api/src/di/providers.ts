@@ -5,6 +5,7 @@ import { env } from "../config/env.js";
 import type { IHistoryRepository } from "../domain/IHistoryRepository.js";
 import type { IStatsRepository } from "../domain/IStatsRepository.js";
 import {
+  CLEAR_DATA_USE_CASE,
   DATA_SOURCE,
   GET_IMPORT_STATUS_USE_CASE,
   GET_STATS_BY_HOUR_USE_CASE,
@@ -28,6 +29,7 @@ import { GetStatsChannelsUseCase } from "../use-cases/stats/GetStatsChannelsUseC
 import { GetStatsByHourUseCase } from "../use-cases/stats/GetStatsByHourUseCase.js";
 import { GetStatsByWeekdayUseCase } from "../use-cases/stats/GetStatsByWeekdayUseCase.js";
 import { GetStatsByMonthUseCase } from "../use-cases/stats/GetStatsByMonthUseCase.js";
+import { ClearDataUseCase } from "../use-cases/import/ClearDataUseCase.js";
 import { GetImportStatusUseCase } from "../use-cases/import/GetImportStatusUseCase.js";
 import { ImportHistoryUseCase } from "../use-cases/import/ImportHistoryUseCase.js";
 import { ImportController } from "../controllers/importController.js";
@@ -75,6 +77,12 @@ export const providers = [
     useFactory: (statsRepository: IStatsRepository) =>
       new GetStatsByMonthUseCase(statsRepository),
     deps: [STATS_REPOSITORY],
+  },
+  {
+    provide: CLEAR_DATA_USE_CASE,
+    useFactory: (historyRepository: IHistoryRepository) =>
+      new ClearDataUseCase(historyRepository),
+    deps: [HISTORY_REPOSITORY],
   },
   {
     provide: GET_IMPORT_STATUS_USE_CASE,

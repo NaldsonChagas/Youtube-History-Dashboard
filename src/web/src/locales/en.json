@@ -42,7 +42,7 @@
     "channelPlaceholder": "Type to search channels"
   },
   "setup": {
-    "title": "YouTube History Setup",
+    "title": "YouTube History Dashboard",
     "subtitle": "Import your watch history",
     "whereToFind": "Where to find the file:",
     "step1Prefix": "Go to ",
@@ -52,10 +52,18 @@
     "import": "Import",
     "importing": "Importing…",
     "selectFile": "Please select an HTML file.",
-    "importFailed": "Import failed."
+    "importFailed": "Import failed.",
+    "availableOnNetworkPrefix": "The application is available on your network at ",
+    "dismiss": "Dismiss"
   },
   "chart": {
     "views": "Views",
     "weekdays": ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+  },
+  "settings": {
+    "clearData": "Clear data",
+    "clearDataConfirm": "All watch history will be deleted and you will return to the setup screen. Continue?",
+    "clearDataError": "Failed to clear data.",
+    "viewInBrowser": "View in browser"
   }
 }

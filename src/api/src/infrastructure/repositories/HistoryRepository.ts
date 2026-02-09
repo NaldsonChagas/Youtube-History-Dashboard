@@ -76,4 +76,9 @@ export class HistoryRepository implements IHistoryRepository {
       })),
     };
   }
+
+  async deleteAll(): Promise<void> {
+    const repo = this.dataSource.getRepository(WatchHistory);
+    await repo.clear();
+  }
 }

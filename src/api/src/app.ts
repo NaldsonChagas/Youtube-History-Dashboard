@@ -5,10 +5,14 @@ import swagger from "@fastify/swagger";
 import swaggerUi from "@fastify/swagger-ui";
 import Fastify from "fastify";
 import { existsSync } from "fs";
+import { mkdir } from "fs/promises";
+import { dirname } from "path";
 import type { HistoryController } from "./controllers/historyController.js";
 import type { ImportController } from "./controllers/importController.js";
 import type { StatsController } from "./controllers/statsController.js";
 import { env, type BuildAppOptions } from "./config/env.js";
+
+export type { BuildAppOptions } from "./config/env.js";
 import {
   buildContainerWithDataSource,
   DATA_SOURCE,
@@ -18,8 +22,10 @@ import {
 } from "./di/index.js";
 import type { DataSource } from "typeorm";
 import { errorHandler } from "./middleware/errorHandler.js";
+import { registerDataRoutes } from "./routes/data.js";
 import { registerHistoryRoutes } from "./routes/history.js";
 import { registerImportRoutes } from "./routes/import.js";
+import { registerServerInfoRoutes } from "./routes/serverInfo.js";
 import { registerStatsRoutes } from "./routes/stats.js";
 
 export async function buildApp(opts?: BuildAppOptions) {
@@ -47,6 +53,7 @@ export async function buildApp(opts?: BuildAppOptions) {
       tags: [
         { name: "history", description: "Watch history list" },
         { name: "import", description: "Import Takeout HTML" },
+        { name: "server", description: "Server info and network address" },
         { name: "stats", description: "Aggregated statistics" },
       ],
     },
@@ -56,6 +63,9 @@ export async function buildApp(opts?: BuildAppOptions) {
     uiConfig: { docExpansion: "list" },
   });
 
+  if (env.databasePath !== ":memory:") {
+    await mkdir(dirname(env.databasePath), { recursive: true });
+  }
   const container = await buildContainerWithDataSource();
   const dataSource = container.get(DATA_SOURCE) as DataSource;
   app.addHook("onClose", async () => {
@@ -80,9 +90,21 @@ export async function buildApp(opts?: BuildAppOptions) {
   );
   await app.register(
     async (instance) => {
+      await registerDataRoutes(instance, importController);
+    },
+    { prefix: "/api" }
+  );
+  await app.register(
+    async (instance) => {
       await registerStatsRoutes(instance, statsController);
     },
     { prefix: "/api/stats" }
+  );
+  await app.register(
+    async (instance) => {
+      await registerServerInfoRoutes(instance);
+    },
+    { prefix: "/api" }
   );
 
   const publicPath = opts?.publicPath ?? env.publicPath;

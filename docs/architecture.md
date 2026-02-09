@@ -38,7 +38,7 @@ src/api/src/
 
 ## Conventions
 
-- **Routes**: one file per domain (e.g. `history.ts`, `stats.ts`). Function that receives `app` and the **controller** (obtained from the container in `app.ts`) and registers handlers with `controller.method.bind(controller)`.
+- **Routes**: one file per domain (e.g. `history.ts`, `stats.ts`). Function that receives `app` and the **controller** (obtained from the container in `app.ts`) and registers handlers with `controller.method.bind(controller)`. Simple endpoints without domain logic (e.g. `GET /api/server-info`) use a dedicated route file (`routes/serverInfo.ts`) with an inline handler that calls a helper (e.g. `lib/network.ts`); no controller/use case.
 - **Controllers**: classes with `@Injectable()`; constructor receives use cases via `@Inject(TOKEN)`. They do not instantiate use cases or repositories.
 - **Use cases**: classes with an `execute(...)` method; constructor receives only the repository interface (e.g. `IStatsRepository`). Repository implementation is injected by the container.
 - **Repositories**: interface in `domain/` (e.g. `IHistoryRepository`); implementation in `infrastructure/repositories/`, using TypeORM (DataSource, QueryBuilder, entities).
@@ -109,3 +109,7 @@ src/web/
 - Unit tests live in **`src/web/tests/`** (Vitest).
 - Cover: API module (with mocked `fetch`), pure helpers (formatDate, escapeHtml), guards, theme utilities, and any extracted logic used by Alpine components.
 - Same rules as API: new feature → add/update tests; bug fix → failing test first, then fix.
+
+## Desktop (Electron)
+
+The installable desktop app is built with Electron and lives in `src/electron/`. The main process starts the API (via `startServer()` from `src/api/src/startServer.ts`) and opens a `BrowserWindow` to the local server. From the project root, `make dev` installs dependencies, builds API and web, runs the database migration, and starts Electron; see [docs/development.md](development.md) and [docs/electron.md](electron.md) for details. Structure, paths, and how to run or package are described in [docs/electron.md](electron.md).

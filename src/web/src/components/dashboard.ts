@@ -1,6 +1,7 @@
 import flatpickr from "flatpickr";
 import { Portuguese } from "flatpickr/dist/l10n/pt.js";
 import {
+  getServerInfo,
   getStatsByHour,
   getStatsByMonth,
   getStatsByWeekday,
@@ -10,6 +11,7 @@ import {
 import { formatDate } from "../lib/format.js";
 import { getLocale, getLocaleForIntl, getWeekdays, t } from "../lib/i18n.js";
 import { requireImportData } from "../lib/guards.js";
+import { isElectron, openInSystemBrowser } from "../lib/electron.js";
 import { applyTheme, initTheme, setStoredTheme } from "../lib/theme.js";
 import type { ChannelCount, HourCount, MonthCount, WeekdayCount } from "../types.js";
 
@@ -189,11 +191,13 @@ interface DashboardState {
   loadError: boolean;
   dateRangeError: boolean;
   dateFutureError: boolean;
+  networkUrl: string | null;
   getFilters(): { from?: string; to?: string };
   toggleTheme(): void;
   displayOverview(): void;
   loadDashboard(): Promise<void>;
   init(): Promise<void>;
+  openInSystemBrowser: (url: string) => void;
 }
 
 export function registerDashboard(): void {
@@ -208,6 +212,8 @@ export function registerDashboard(): void {
     loadError: false,
     dateRangeError: false,
     dateFutureError: false,
+    networkUrl: null,
+    openInSystemBrowser,
 
     getFilters(): { from?: string; to?: string } {
       const params: { from?: string; to?: string } = {};
@@ -284,6 +290,14 @@ export function registerDashboard(): void {
 
     async init(): Promise<void> {
       if (!(await requireImportData())) return;
+      if (isElectron()) {
+        try {
+          const info = await getServerInfo();
+          if (info.baseUrl) this.networkUrl = info.baseUrl;
+        } catch {
+          void 0;
+        }
+      }
       this.loadDashboard();
       this.$nextTick(() => {
         const fromEl = this.$refs.filterFromInput as HTMLInputElement | undefined;

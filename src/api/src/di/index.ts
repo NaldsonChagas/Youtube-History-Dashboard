@@ -8,6 +8,7 @@ import {
   IMPORT_CONTROLLER,
   STATS_CONTROLLER,
 } from "./tokens.js";
+import { runMigration } from "../infrastructure/migrate.js";
 
 export { providers } from "./providers.js";
 export * from "./tokens.js";
@@ -20,6 +21,7 @@ export async function buildContainerWithDataSource(): Promise<Injector> {
   const container = buildContainer();
   const dataSource = container.get(DATA_SOURCE) as DataSource;
   await dataSource.initialize();
+  await runMigration(dataSource);
   return container;
 }
 

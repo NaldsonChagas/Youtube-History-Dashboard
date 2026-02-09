@@ -15,4 +15,5 @@ export interface IHistoryRepository {
   hasAny(): Promise<boolean>;
   insertBatch(entries: WatchHistoryInsert[]): Promise<void>;
   list(filters: ListFilters): Promise<ListResult>;
+  deleteAll(): Promise<void>;
 }

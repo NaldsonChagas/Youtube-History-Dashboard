@@ -71,6 +71,16 @@ export async function getStatsByMonth(params: StatsParams = {}): Promise<MonthCo
   return res.json() as Promise<MonthCount[]>;
 }
 
+export interface ServerInfo {
+  baseUrl: string;
+}
+
+export async function getServerInfo(): Promise<ServerInfo> {
+  const res = await fetch(`${API_BASE}/api/server-info`);
+  if (!res.ok) throw new Error(res.statusText);
+  return res.json() as Promise<ServerInfo>;
+}
+
 export interface ImportStatus {
   hasData: boolean;
 }
@@ -97,4 +107,9 @@ export async function importHistory(html: string): Promise<ImportResult> {
     throw new Error(message);
   }
   return res.json() as Promise<ImportResult>;
+}
+
+export async function clearData(): Promise<void> {
+  const res = await fetch(`${API_BASE}/api/data`, { method: "DELETE" });
+  if (!res.ok) throw new Error(res.statusText);
 }

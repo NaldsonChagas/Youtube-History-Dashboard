@@ -1,6 +1,6 @@
 # Coding standards
 
-This document defines the project's code standards, aligned with the **Google TypeScript Style Guide** and clean code practices. It applies to **API and web** and must be followed in all code and in reviews.
+This document defines the project's code standards, aligned with the **Google TypeScript Style Guide** and clean code practices. It applies to **API, web, and Electron** (`src/electron/`) and must be followed in all code and in reviews.
 
 ## General principles
 
@@ -62,6 +62,7 @@ This document defines the project's code standards, aligned with the **Google Ty
 
 - **API**: ESLint with typescript-eslint. Run `pnpm run lint` in `src/api/` before committing.
 - **Web**: ESLint with typescript-eslint for `src/web/src` and `src/web/tests`. Run `pnpm run lint` in `src/web/` before committing.
+- **Electron**: Same style and lint expectations apply to code in `src/electron/`; run `pnpm run lint` in `src/electron/` before committing.
 - Main rules: no unused variables (except with `_` prefix), warning for `any`, consistent style.
 
 ## Reference

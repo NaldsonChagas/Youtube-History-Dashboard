@@ -42,7 +42,7 @@
     "channelPlaceholder": "Digite para buscar canais"
   },
   "setup": {
-    "title": "Configuração do YouTube History",
+    "title": "YouTube History Dashboard",
     "subtitle": "Importe seu histórico de visualização",
     "whereToFind": "Onde encontrar o arquivo:",
     "step1Prefix": "Acesse ",
@@ -52,10 +52,18 @@
     "import": "Importar",
     "importing": "Importando…",
     "selectFile": "Selecione um arquivo HTML.",
-    "importFailed": "Falha ao importar."
+    "importFailed": "Falha ao importar.",
+    "availableOnNetworkPrefix": "A aplicação está disponível na sua rede em ",
+    "dismiss": "Fechar"
   },
   "chart": {
     "views": "Visualizações",
     "weekdays": ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"]
+  },
+  "settings": {
+    "clearData": "Excluir dados",
+    "clearDataConfirm": "Todo o histórico será excluído e você voltará à tela de configuração. Continuar?",
+    "clearDataError": "Falha ao excluir dados.",
+    "viewInBrowser": "Ver no navegador"
   }
 }

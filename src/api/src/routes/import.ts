@@ -23,13 +23,6 @@ const importSchema = {
       required: ["inserted"],
       properties: { inserted: { type: "integer", description: "Number of rows inserted" } },
     },
-    409: {
-      type: "object",
-      properties: {
-        error: { type: "string" },
-        message: { type: "string" },
-      },
-    },
   },
 };
 

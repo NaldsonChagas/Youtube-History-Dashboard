@@ -9,3 +9,4 @@ src/web/js/
 coverage/
 *.tsbuildinfo
 youtube-metadata/
+data/

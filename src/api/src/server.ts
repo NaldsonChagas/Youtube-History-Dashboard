@@ -1,13 +1,11 @@
 import "reflect-metadata";
-import { buildApp } from './app.js';
-import { env } from './config/env.js';
+import { startServer } from "./startServer.js";
 
 const start = async (): Promise<void> => {
-  const app = await buildApp();
   try {
-    await app.listen({ port: env.port, host: '0.0.0.0' });
+    await startServer();
   } catch (err) {
-    app.log.error(err);
+    console.error(err);
     process.exit(1);
   }
 };

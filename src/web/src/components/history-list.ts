@@ -1,7 +1,7 @@
 import flatpickr from "flatpickr";
 import { Portuguese } from "flatpickr/dist/l10n/pt.js";
 import TomSelect from "tom-select";
-import { getHistory, getStatsChannels } from "../lib/api.js";
+import { clearData, getHistory, getStatsChannels } from "../lib/api.js";
 import { formatDate } from "../lib/format.js";
 import { getLocale, t } from "../lib/i18n.js";
 import { requireImportData } from "../lib/guards.js";
@@ -40,6 +40,7 @@ interface HistoryListState {
   videoUrl(item: HistoryItem): string;
   formattedDate(iso: string | null | undefined): string;
   toggleTheme(): void;
+  clearData(): Promise<void>;
   loadPage(): Promise<void>;
   applyFilters(): void;
   goToPage(page: number): void;
@@ -85,6 +86,17 @@ export function registerHistoryList(): void {
       this.theme = this.theme === "dark" ? "light" : "dark";
       setStoredTheme(this.theme);
       applyTheme(this.theme);
+    },
+
+    async clearData(): Promise<void> {
+      if (!window.confirm(t("settings.clearDataConfirm"))) return;
+      try {
+        await clearData();
+        window.location.href = "/";
+      } catch (err) {
+        console.error(err);
+        window.alert(t("settings.clearDataError"));
+      }
     },
 
     async loadPage(): Promise<void> {

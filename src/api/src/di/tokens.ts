@@ -8,6 +8,7 @@ import type { GetStatsChannelsUseCase } from "../use-cases/stats/GetStatsChannel
 import type { GetStatsByHourUseCase } from "../use-cases/stats/GetStatsByHourUseCase.js";
 import type { GetStatsByWeekdayUseCase } from "../use-cases/stats/GetStatsByWeekdayUseCase.js";
 import type { GetStatsByMonthUseCase } from "../use-cases/stats/GetStatsByMonthUseCase.js";
+import type { ClearDataUseCase } from "../use-cases/import/ClearDataUseCase.js";
 import type { GetImportStatusUseCase } from "../use-cases/import/GetImportStatusUseCase.js";
 import type { ImportHistoryUseCase } from "../use-cases/import/ImportHistoryUseCase.js";
 
@@ -21,6 +22,7 @@ export const GET_STATS_CHANNELS_USE_CASE = new InjectionToken<GetStatsChannelsUs
 export const GET_STATS_BY_HOUR_USE_CASE = new InjectionToken<GetStatsByHourUseCase>("GetStatsByHourUseCase");
 export const GET_STATS_BY_WEEKDAY_USE_CASE = new InjectionToken<GetStatsByWeekdayUseCase>("GetStatsByWeekdayUseCase");
 export const GET_STATS_BY_MONTH_USE_CASE = new InjectionToken<GetStatsByMonthUseCase>("GetStatsByMonthUseCase");
+export const CLEAR_DATA_USE_CASE = new InjectionToken<ClearDataUseCase>("ClearDataUseCase");
 export const GET_IMPORT_STATUS_USE_CASE = new InjectionToken<GetImportStatusUseCase>("GetImportStatusUseCase");
 export const IMPORT_HISTORY_USE_CASE = new InjectionToken<ImportHistoryUseCase>("ImportHistoryUseCase");
 

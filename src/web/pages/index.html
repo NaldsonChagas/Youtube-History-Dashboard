@@ -104,6 +104,10 @@
         </div>
       </div>
     </section>
+
+    <p class="mt-8 mb-4 text-center" x-show="networkUrl" x-cloak>
+      <a href="#" @click.prevent="openInSystemBrowser(networkUrl)" class="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-400 text-xs hover:underline transition-colors" x-text="$store.i18n.t('settings.viewInBrowser')"></a>
+    </p>
   </div>
 
   <div class="lang-switcher fixed bottom-3 right-3 z-10 flex gap-1 rounded-lg border p-1 shadow-sm theme-border theme-bg-toggle" aria-label="Language">

@@ -1,7 +1,9 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import {
+  clearData,
   getHistory,
   getImportStatus,
+  getServerInfo,
   importHistory,
   getStatsOverview,
   getStatsChannels,
@@ -138,6 +140,26 @@ describe("api", () => {
     expect(result).toEqual([{ year: 2024, month: 1, count: 10 }]);
   });
 
+  it("getServerInfo returns baseUrl from /api/server-info", async () => {
+    const mockFetch = vi.mocked(fetch);
+    mockFetch.mockResolvedValueOnce({
+      ok: true,
+      json: () => Promise.resolve({ baseUrl: "http://192.168.1.5:3000" }),
+    } as Response);
+
+    const result = await getServerInfo();
+
+    expect(mockFetch).toHaveBeenCalledWith("/api/server-info");
+    expect(result).toEqual({ baseUrl: "http://192.168.1.5:3000" });
+  });
+
+  it("getServerInfo throws when response not ok", async () => {
+    const mockFetch = vi.mocked(fetch);
+    mockFetch.mockResolvedValueOnce({ ok: false, statusText: "Server Error" } as Response);
+
+    await expect(getServerInfo()).rejects.toThrow("Server Error");
+  });
+
   it("getImportStatus returns hasData from /api/import/status", async () => {
     const mockFetch = vi.mocked(fetch);
     mockFetch.mockResolvedValueOnce({
@@ -173,11 +195,27 @@ describe("api", () => {
     const mockFetch = vi.mocked(fetch);
     mockFetch.mockResolvedValueOnce({
       ok: false,
-      json: () => Promise.resolve({ message: "Database already has history data." }),
+      json: () => Promise.resolve({ message: "Request body must be non-empty HTML (text/html)." }),
     } as Response);
 
     await expect(importHistory("<html></html>")).rejects.toThrow(
-      "Database already has history data."
+      "Request body must be non-empty HTML (text/html)."
     );
+  });
+
+  it("clearData sends DELETE to /api/data and does not throw when ok", async () => {
+    const mockFetch = vi.mocked(fetch);
+    mockFetch.mockResolvedValueOnce({ ok: true } as Response);
+
+    await clearData();
+
+    expect(mockFetch).toHaveBeenCalledWith("/api/data", { method: "DELETE" });
+  });
+
+  it("clearData throws when response not ok", async () => {
+    const mockFetch = vi.mocked(fetch);
+    mockFetch.mockResolvedValueOnce({ ok: false, statusText: "Server Error" } as Response);
+
+    await expect(clearData()).rejects.toThrow("Server Error");
   });
 });

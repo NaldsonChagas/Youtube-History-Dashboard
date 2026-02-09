@@ -106,6 +106,10 @@
       <button type="button" @click="goToPage(currentPage + 1)" x-show="currentPage < totalPages" class="bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-900 dark:text-white px-3 py-1 rounded theme-bg-muted theme-text-primary" x-text="$store.i18n.t('common.next')">Próxima</button>
     </div>
     <p class="text-gray-600 dark:text-gray-400 mt-4 text-center theme-text-secondary" x-show="loading" x-transition x-text="$store.i18n.t('common.loading')">Carregando…</p>
+
+    <p class="mt-8 mb-4 text-center">
+      <button type="button" @click="clearData()" class="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-400 text-xs hover:underline transition-colors" x-text="$store.i18n.t('settings.clearData')"></button>
+    </p>
   </div>
 
   <div class="lang-switcher fixed bottom-3 right-3 z-10 flex gap-1 rounded-lg border p-1 shadow-sm theme-border theme-bg-toggle" aria-label="Language">

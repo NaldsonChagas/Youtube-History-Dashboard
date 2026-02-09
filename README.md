@@ -1,96 +1,50 @@
 # YouTube History Dashboard
 
-Dashboard for viewing and analyzing YouTube watch history, powered by data exported via Google Takeout.
+View and analyze your YouTube watch history on your computer and on your network.
 
-## What it is
+## What it does
 
-- **API**: REST API in Fastify + TypeScript (MVC), with SQLite. Takeout data is imported once (seed) and queried via the database.
-- **Web**: Static pages (HTML, Tailwind, Chart.js, Alpine.js) with TypeScript. Built with **Vite** (output in `src/web/dist`, minified); dashboard with charts and paginated history list.
+Use your history exported from Google Takeout: see charts by hour, day of week and month, most watched channels, and a full list of videos. Everything runs locally and can be accessed from other devices on your network.
 
-## Prerequisites
+## How to use
 
-- Docker and Docker Compose (build uses pnpm via Corepack)
-- (Optional, for local development) Node.js 20+, pnpm
+1. Install the app (desktop or Docker, see below).
+2. Open the setup screen and import the `histórico-de-visualização.html` file (or `watch-history.html`) from your Takeout export.
+3. Use the dashboard and history list on this device or on any device on the same network—open in a browser the address shown on the setup screen (toast).
 
-## How to run
+## How to install
 
-1. Place the Takeout export in the `youtube-metadata/` folder (expected structure: `youtube-metadata/histórico/histórico-de-visualização.html`).
+### Desktop
 
-2. Start the services:
+Download the installer for Windows, macOS or Linux from the [Releases](https://github.com/your-org/youtube-history-dashboard/releases) page (or the project’s download link). Install and run; the app will open in a window and show the setup page on first run.
+
+### From source (development)
+
+From the project root, run `make dev` to install dependencies, build the API and web app, run the database migration, and start the Electron app. See [docs/development.md](docs/development.md) for other Makefile targets and details.
+
+### Docker
+
+1. Put your Takeout export in the `youtube-metadata/` folder (e.g. `youtube-metadata/histórico/histórico-de-visualização.html`).
+2. Run:
 
 ```bash
 docker compose up --build
 ```
 
-3. The API runs at `http://localhost:3000`. On first run, the entrypoint runs the web build (Vite), then the migration and seed (if the table is empty). The web app is served by the API from `src/web/dist` at `/` (root). The API runs in **development mode with watch** for API code; web changes require re-running the web build (or restarting the container, which rebuilds the web app).
+3. Open `http://localhost:3000` in your browser.
 
-## Environment variables
+## Where to get your history
 
-| Variable       | Description                    | Default               |
-|----------------|--------------------------------|-----------------------|
-| `PORT`         | Server port                    | `3000`                |
-| `DATABASE_PATH`| Path to SQLite database file   | `./data/youtube_history.db` |
-| `DATA_PATH`    | Path to Takeout folder         | `./youtube-metadata`  |
-| `PUBLIC_PATH` | Path to static web build | `../web/dist` (from API cwd) |
-| `NODE_ENV`  | Environment                    | `development`     |
+1. Go to [takeout.google.com](https://takeout.google.com).
+2. Select only YouTube (or YouTube and YouTube Music).
+3. Export and download the ZIP file.
+4. Inside the ZIP, open the YouTube folder and find the history file (e.g. `histórico/histórico-de-visualização.html` or `history/watch-history.html`).
 
-## Local development (without Docker)
+The setup screen in the app also explains these steps.
 
-1. Install dependencies and run migration and seed:
+## Technical documentation
 
-```bash
-cd src/api
-pnpm install
-pnpm run migrate
-pnpm run seed
-```
-
-2. Start the server:
-
-```bash
-pnpm run dev
-```
-
-3. Run tests (uses in-memory SQLite; no external database required):
-
-```bash
-pnpm run test
-```
-
-4. Lint:
-
-```bash
-pnpm run lint
-```
-
-## Web (standalone)
-
-The web app is in `src/web/`. Source is TypeScript in `src/web/src/`; build output is **minified** and goes to `src/web/dist/` (Vite).
-
-```bash
-cd src/web
-pnpm install
-pnpm run build    # Vite build (minified JS/CSS to dist/)
-pnpm run test     # unit tests (Vitest)
-pnpm run lint     # ESLint
-```
-
-When running the full app (Docker or API dev server), the API serves static files from **`src/web/dist/`**. Run `pnpm run build` in `src/web/` after changing web source so the API serves the latest build.
-
-## Project documentation
-
-- [docs/coding-standards.md](docs/coding-standards.md) – Code standards (Google Style Guide, clean code).
-- [docs/architecture.md](docs/architecture.md) – API and web architecture; how to add new routes.
-
-## API
-
-- `GET /api/history` – Paginated history list. Query: `page`, `limit`, `from`, `to`, `channel_id`.
-- `GET /api/stats/overview` – Totals (views, channels, first/last date).
-- `GET /api/stats/channels` – Most watched channels. Query: `limit`, `from`, `to`.
-- `GET /api/stats/by-hour` – Count by hour of day.
-- `GET /api/stats/by-weekday` – Count by weekday.
-- `GET /api/stats/by-month` – Count by month/year.
-
-Responses are JSON. Filters `from` and `to` use ISO 8601 format (e.g. `2025-01-01`, `2025-12-31`).
-
-API documentation is available via **Swagger UI** at `/documentation` when the API is running.
+- [docs/development.md](docs/development.md) – How to run locally, environment variables, build and tests, API reference.
+- [docs/architecture.md](docs/architecture.md) – API and web structure; how to add routes.
+- [docs/coding-standards.md](docs/coding-standards.md) – Code style and conventions.
+- [docs/electron.md](docs/electron.md) – Desktop app structure and packaging.

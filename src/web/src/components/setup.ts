@@ -1,4 +1,5 @@
-import { getImportStatus, importHistory } from "../lib/api.js";
+import { getImportStatus, getServerInfo, importHistory } from "../lib/api.js";
+import { isElectron, openInSystemBrowser } from "../lib/electron.js";
 import { t } from "../lib/i18n.js";
 import { applyTheme, initTheme, setStoredTheme } from "../lib/theme.js";
 
@@ -9,10 +10,13 @@ interface SetupState {
   file: File | null;
   error: string;
   loading: boolean;
+  networkUrl: string | null;
   toggleTheme: () => void;
   onFileChange: (e: Event) => void;
   confirm: () => Promise<void>;
   init: () => Promise<void>;
+  dismissToast: () => void;
+  openInSystemBrowser: (url: string) => void;
 }
 
 function registerSetup(): void {
@@ -24,6 +28,7 @@ function registerSetup(): void {
       file: null,
       error: "",
       loading: false,
+      networkUrl: null,
 
       toggleTheme(): void {
         this.theme = this.theme === "dark" ? "light" : "dark";
@@ -55,6 +60,12 @@ function registerSetup(): void {
         }
       },
 
+      dismissToast(): void {
+        this.networkUrl = null;
+      },
+
+      openInSystemBrowser,
+
       async init(): Promise<void> {
         try {
           const status = await getImportStatus();
@@ -63,6 +74,16 @@ function registerSetup(): void {
           }
         } catch {
           void 0;
+        }
+        if (isElectron()) {
+          try {
+            const info = await getServerInfo();
+            if (info.baseUrl) {
+              this.networkUrl = info.baseUrl;
+            }
+          } catch {
+            void 0;
+          }
         }
       },
     })
