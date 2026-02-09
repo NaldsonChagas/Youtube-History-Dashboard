@@ -1,13 +1,13 @@
 ---
-description: Usar Conventional Commits em todos os commits do projeto
+description: Use Conventional Commits for all project commits
 alwaysApply: true
 ---
 
 # Conventional Commits
 
-- **Commits**: usar **somente** o formato [Conventional Commits](https://www.conventionalcommits.org/).
+- **Commits**: use **only** the [Conventional Commits](https://www.conventionalcommits.org/) format.
 
-Formato:
+Format:
 
 ```
 <type>(<scope>): <description>
@@ -17,19 +17,19 @@ Formato:
 [optional footer(s)]
 ```
 
-## Tipos comuns
+## Common types
 
-| Tipo     | Uso                          |
+| Type     | Usage                          |
 |----------|------------------------------|
-| `feat`   | Nova funcionalidade          |
-| `fix`    | Correção de bug              |
-| `docs`   | Apenas documentação          |
-| `style`  | Formatação (sem mudar lógica)|
-| `refactor` | Refatoração (sem feat/fix) |
-| `test`   | Testes                       |
+| `feat`   | New feature          |
+| `fix`    | Bug fix              |
+| `docs`   | Documentation only          |
+| `style`  | Formatting (no logic change)|
+| `refactor` | Refactor (no feat/fix) |
+| `test`   | Tests                       |
 | `chore`  | Build, CI, deps, etc.        |
 
-## Exemplos
+## Examples
 
 ```
 feat(web): add dark mode toggle
@@ -39,6 +39,6 @@ test(api): add server-info integration tests
 chore(deps): bump eslint to 9.x
 ```
 
-- `scope` é opcional; use quando fizer sentido (ex.: `api`, `web`, `electron`).
-- Para breaking change: `feat(api)!: remove legacy endpoint` ou footer `BREAKING CHANGE: ...`.
-- Descrição em minúsculas, sem ponto no final; imperativo: "add" não "adds" ou "added".
+- `scope` is optional; use when it makes sense (e.g.: `api`, `web`, `electron`).
+- For breaking change: `feat(api)!: remove legacy endpoint` or footer `BREAKING CHANGE: ...`.
+- Description in lowercase, no period at the end; use imperative mood: "add" not "adds" or "added".

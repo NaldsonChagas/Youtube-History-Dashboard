@@ -1,0 +1,11 @@
+---
+description: All new documentation and project-written content must be in English
+alwaysApply: true
+---
+
+# Documentation in English
+
+- All new documentation (README, `docs/*.md`, ADRs, etc.) must be written in English.
+- Cursor rules (`.cursor/rules/*.mdc`) must be written in English.
+- User-facing copy, comments in docs, and commit messages (per conventional-commits) must be in English.
+- Code comments and variable names follow existing project standards (e.g. [docs/coding-standards.md](../docs/coding-standards.md)); this rule focuses on **documentation and rules**, not changing code language.
