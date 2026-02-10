@@ -1,6 +1,7 @@
 import "reflect-metadata";
 import { buildApp, type BuildAppOptions } from "./app.js";
 import { env } from "./config/env.js";
+import { logger } from "./lib/logger.js";
 import { getNetworkBaseUrl } from "./lib/network.js";
 
 export interface StartServerOptions extends BuildAppOptions {
@@ -24,5 +25,6 @@ export async function startServer(opts?: StartServerOptions): Promise<StartServe
   await app.listen({ port: requestedPort, host: "0.0.0.0" });
   const port = getListenPort(app, requestedPort);
   const baseUrl = getNetworkBaseUrl(port);
+  logger.info({ port, baseUrl }, "Server started");
   return { app, port, baseUrl };
 }

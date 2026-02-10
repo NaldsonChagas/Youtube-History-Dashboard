@@ -1,8 +1,9 @@
 import { mkdir } from "fs/promises";
 import { dirname } from "path";
+import { env } from "../src/config/env.js";
+import { logger } from "../src/lib/logger.js";
 import { createDataSource } from "../src/infrastructure/data-source.js";
 import { runMigration } from "../src/infrastructure/migrate.js";
-import { env } from "../src/config/env.js";
 
 async function migrate(): Promise<void> {
   const dbPath = env.databasePath;
@@ -13,13 +14,13 @@ async function migrate(): Promise<void> {
   await dataSource.initialize();
   try {
     await runMigration(dataSource);
-    console.log("Migration completed.");
+    logger.info("Migration completed.");
   } finally {
     await dataSource.destroy();
   }
 }
 
 migrate().catch((err) => {
-  console.error(err);
+  logger.error(err, "Migration failed");
   process.exit(1);
 });

@@ -1,9 +1,10 @@
 import { readFile } from "fs/promises";
 import { join } from "path";
-import { createDataSource } from "../src/infrastructure/data-source.js";
 import { env } from "../src/config/env.js";
-import { HistoryRepository } from "../src/infrastructure/repositories/HistoryRepository.js";
+import { logger } from "../src/lib/logger.js";
 import { seedFromHtml } from "../src/lib/seed-from-html.js";
+import { createDataSource } from "../src/infrastructure/data-source.js";
+import { HistoryRepository } from "../src/infrastructure/repositories/HistoryRepository.js";
 
 async function seed(): Promise<void> {
   const dataSource = createDataSource({ databasePath: env.databasePath });
@@ -12,7 +13,7 @@ async function seed(): Promise<void> {
   try {
     const repo = new HistoryRepository(dataSource);
     if (await repo.hasAny()) {
-      console.log("watch_history already has data; skipping seed.");
+      logger.info("watch_history already has data; skipping seed.");
       return;
     }
 
@@ -21,16 +22,16 @@ async function seed(): Promise<void> {
       "histórico",
       "histórico-de-visualização.html"
     );
-    console.log("Reading", historyPath);
+    logger.info({ path: historyPath }, "Reading history file");
     const html = await readFile(historyPath, "utf-8");
     const { inserted } = await seedFromHtml(html, repo);
-    console.log("Seed completed. Inserted", inserted, "entries.");
+    logger.info({ inserted }, "Seed completed");
   } finally {
     await dataSource.destroy();
   }
 }
 
 seed().catch((err) => {
-  console.error(err);
+  logger.error(err, "Seed failed");
   process.exit(1);
 });

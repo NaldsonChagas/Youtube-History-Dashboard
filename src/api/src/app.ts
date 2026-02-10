@@ -6,6 +6,7 @@ import swaggerUi from "@fastify/swagger-ui";
 import Fastify from "fastify";
 import { existsSync } from "fs";
 import { mkdir } from "fs/promises";
+import pino from "pino";
 import { dirname } from "path";
 import type { HistoryController } from "./controllers/historyController.js";
 import type { ImportController } from "./controllers/importController.js";
@@ -29,7 +30,14 @@ import { registerServerInfoRoutes } from "./routes/serverInfo.js";
 import { registerStatsRoutes } from "./routes/stats.js";
 
 export async function buildApp(opts?: BuildAppOptions) {
-  const app = Fastify({ logger: { level: 'warn' } });
+  const app = Fastify({
+    logger: {
+      level: "warn",
+      base: { service: "youtube-history-api", pid: process.pid, component: "http" },
+      formatters: { level: (label: string) => ({ level: label }) },
+      timestamp: pino.stdTimeFunctions.isoTime,
+    },
+  });
 
   await app.register(cors, { origin: true });
   app.setErrorHandler(errorHandler);

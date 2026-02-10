@@ -13,6 +13,9 @@ function getEnv() {
     get nodeEnv() {
       return process.env.NODE_ENV ?? "development";
     },
+    get logLevel() {
+      return process.env.LOG_LEVEL ?? "info";
+    },
     get databasePath() {
       return (
         process.env.DATABASE_PATH ??
