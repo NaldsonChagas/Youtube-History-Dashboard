@@ -1,5 +1,5 @@
 import { getImportStatus, getServerInfo, importHistory } from "../lib/api.js";
-import { isElectron, openInSystemBrowser } from "../lib/electron.js";
+import { isElectron } from "../lib/electron.js";
 import { t } from "../lib/i18n.js";
 import { applyTheme, initTheme, setStoredTheme } from "../lib/theme.js";
 
@@ -11,12 +11,13 @@ interface SetupState {
   error: string;
   loading: boolean;
   networkUrl: string | null;
+  copyFeedback: boolean;
   toggleTheme: () => void;
   onFileChange: (e: Event) => void;
   confirm: () => Promise<void>;
   init: () => Promise<void>;
   dismissToast: () => void;
-  openInSystemBrowser: (url: string) => void;
+  copyAddress: (url: string) => Promise<void>;
 }
 
 function registerSetup(): void {
@@ -29,6 +30,7 @@ function registerSetup(): void {
       error: "",
       loading: false,
       networkUrl: null,
+      copyFeedback: false,
 
       toggleTheme(): void {
         this.theme = this.theme === "dark" ? "light" : "dark";
@@ -62,9 +64,20 @@ function registerSetup(): void {
 
       dismissToast(): void {
         this.networkUrl = null;
+        this.copyFeedback = false;
       },
 
-      openInSystemBrowser,
+      async copyAddress(url: string): Promise<void> {
+        try {
+          await navigator.clipboard.writeText(url);
+        } catch {
+          void 0;
+        }
+        this.copyFeedback = true;
+        setTimeout(() => {
+          this.copyFeedback = false;
+        }, 2500);
+      },
 
       async init(): Promise<void> {
         try {

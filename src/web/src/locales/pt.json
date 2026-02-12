@@ -18,7 +18,10 @@
     "channel": "Canal",
     "channelFilterAria": "Filtrar por canal",
     "dateRangeError": "Data inicial não pode ser maior que a data final.",
-    "dateFutureError": "Data não pode ser no futuro."
+    "dateFutureError": "Data não pode ser no futuro.",
+    "toViewInBrowser": "Para visualizar no navegador, acesse:",
+    "addressCopied": "Endereço copiado. Abra no seu navegador.",
+    "copyAddress": "Copiar endereço"
   },
   "dashboard": {
     "title": "YouTube History Dashboard",
@@ -53,7 +56,6 @@
     "importing": "Importando…",
     "selectFile": "Selecione um arquivo HTML.",
     "importFailed": "Falha ao importar.",
-    "availableOnNetworkPrefix": "A aplicação está disponível na sua rede em ",
     "dismiss": "Fechar"
   },
   "chart": {
@@ -63,7 +65,6 @@
   "settings": {
     "clearData": "Excluir dados",
     "clearDataConfirm": "Todo o histórico será excluído e você voltará à tela de configuração. Continuar?",
-    "clearDataError": "Falha ao excluir dados.",
-    "viewInBrowser": "Ver no navegador"
+    "clearDataError": "Falha ao excluir dados."
   }
 }

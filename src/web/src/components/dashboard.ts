@@ -11,7 +11,7 @@ import {
 import { formatDate } from "../lib/format.js";
 import { getLocale, getLocaleForIntl, getWeekdays, t } from "../lib/i18n.js";
 import { requireImportData } from "../lib/guards.js";
-import { isElectron, openInSystemBrowser } from "../lib/electron.js";
+import { isElectron } from "../lib/electron.js";
 import { applyTheme, initTheme, setStoredTheme } from "../lib/theme.js";
 import type { ChannelCount, HourCount, MonthCount, WeekdayCount } from "../types.js";
 
@@ -192,12 +192,13 @@ interface DashboardState {
   dateRangeError: boolean;
   dateFutureError: boolean;
   networkUrl: string | null;
+  copyFeedback: boolean;
   getFilters(): { from?: string; to?: string };
   toggleTheme(): void;
   displayOverview(): void;
   loadDashboard(): Promise<void>;
   init(): Promise<void>;
-  openInSystemBrowser: (url: string) => void;
+  copyAddress: (url: string) => Promise<void>;
 }
 
 export function registerDashboard(): void {
@@ -213,7 +214,7 @@ export function registerDashboard(): void {
     dateRangeError: false,
     dateFutureError: false,
     networkUrl: null,
-    openInSystemBrowser,
+    copyFeedback: false,
 
     getFilters(): { from?: string; to?: string } {
       const params: { from?: string; to?: string } = {};
@@ -227,6 +228,18 @@ export function registerDashboard(): void {
       setStoredTheme(this.theme);
       applyTheme(this.theme);
       this.loadDashboard();
+    },
+
+    async copyAddress(url: string): Promise<void> {
+      try {
+        await navigator.clipboard.writeText(url);
+      } catch {
+        void 0;
+      }
+      this.copyFeedback = true;
+      setTimeout(() => {
+        this.copyFeedback = false;
+      }, 2500);
     },
 
     displayOverview(): void {
