@@ -5,7 +5,7 @@ This document covers how to run the project, environment variables, build and te
 ## Prerequisites
 
 - **Docker and Docker Compose** – for running the app with `docker compose` (build uses pnpm via Corepack).
-- **Node.js 20+ and pnpm** – for local development without Docker.
+- **Node.js 24.13.0** (recommended) and pnpm – for local development without Docker. Use `nvm use` (or `fnm use`) if you have `.nvmrc` support.
 
 ## How to run with Docker
 

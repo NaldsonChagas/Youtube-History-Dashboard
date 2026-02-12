@@ -10,3 +10,4 @@ coverage/
 *.tsbuildinfo
 youtube-metadata/
 data/
+releases/

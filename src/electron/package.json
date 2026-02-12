@@ -1,1 +1,89 @@
-{"name":"youtube-history-desktop","version":"1.0.0","description":"Desktop app for YouTube History Dashboard","type":"module","main":"dist/main.js","scripts":{"build":"tsc","dev":"electron .","lint":"eslint .","package":"electron-builder"},"build":{"appId":"com.youtube-history.dashboard","productName":"YouTube History Dashboard","directories":{"output":"release"},"files":["dist/**"],"linux":{"target":["deb","AppImage"]},"win":{"target":["nsis"]},"mac":{"target":["dmg"],"category":"public.app-category.utilities"}},"engines":{"node":">=20"},"pnpm":{"onlyBuiltDependencies":["electron"]},"devDependencies":{"@eslint/js":"^9.15.0","@types/node":"^22.10.0","electron":"^33.0.0","electron-builder":"^25.0.0","eslint":"^9.15.0","typescript":"^5.7.2","typescript-eslint":"^8.16.0"}}
+{
+  "name": "youtube-history-desktop",
+  "version": "1.0.0",
+  "description": "Desktop app for YouTube History Dashboard",
+  "type": "module",
+  "main": "dist/main.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "electron .",
+    "lint": "eslint .",
+    "package": "electron-builder"
+  },
+  "build": {
+    "appId": "com.youtube-history.dashboard",
+    "productName": "YouTube History Dashboard",
+    "directories": {
+      "output": "../../releases"
+    },
+    "files": [
+      "dist/**"
+    ],
+    "linux": {
+      "target": [
+        "AppImage"
+      ],
+      "maintainer": "Naldson Chagas <naldson.bc@gmail.com>"
+    },
+    "win": {
+      "target": [
+        "nsis"
+      ]
+    },
+    "mac": {
+      "target": [
+        "dmg"
+      ],
+      "category": "public.app-category.utilities"
+    },
+    "extraFiles": [
+      {
+        "from": "../api/dist",
+        "to": "src/api/dist",
+        "filter": [
+          "**/*"
+        ]
+      },
+      {
+        "from": "../api/package.json",
+        "to": "src/api/package.json"
+      },
+      {
+        "from": "../api/node_modules",
+        "to": "src/api/node_modules",
+        "filter": [
+          "**/*"
+        ]
+      },
+      {
+        "from": "../web/dist",
+        "to": "src/web/dist",
+        "filter": [
+          "**/*"
+        ]
+      }
+    ]
+  },
+  "engines": {
+    "node": ">=24.13.0"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "electron"
+    ]
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.15.0",
+    "@types/node": "^22.10.0",
+    "electron": "^33.0.0",
+    "electron-builder": "^25.0.0",
+    "eslint": "^9.15.0",
+    "typescript": "^5.7.2",
+    "typescript-eslint": "^8.16.0"
+  },
+  "homepage": "https://github.com/NaldsonChagas/Youtube-History-Dashboard",
+  "author": {
+    "name": "Naldson Chagas",
+    "email": "naldson.bc@gmail.com"
+  }
+}

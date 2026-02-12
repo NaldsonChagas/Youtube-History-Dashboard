@@ -17,7 +17,7 @@
     "seed": "tsx scripts/seed-history.ts"
   },
   "engines": {
-    "node": ">=20"
+    "node": ">=24.13.0"
   },
   "dependencies": {
     "pino": "^9.5.0",
